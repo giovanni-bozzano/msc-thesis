@@ -1,0 +1,29 @@
+\chapter{Introduction}
+
+In recent years, due to the fast advancement of information technology, entertainment and commerce services have shifted towards the web medium.
+Not only did consumers easily adapt to the new medium, but the expansion of options of what to do for fun has lead to a major increase in entertainment activities related to digital media, which are now generally seen as an habit.\\
+This, paired with continuously enriched and updated catalogs, makes sure that users are faced with a mass of media content. It is then difficult for users to find the products they are interested in, while personal recommendations from friends or family is not enough to choose what to buy or how to employ free time.\\
+
+Recommender systems aim to address this issue and to increase traffic and revenue.
+There are two common types of recommender systems:
+\begin{itemize}
+\item Content-based: when catalog items are comparable, it is possible to leverage their features to retrieve items similar to the user's preferred ones. Generally, a similarity matrix is built by transforming the item features in numerical values and computing the distance between each interacted or liked item and the others.
+\item Collaborative filtering: this techniques aims at providing recommendations based on correlated preferences. Each user's historical interactions or preferences are used to determine the similarity with other users. Then, items preferred by similar users are recommended.
+\end{itemize}
+
+Both of these techniques suffer from poor data quality or quantity, which lead to wrong or biased users and items similarities.\\
+
+Another common and major problem in the field of recommender systems is cold start.
+The cold start problem arises when a user has no recorded interaction with any item or vice versa.\\
+
+The objective of this thesis is to analyse a recent technique, called codebook transfer, which aims at alleviating this problems by transferring data from a different and unrelated dataset, with no overlap of users or items.\\
+A set of articles expanding on the original technique have appeared over the last ten years.
+We show that the original technique, and thus the derived articles, only work on the specific reported scenarios.
+
+\section{Thesis Structure}
+
+The structure of the thesis is as follows.\\
+Chapter 2 describes the current state of the art in recommender systems. We present classic algorithms, evaluation criteria and knowledge transfer techniques.\\
+Chapter 3 contains a detailed description of the goal of recommender systems that adopt the codebook transfer technique and their model.\\
+Chapter 4 contains the description of the experiments implementations.\\
+Chapter 5 includes the results of the experiments and the conclusions which can be drawn from them.
