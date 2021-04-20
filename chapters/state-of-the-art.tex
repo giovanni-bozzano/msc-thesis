@@ -12,7 +12,6 @@ The fourth section describes clustering techniques and their use in recommender 
 
 In this section we will start by giving a brief definition of recommender systems and the problems they are faced with.\\
 The most accurate definition of modern recommender systems can be found in Burke's statement:\\
-
 "Any system that produces individualized recommendations as output or has the effect of guiding the user in a personalized way to interesting or useful objects in a large space of possible options." (Burke, 2002)
 
 
@@ -69,30 +68,38 @@ The URM is generally built in collaborative filtering recommendation approaches.
 
 \subsection{Similarities}
 
-A similarity function is mathematical tool to compute the similarity between two entities represented in a space, as a numerical value. In the field of recommender systems similarity functions are often used to extract from a dataset similar entities, given a target user or item. It is then important to mention and describe the commonly used ones.
+A similarity function is mathematical tool to compute the similarity between two entities represented in a space, as a numerical value. In the field of recommender systems similarity functions are often used to extract similar entities from a dataset, given a target user or item. It is then important to mention and describe the commonly used ones.
 
 \begin{itemize}
 
-\item \textbf{Cosine}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
-\[ S_{xy} = \frac{xy}{||x||||y|| + h} \]
-where h is the shrink term form normalization.
-A variant of the cosine similarity, asymmetric cosine similarity is computed as follows:
-\[ S_{xy} = \frac{xy}{(\sum x^2)^\alpha (\sum y)^{1 - \alpha} + h} \]
-where h is the shrink term form normalization and $\alpha \in [0, 1]$ is the asymmetric coefficient.
+\item \textbf{Cosine similarity}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
+\[ S_{xy} = \frac{x \times y}{||x||\||y|| + h} \]
+where $h$ is the shrink term for normalization.
+This similarity measures the angle between n-dimensional vectors. Since the angle can vary between 1 and -1, $S_{xy} \in [-1, 1]$. If $S_{xy} = 1$ we have complete similarity (parallel vectors); if $S_{xy} = 0$, we have no similarity (orthogonal vectors) and if $S_{xy} = -1$ we have inverse similarity (parallel vectors with inverse direction).\\
+The cosine similarity is between the two most popular similarities used in recommender systems.
 
-\item \textbf{Pearson}: 
+\item \textbf{Pearson correlation}: given two random variables $X$ and $Y$, the Pearson correlation can be computed as follows:
+\[ \rho_{X,Y} = \frac{cov(X,Y)}{\sigma_x \sigma_y} \]
+where $cov(X,Y)$ is the covariance between $X$ and $Y$ and $\sigma_x$ and $\sigma_y$ are respectively the standard deviations of $X$ and $Y$.\\
+Since we need to apply the formula to a sample, we can give the following definition. Given two vectors $x$ and $y$ of dimension $n$, the pearson correlation is computed as follows:
+\[ S_{xy} = \frac{\sum_{i}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i}^{n} (x_i - \bar{x})^2}\sqrt{\sum_{i}^{n} (y_i - \bar{y})^2} + h} \]
+where $\bar{x}$ and $\bar{y}$ are respectively the means of $x$ and $y$ and $h$ is the shrink term for normalization.\\
+Like with the cosine similarity $S_{xy} \in [-1, 1]$, where -1 means positive linear correlation, 0 means no linear correlation and -1 means negative linear correlation. It is very popular in recommender systems.
 
-\item \textbf{Jaccard}: given two vectors $x$ and $y$, the Jaccard similarity is computed as follows:
-\[ S_{xy} = \frac{xy}{|x| + |y| - xy + h} \]
-where h is the shrink term form normalization.
+\item \textbf{Jaccard coefficient}: given two vectors $x$ and $y$, the Jaccard coefficient is computed as follows:
+\[ S_{xy} = \frac{x \times y}{|x| + |y| - xy + h} \]
+where $h$ is the shrink term for normalization.\\
+The Jaccard coefficient is ranged in the interval $[0, 1]$ and is used to compute the similarity between two finite sets and can be applied with binary values.
 
-\item \textbf{Dice}: given two vectors $x$ and $y$, the Dice similarity is computed as follows:
-\[ S_{xy} = \frac{xy}{\frac{1}{2}|x| + \frac{1}{2}|y| - xy + h} \]
-where h is the shrink term form normalization.
+\item \textbf{Dice coefficient}: given two vectors $x$ and $y$, the Dice coefficient is computed as follows:
+\[ S_{xy} = \frac{x \times y}{\frac{1}{2}|x| + \frac{1}{2}|y| - xy + h} \]
+where $h$ is the shrink term for normalization.\\
+It ranges in the interval $[0, 1]$ and, like the Jaccard coefficient, it is used to compute the similarity between finite sets and can be applied with binary values.
 
-\item \textbf{Tversky}: given two vectors $x$ and $y$, the Tversky similarity is computed as follows:
-\[ S_{xy} = \frac{xy}{\alpha(|x| - xy) + \beta(|y| - xy) + xy + h} \]
-where h is the shrink term form normalization.
+\item \textbf{Tanimoto coefficient}: given two vectors $x$ and $y$ of dimension $n$, the Tanimoto coefficient is computed as follows:
+\[ S_{xy} = \frac{\sum_{i = 1}^{n} x_iy_i}{\sum_{i = 1}^{n} x_i^2 + \sum_{i = 1}^{n} y_i^2 - \sum_{i = 1}^{n} x_iy_i} \]
+where $h$ is the shrink term for normalization.\\
+It ranges in the interval $[0, 1]$ and, like Jaccard and Dice coefficients, it is used to compute the similarity between finite sets and can be applied with binary values.
 
 \end{itemize}
 
@@ -109,30 +116,97 @@ When users or items characteristics are available, it is possible to leverage th
 
 \begin{itemize}
 
-\item \textbf{Item-based}: given the set of items I and the set of users U, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. To recommend items to user $u$, the system exploits the ICM to compute the similarities between each item $i_u \in I_u$ and $i \in I$ by building an item similarity matrix with shape $|I_u| \times |I|$.\\
+\item \textbf{Item-based}: given the set of items $I$ and the set of users $U$, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. To recommend items to user $u$, the system exploits the ICM to compute the similarities between each item $i_u \in I_u$ and $i \in I$ by building an item similarity matrix with shape $|I_u| \times |I|$.\\
 Then, it computes the estimated rating of each item $i$ by user $u$ as follows:
 \[ \hat{r}_{ui} = \frac{\sum_{i_u \in I_u} r_{ui_u} * ISIM_{i_u,i}}{\sum_{i_u \in I_u} ISIM_{i_u,i}} \]
 where $r_{ui_u}$ is the rating of item $i_u$ by user $u$ and $ISIM$ is the item similarity matrix. The normalization is useful to compute accurate ratings, but can be left out for top-n recommendation.\\
-Items with the highest ratings, excluding items included in $I_u$, are recommended to user $u$.
+Items with the highest ratings, excluding items in $I_u$, are recommended to user $u$.
 To avoid computing the similarity matrix for each user, it is possible to build a single item similarity matrix with shape $|I| \times |I|$ and consider, for each user, only the items contained in $I_u$.
 
-\item \textbf{User-based}: given the set of items I and the set of users U, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. Similarly to the item-based approach, with the user-based a user similarity matrix with shape $|U| \times |U|$ is built starting from the UCM.\\
-The estimated rating of each item $i$ by user $u$ as follows:
+\item \textbf{User-based}: given the set of items $I$ and the set of users $U$, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. Similarly to the item-based approach, a user similarity matrix with shape $|U| \times |U|$ is built starting from the UCM.\\
+The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
 \[ \hat{r}_{ui} = \frac{\sum_{v \in U} r_{vi_u} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}} \]
+Items with the highest ratings, excluding items in $I_u$, are recommended to user $u$.
 
 \end{itemize}
 
 The main advantage of CBF is that it makes possible to solve the cold start problem, both for users and items, when their features are available. By leveraging the users and items features to provide recommendations, CBF bypasses the problem completely.
 
 
-\subsection{Collaborative Filtering}
+\subsection{Memory-based Collaborative Filtering}
 
-Collaborative filtering recommender systems can easily be distinguished in user-based or item-based. The approach is to use interactions as a bridge to identify similar users or items, called neighbors. In the user-based scenario, a user profile consists in the set or ratings or interactions of the user. The system identifies similarities between profiles and then recommends the items which are not in common. Item-based collaborative filtering uses the same approach by inverting the relationship and comparing built items profiles.
+Memory-based collaborative filtering recommender systems exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood for target users or items. In order to describe the methodology, we must distinguish between user-based and item-based.
+
+\begin{itemize}
+
+\item \textbf{User-based}: in the user-based approach, the goal of the system is to compute a neighborhood for the user $u$ needing recommendations. This is defined as the set of users similar to $u$ based on their preferences. Their own preferences are then used to extract recommendation for the user $u$.\\
+Given the set of users $U$ and the set of items $I$, the system exploits the URM to build a user similarity matrix with shape $|U| \times |U|$.\\
+We define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
+The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
+\[ \hat{r}_{ui} = \frac{\sum_{v \in U \wedge v \neq u} URM_{v,i} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}} \]
+Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
+
+\item \textbf{Item-based}: the item-based approach is slightly different. In this scenario, the system computes the neighborhood of the item $i$ and then recommends it to users belonging to the neighborhood that are yet to interact with it.\\
+Given the set of users $U$ and the set of items $I$, the system exploits the URM to build an item similarity matrix with shape $|I| \times |I|$.\\
+Like in the user-based approach, we define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
+The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
+\[ \hat{r}_{ui} = \frac{\sum_{j \in I \wedge j \neq i} URM_{u,j} * USIM_{i,j}}{\sum_{j \in I} USIM_{i,j}} \]
+Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
+
+\end{itemize}
+
+
+\subsection{Model-based Collaborative Filtering}
+
+Model-based collaborative filtering recommender systems exploit the URM with a machine learning model to provide recommendations. There are many different ways to do so and in this thesis we will cover matrix factorization in \autoref{matrix-factorization} and factorization machines in \autoref{factorization-machines}.
 
 
 \subsection{Hybrid}
 
 Different recommender systems have different strengths and weaknesses. Many different types of hybrid systems have been developed to overcome the weaknesses of the single approaches. There are multiple techniques that can be used to combine the results. The most common technique is to combine the items scores into a single recommendations by assigning weights. Alternatives are switching recommender system based on the scenario or to use different systems in cascade to refine previous recommendations.
+
+
+
+\section{Matrix Factorization}
+\label{matrix-factorization}
+
+Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009, it became a very popular approach in recommender systems.\par
+The assumption of matrix factorization is that it is possible to extract latent factors, to characterize users and items, from the rating pattern. For items, these factors represent an alternative to the human generated features. For users, the factors represent how much a user prefers items with a high score in the corresponding factor. For this reason, we say that matrix factorization is an approach for latent factors models.\par
+Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in R^f$ and each item $i \in I$ is associated with a vector $q_i \in R^f$.\\
+For each user $u$, the values of $p_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $q_i$ measure how much the item is characterized by that factor.\\
+The estimated rating of item $i$ by user $u$ is then computed as follows:
+\[ \hat{r}_{ui} = q_i^T p_u \]\par
+The challenge of matrix factorization is building the mappings for users and items.
+
+
+\subsection{Stochastic Gradient Descent (SGD)}
+
+SGD is a popular approach \cite{ImprovingSVD, 10.1145/1401890.1401944, 10.1145/1345448.1345466} to compute the latent factors mappings. It involves cycling all the training ratings and computing the error:
+\[ e_{ui} = r_{ui} - q_i^T p_u \]
+Then, the values are modified by a magnitude proportional to $\gamma$ in the opposite direction of the gradient, as follows:
+\begin{equation*}
+\begin{split}
+& p_u \leftarrow p_u + \gamma (e_{ui} q_i - \lambda p_u) \\
+& q_i \leftarrow q_i + \gamma (e_{ui} p_u - \lambda q_i)
+\end{split}
+\end{equation*}
+where the costant $\lambda$ determines the extent of regularization.
+
+
+
+\section{Factorization Machines (FM)}
+\label{factorization-machines}
+
+Factorization machines \cite{10.1109/ICDM.2010.127} are a relatively new technique of collaborative filtering with side information proposed by Steffen Rendle in 2010. Since they are a general-purpose supervised learning algorithm, they can be adapted to work with recommender systems.\\
+Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in R^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM models all possible interactions between variables in $\bar{x}$.\\
+The FM model equation is defined as follows:
+\begin{equation*}
+\hat{y}(\bar{x}) = w_0 + \sum_{i = 1}^{n} w_i x_i + \sum_{i = 1}^{n} \sum_{j = i + 1}^{n} \langle v_i, v_j \rangle x_i x_j
+\end{equation*}
+where $w_0 \in R$ is the global bias, $w_i \in R$ is the bias of feature $i$, vector $v_i \in R \times f$ is the interaction parameter vector of feature $i$ and $\langle \cdot, \cdot \rangle$ is the dot product of two vectors of size k:
+\begin{equation*}
+\langle v_i, v_j \rangle = \sum_{f = 1}^{k} v_{i,f} \cdot v_{j,f}
+\end{equation*}
 
 
 
@@ -149,18 +223,18 @@ When designing or evaluating a recommender system, metrics a fundamental point t
 
 \subsection{Accuracy metrics}
 
-Accuracy metrics are meant to evaluate ranking. They measure the predictiveness of the recommender system; how good its decisions are. The most popular accuracy metrics are Mean Average Precision (MAP) and Normalized Discounted Cumulative Gain (NDCG). Both of them evaluate how good the recommender is to put the most relevant items first in the recommendation list.\par
-MAP is outfitted with a top-n threshold which defines how many recommended items are considered for the metric computation. MAP@n is then used to indicate MAP computed on the first n items recommended to each user.\\
+Accuracy metrics are meant to evaluate ranking. They measure the predictiveness of the recommender system; how good its decisions are. The most popular accuracy metrics are Mean Average Precision (mAP) and Normalized Discounted Cumulative Gain (nDCG). Both of them evaluate how good the recommender is to put the most relevant items first in the recommendation list.\par
+mAP is outfitted with a top-n threshold which defines how many recommended items are considered for the metric computation. mAP@n is then used to indicate mAP computed on the first n items recommended to each user.\\
 We define Precision of the query for user $i$ as
 \[ P@k_i = \frac{relevant\_items@k_i}{k} \]
 Where $relevant\_items@k$ is the amount of relevant items included in the recommendations list up to rank $k$.\\
 We then define Average Precision of the query for user $i$ as
 \[ AP@n_i = \frac{1}{TP} \sum_{k=1}^{n} (P@k_i * rel@k) \]
 where $TP$ is the total amount of ground truth items and $rel@k$ equals 1 if the item at rank k is relevant and equals to 0 otherwise.\\
-Finally, MAP is defined as
-\[ MAP@n = \frac{1}{U} \sum_{i=1}^{U} AP@n_i \]
+Finally, mAP is defined as
+\[ mAP@n = \frac{1}{U} \sum_{i=1}^{U} AP@n_i \]
 where $U$ is the amount of users.\par
-Like MAP, NDCG is computed with a top-n threshold.\\
+Like mAP, nDCG is computed with a top-n threshold.\\
 We define Cumulative Gain as
 \[ CG@n = \sum_{k=1}^{n} rating@k \]
 where $rating@k$ is the predicted rating of the item at rank $k$.\\
@@ -169,8 +243,8 @@ Discounted Cumulative Gain is then computed to penalize ratings based on their p
 Then the result is normalized to make it irrelevant of the query. To do so, we compute the Ideal DCG
 \[ IDCG@n = \sum_{k=1}^{|REL_n|} \frac{rating@k}{\log(i+1)} \]
 where $REL_p$ is the list of relevant items up to position $n$.\\
-Finally, NDCG is defined as
-\[ NDCG@n = \frac{DCG@n}{IDCG@n} \]
+Finally, nDCG is defined as
+\[ nDCG@n = \frac{DCG@n}{IDCG@n} \]
 
 
 \subsection{Error metrics}
@@ -186,9 +260,8 @@ To compute a weighted error, we define RMSE as
 
 \subsection{Diversity}
 
-Gini index, or Gini coefficient, is a well known statistical metric used measure income inequality. It can be slightly changed in and used in the field of recommender systems to evaluate a system diversity. We call the variation, where higher values mean higher diversity, Gini diversity.\\
-It is computed as
-\[ gini\_index = \frac{\sum_{i=1}^{n} ((2i - n - 1) * x_i)}{n \sum_{i=1}^{n} x_i} \]
+Gini index, or Gini coefficient, is a well known statistical metric used to measure income inequality. It can be slightly changed in and used in the field of recommender systems to evaluate a system diversity. We call the variation, where higher values mean higher diversity, Gini diversity \cite{Diversity}.\\
+It is computed as follows:
 \[ gini\_diversity = 2 \sum_{i=1}^{n} \frac{(n + 1 - i) * x_i}{(n + 1) * \sum_{i=1}^{n} x_i} \]
 where $n$ is the amount of items and $x_i$ is the numbers of times item $i$ has been recommended.
 
