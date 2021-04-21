@@ -267,8 +267,36 @@ where $n$ is the amount of items and $x_i$ is the numbers of times item $i$ has 
 
 
 
-\section{Knowledge Transfer in Recommender Systems}
-
-
-
 \section{Clustering Techniques}
+
+Clustering is the operation of grouping similar unclassified elements together according to some properties or features. It is used in many fields of machine learning with different applications and implementations. In this section we cover the main clustering algorithms used in recommender systems, paying particular attention to the one used in this thesis.
+
+
+\subsection{K-Means Clustering}
+
+K-Means clustering is the most used and well-known iterative clustering algorithm.\\
+To apply K-Means clustering it is necessary to define the number of target clusters. For each cluster, a centroid with random coordinates is initialized.
+\begin{itemize}
+\item Each element is classified by computing the euclidean distance between its position in space and each centroid. The element is assigned to closest centroid.
+\item The centroid is moved by computing the mean of the distances between it and all the elements assigned to it.
+\item The process is repeated until the the centroid are only slightly moved or until a maximum amount of iterations is reached.
+\end{itemize}
+\begin{figure}[htbp]
+	\begin{center}
+		\includegraphics[width=\textwidth]{pictures/k-means-clustering}
+		\caption{Source: https://i.stack.imgur.com/cIDB3.png}
+	\end{center}
+\end{figure}
+K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
+
+
+
+\subsection{Non-Negative Matrix Factorization}
+
+
+
+\subsection{Orthogonal Non-Negative Matrix Factorization}
+
+
+
+\section{Knowledge Transfer in Recommender Systems}
