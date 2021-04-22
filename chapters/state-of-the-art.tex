@@ -172,7 +172,7 @@ Different recommender systems have different strengths and weaknesses. Many diff
 
 Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009, it became a very popular approach in recommender systems.\par
 The assumption of matrix factorization is that it is possible to extract latent factors, to characterize users and items, from the rating pattern. For items, these factors represent an alternative to the human generated features. For users, the factors represent how much a user prefers items with a high score in the corresponding factor. For this reason, we say that matrix factorization is an approach for latent factors models.\par
-Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in R^f$ and each item $i \in I$ is associated with a vector $q_i \in R^f$.\\
+Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in \mathbb{R}^f$ and each item $i \in I$ is associated with a vector $q_i \in \mathbb{R}^f$.\\
 For each user $u$, the values of $p_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $q_i$ measure how much the item is characterized by that factor.\\
 The estimated rating of item $i$ by user $u$ is then computed as follows:
 \[ \hat{r}_{ui} = q_i^T p_u \]\par
@@ -198,12 +198,12 @@ where the costant $\lambda$ determines the extent of regularization.
 \label{factorization-machines}
 
 Factorization machines \cite{10.1109/ICDM.2010.127} are a relatively new technique of collaborative filtering with side information proposed by Steffen Rendle in 2010. Since they are a general-purpose supervised learning algorithm, they can be adapted to work with recommender systems.\\
-Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in R^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM models all possible interactions between variables in $\bar{x}$.\\
+Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in \mathbb{R}^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM models all possible interactions between variables in $\bar{x}$.\\
 The FM model equation is defined as follows:
 \begin{equation*}
 \hat{y}(\bar{x}) = w_0 + \sum_{i = 1}^{n} w_i x_i + \sum_{i = 1}^{n} \sum_{j = i + 1}^{n} \langle v_i, v_j \rangle x_i x_j
 \end{equation*}
-where $w_0 \in R$ is the global bias, $w_i \in R$ is the bias of feature $i$, vector $v_i \in R \times f$ is the interaction parameter vector of feature $i$ and $\langle \cdot, \cdot \rangle$ is the dot product of two vectors of size k:
+where $w_0 \in \mathbb{R}$ is the global bias, $w_i \in \mathbb{R}$ is the bias of feature $i$, vector $v_i \in \mathbb{R} \times f$ is the interaction parameter vector of feature $i$ and $\langle \cdot, \cdot \rangle$ is the dot product of two vectors of size k:
 \begin{equation*}
 \langle v_i, v_j \rangle = \sum_{f = 1}^{k} v_{i,f} \cdot v_{j,f}
 \end{equation*}
@@ -290,13 +290,25 @@ To apply K-Means clustering it is necessary to define the number of target clust
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
 
 
+\subsection{Non-Negative Matrix Factorization (NMF)}
 
-\subsection{Non-Negative Matrix Factorization}
+Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extracts features from a set of non-negative vectors. It was first introduced by an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
+Given a metrix $X$ with shape $n \times m$, the goal of NMF is to compute matrices $W$, with shape $m \times p$, and $H$, with shape $p \times n$, such that:
+\begin{equation*}
+X = WH
+\end{equation*}
+by solving the optimization problem:
+\begin{equation*}
+\min_{W \in \mathbb{R}^{m \times p}, H \in \mathbb{R}^{p \times n}} ||X - WH||^2_F\quad \text{such that}\quad W \geq 0, H \geq 0
+\end{equation*}
+where $||X - WH||^2_F$ is the Frobenius norm, defined as:
+\begin{equation*}
+||X - WH||^2_F = \sum_{i,j} (X - WH)^2_{i,j}
+\end{equation*}
+The standard NMF algorithm is the following:
 
 
-
-\subsection{Orthogonal Non-Negative Matrix Factorization}
-
+\subsection{Orthogonal Non-Negative Matrix Factorization (ONMF)}
 
 
 \section{Knowledge Transfer in Recommender Systems}
