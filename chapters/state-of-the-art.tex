@@ -186,8 +186,8 @@ SGD is a popular approach \cite{ImprovingSVD, 10.1145/1401890.1401944, 10.1145/1
 Then, the values are modified by a magnitude proportional to $\gamma$ in the opposite direction of the gradient, as follows:
 \begin{equation*}
 \begin{split}
-& p_u \leftarrow p_u + \gamma (e_{ui} q_i - \lambda p_u) \\
-& q_i \leftarrow q_i + \gamma (e_{ui} p_u - \lambda q_i)
+& p_u \gets p_u + \gamma (e_{ui} q_i - \lambda p_u) \\
+& q_i \gets q_i + \gamma (e_{ui} p_u - \lambda q_i)
 \end{split}
 \end{equation*}
 where the costant $\lambda$ determines the extent of regularization.
@@ -284,7 +284,7 @@ To apply K-Means clustering it is necessary to define the number of target clust
 \begin{figure}[htbp]
 	\begin{center}
 		\includegraphics[width=\textwidth]{pictures/k-means-clustering}
-		\caption{Source: https://i.stack.imgur.com/cIDB3.png}
+		\caption{Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
 	\end{center}
 \end{figure}
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
@@ -293,22 +293,215 @@ K-Means clustering has linear complexity $O(n)$, thus it is considered a fast cl
 \subsection{Non-Negative Matrix Factorization (NMF)}
 
 Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extracts features from a set of non-negative vectors. It was first introduced by an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
-Given a metrix $X$ with shape $n \times m$, the goal of NMF is to compute matrices $W$, with shape $m \times p$, and $H$, with shape $p \times n$, such that:
+It has been proved empirically by different experiments \cite{10.5555/1005332.1044709, 10.1109/CVPR.2001.990477} that NMF has clustering effects.
+Given a metrix $X$ with shape $m \times n$, the goal of NMF is to compute matrices $F$, with shape $m \times p$, and $G$, with shape $p \times n$, such that:
 \begin{equation*}
-X = WH
+X = FG
 \end{equation*}
 by solving the optimization problem:
 \begin{equation*}
-\min_{W \in \mathbb{R}^{m \times p}, H \in \mathbb{R}^{p \times n}} ||X - WH||^2_F\quad \text{such that}\quad W \geq 0, H \geq 0
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG||^2_F
 \end{equation*}
-where $||X - WH||^2_F$ is the Frobenius norm, defined as:
+where $||X - FG||^2_F$ is the Frobenius norm, defined as:
 \begin{equation*}
-||X - WH||^2_F = \sum_{i,j} (X - WH)^2_{i,j}
+||X - FG||^2_F = \sum_{i,j} (X - FG)^2_{i,j}
 \end{equation*}
 The standard NMF algorithm is the following:
+\vskip 0.7cm
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{Non-negative matrix $X \in \mathbb{R}^{m \times n}_+$ and factorization rank $r$.}
+\Output{$(F,G) \geq 0$ : A rank-$r$ NMF of $X \approx FG$.}
+Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
+\For{$t \gets 1$ \KwTo $max\_iteration$}{
+  $G^{(t)} \gets G^{(t - 1)} \odot \frac{(F^{(t - 1)})^T X}{(F^{(t - 1)})^T F^{(t - 1)} G^{(t - 1)}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \frac{X (G^{(t)})^T}{F^{(t - 1)} G^{(t)} (G^{(t)})^T}$\;
+}
+\caption{The standard algorithm for NMF}
+\end{algorithm}
+\vskip 0.7cm
+$F$ and $G$ can be initialized randomly or using some other clustering method, such as K-Means clustering.
 
 
-\subsection{Orthogonal Non-Negative Matrix Factorization (ONMF)}
+\subsection{Orthogonal Non-Negative Matrix Tri-Factorizations (ONMTF)}
+
+Orthogonal non-negative matrix factorizations (ONMF) is a type of NMF that, given a metrix $X$ with shape $m \times n$, computes matrices $F$, with shape $m \times p$, and $G$, with shape $n \times p$, such that:
+\begin{equation*}
+X = FG^T
+\end{equation*}
+by solving the optimization problem:
+\begin{equation*}
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG^T||^2_F, \quad \text{s.t.} \quad F^TF = I
+\end{equation*}
+Alternatively, for the $G$-orthogonal problem is:
+\begin{equation*}
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG^T||^2_F, \quad \text{s.t.} \quad G^TG = I
+\end{equation*}
+The algorithms for ONMF are the following:
+\vskip 0.7cm
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{Non-negative matrix $X \in \mathbb{R}^{m \times n}_+$ and factorization rank $r$.}
+\Output{$(F,G) \geq 0$ : A rank-$r$ NMF of $X \approx FG^T$.}
+Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
+\For{$t \gets 1$ \KwTo $max\_iteration$}{
+  $G^{(t)} \gets G^{(t - 1)} \odot \frac{X^T F^{(t - 1)}}{G^{(t - 1)} (F^{(t - 1)})^T F^{(t - 1)}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)}}{F^{(t - 1)} (F^{(t - 1)})^T X G^{(t)}}}$\;
+}
+\caption{The algorithm for $F$-orthogonal ONMF}
+\end{algorithm}
+\vskip 0.7cm
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{Non-negative matrix $X \in \mathbb{R}^{m \times n}_+$ and factorization rank $r$.}
+\Output{$(F,G) \geq 0$ : A rank-$r$ NMF of $X \approx FG^T$.}
+Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
+\For{$t \gets 1$ \KwTo $max\_iteration$}{
+  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)}}{G^{(t - 1)} (G^{(t - 1)})^T X^T F^{(t - 1)}}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \frac{X (G^{(t)})^T}{F^{(t - 1)} (G^{(t)})^T G^{(t)}}$\;
+}
+\caption{The algorithm for $G$-orthogonal ONMF}
+\end{algorithm}
+\vskip 0.7cm
+The tri-factorizations \cite{10.1145/1150402.1150420} variant uses three factors instead of two, in the form:
+\begin{equation*}
+X = FSG^T
+\end{equation*}
+The optimization problem is the following:
+\begin{equation*}
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} ||X - FG||^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
+\end{equation*}
+According to Ding \textit{et al} \cite{10.1145/1150402.1150420}, tri-factorization is capable of clustering rows and columns of the input matrix simultaneously.\\
+The rules for updating $F$, $G$ and $S$, are according to the following algorithm:
+\vskip 0.7cm
+\begin{algorithm}[H]
+\SetKwInOut{Input}{Input}
+\SetKwInOut{Output}{Output}
+\Input{Non-negative matrix $X \in \mathbb{R}^{m \times n}_+$ and factorization rank $r$.}
+\Output{$(F,G,S) \geq 0$ : A rank-$r$ NMF of $X \approx FSG^T$.}
+Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$, $S^{(0)} \geq 0$\;
+\For{$t \gets 1$ \KwTo $max\_iteration$}{
+  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)} S^{(t - 1)}}{G^{(t - 1)} (G^{(t - 1)})^T X^T F^{(t - 1)} S^{(t - 1)}}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)} (S^{(t - 1)})^T}{F^{(t - 1)} (F^{(t - 1)})^T X G^{(t)} (S^{(t - 1)})^T}}$\;
+  $S^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{(F^{(t)})^T X G^{(t)}}{(F^{(t)})^T F^{(t)} S^{(t - 1)} (G^{(t)})^T G^{(t)}}}$\;
+}
+\caption{The algorithm for ONMTF}
+\end{algorithm}
 
 
-\section{Knowledge Transfer in Recommender Systems}
+
+\section{Cross-Domain Recommender Systems}
+
+While the majority of recommender systems provide recommendation targeted only to a single topic, in recent years large digital service companies like Amazon or Google started providing recommendation across a very eterogeneous set of services. Amazon, for example, provides recommendations both for its e-commerce website, for items of all categories, and for music, movies and so on. In this scenario it may be useful to provide recommendation across different domains.\\
+Cross-domain recommender systems aim to generate higher quality recommendations in a target domain by leveraging data coming from one more different source domains. In particular, knowledge acquired in a source domain can be transferred with some knowledge-transfer technique to the target domain.\\
+The use cases for such approach are mainly two. First, building a user profile across domains allows to generate bundle recommendation \cite{10.1007/s11257-012-9131-2, 10.1007/s11257-007-9042-9, 10.1007/s11257-012-9128-x}. For example it may be possible to recommend the movie transposition of a book the user bought and then to recommend the movie soundtrack. A recommendation like that can only be inferred by exploiting data from multiple domains. The second scenario is the one of the cold start problem \cite{10.1145/2645710.2645777, 10.1007/978-3-642-22362-4_26, 10.1145/2507157.2507206}. Auxiliary source domain may be able information which is missing in the target domain. Both of these scenarios assume that there are correspondences between user and item profiles across domains.\par
+A complete review of recommender systems was given by Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}. To introduce their properties and categories we mainly follow their formalization of the problem.
+
+
+\subsection{Domain Definitions}
+
+The first step in introducting cross-domain recommender systems, is defining the concept of domain. We can distinguish four different levels of domain definition:
+
+\begin{itemize}
+\item \textbf{Attribute level}: Two items are considered to belong to different domains if they differ in some attribute. For example two books could be considered of different domains if the differ by genre. The attribute level definition is too weak to be considered for cross-domain recommender systems.
+\item \textbf{Type level}: Two items are considered to belong to different domains if they share some attributes but differ by others. For example, TV series and movies belong to different domains, according to this definition.
+\item \textbf{Item level}: Two items are considered to belong to different domains if they don't share any attribute, or at least very few. For example, movies and books belong to different domains, according to this definition.
+\item \textbf{System level}: Two items are considered to belong to different domains if they belong to different systems, even if they share the same attributes. For example, movies from the Netflix system and movies from the Amazon system belong to different domains, according to this definition.
+\end{itemize}
+
+
+\subsection{Types of recommendation}
+
+The goal of cross-domain recommender systems can also vary depending on which domain is the target for recommendations.\\
+According to Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}, we can distinguish three types of recommendations. Given the target domain $D_T$ with its users and items sets, respectively $U_T$ and $I_T$, and one or more source domains $D_S$ with their users and items sets, respectively $U_S$ and $I_S$, we distinguish the following types or recommendation types:
+\begin{itemize}
+\item \textbf{Multi-domain recommendation}: recommend items in $I_S \cup I_T$ to users in $U_S$ or to users in $U_T$. This approach requires a significant amount of users overlap between domains, but it is becoming feasible due to the amount of profiles maintained by users on different social media, connected by mechanisms of cross-authentication and identification \cite{10.1016/j.ins.2008.08.022} or interoperability \cite{10.1007/s11257-011-9097-5}.
+\item \textbf{Linked-domain recommendation}: recommend items in $I_T$ to users in $U_S$ or $U_T$ by exploiting knowledge about $U_S \cup U_T$ and $I_S \cup I_T$. This approach is used to enrich data in a target domain with a cold start or data sparsity problem. Generally, it requires at least a partial amount of users or items overlap between the source and target domains.
+\item \textbf{Cross-domain recommendation}: recommend items in $I_T$ to users in $U_S$ or $U_T$ by exploiting knowledge about $U_S$ and $I_S$. This approach is used when the target domain has no information about the users. In this scenario there is no assumption of data overlap between domains and the approaches aim at transferring knowledge from one domain to the other.
+\end{itemize}
+
+
+\subsection{Types of Overlap}
+
+We can then make distinction between four types of overlap:
+\begin{itemize}
+\item \textbf{No overlap}: Neither the user nor the item sets share common data, such that:
+\begin{equation*}
+U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S = \emptyset
+\end{equation*}
+\item \textbf{User overlap}: Only the user sets share common data, such that:
+\begin{equation*}
+U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S = \emptyset
+\end{equation*}
+\item \textbf{Item overlap}: Only the item sets share common data, such that:
+\begin{equation*}
+U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
+\end{equation*}
+\item \textbf{User and item overlap}: Both user and item sets share common data, such that:
+\begin{equation*}
+U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
+\end{equation*}
+\end{itemize}
+
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=\textwidth]{pictures/domains-overlap}
+  \caption{Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+
+
+\subsection{Systems Categories}
+
+Given the previous attributes, different cross-domain recommender system trends have been defined into a categorization by Loizou \cite{crossdomain-recsys-categorization}, which was later enhanced by Cremonesi \textit{et al} \cite{crossdomain-recsys-categorization} into four groups:
+
+\begin{itemize}
+\item As proposed by Lee \cite{10.1016/S0957-41740100034-3}, extract association rules from rating behavior in source domains, to be used in the target domain.
+\item As proposed by Cao \textit{et al.} \cite{10.5555/3104322.3104344} and Zhang \textit{et al.} \cite{10.5555/3023549.3023635}, learn inter-domain similarity based on ratings and correlation matrices.
+\item As proposed by Zhuang \textit{et al.} \cite{10.1109/TKDE.2009.205}, combine estimations of rating probability distributions in source domains, to be used in the target domain.
+\item As proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773, 10.1145/1553374.1553454} and Pan \textit{et al.} \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}, transfer knowledge from source domains to the target domain to reduce rating sparsity.
+\end{itemize}
+
+Furthermore, it is possible to make another type of distinction based on the approach of knowledge exploitation, into two macro-groups and sub-groups:
+
+\begin{itemize}
+\item \textbf{Aggregating knowledge}
+\begin{itemize}
+\item \textit{Merging user preferences}: the aggregated knowledge consists of user preferences.
+\item \textit{Mediating user modeling data}: the aggregated knowledge consists of user models, such as similarities or neighbors.
+\item \textit{Combining recommendations}: the aggregated knowledge is composed of single-domain recommendations.
+\end{itemize}
+\item \textbf{Linking and transferring knowledge}:
+\begin{itemize}
+\item \textbf{\textit{Linking domains}}: source and target domains are linked by common knowledge, such as item attributes. This correspondences can either be directly identified between the single domains, or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
+Chung \textit{et al.} \cite{10.1145/1282100.1282113} initially proposed an approach using item attributes directly to identify a bridge between domains, but since items are generally very heterogeneus, it may be difficult to find directly corresponding features. To address this problem, Loizou \cite{crossdomain-recsys-categorization} proposed to use Wikipedia as a universal vocabulary to express and relate user preferences across multiple domains.\\
+The known problem of both approaches is building said knowledge repositories. Cremonesi \textit{et al.} \cite{10.1007/978-1-4899-7637-6_27} observed that the majority of approaches with the goal of linking domains does not require user or item overlap, but only feature overlap between domains. It was also observed that no particular approach outperforms the others in a general scenario.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pictures/linking-domains}
+  \caption{Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+\item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features. This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches. These new representations are obtained with various factorization algorithms. As for the previous approach, at least a feature overlap is strictly needed.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
+  \caption{Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+\item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
+  \caption{Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+\end{itemize}
+\end{itemize}
+
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
+  \caption{Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+
+Since in this thesis we evaluate the codebook transfer technique, we will focus on transferring knowledge and, in particular, on transferring rating patterns.
