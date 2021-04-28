@@ -175,7 +175,7 @@ The assumption of matrix factorization is that it is possible to extract latent 
 Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in \mathbb{R}^f$ and each item $i \in I$ is associated with a vector $q_i \in \mathbb{R}^f$.\\
 For each user $u$, the values of $p_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $q_i$ measure how much the item is characterized by that factor.\\
 The estimated rating of item $i$ by user $u$ is then computed as follows:
-\[ \hat{r}_{ui} = q_i^T p_u \]\par
+\[ \hat{r}_{ui} = q_i^T p_u \]\\
 The challenge of matrix factorization is building the mappings for users and items.
 
 
@@ -216,6 +216,36 @@ The main characteristic of a dataset is sparsity. Given a user rating matrix, sp
 
 
 
+\section{Data Partitioning}
+
+To address the evaluation of a recommender system, it is important to introduce in detail the different methodologies of how it can be performed.\\
+There can be three types of evaluation:
+
+\begin{itemize}
+\item \textbf{Online evaluation}: a controlled environment is set up and a group of selected users is asked to use it and to report on the experience.
+\item \textbf{Live trials}: similarly to the previous methodology, it is performed by real users. With this approach, real users are asked to provide feedback in a production environment.
+\item \textbf{Offline evaluation}: the most used evaluation technique consists in analyzing past user interactions. Since in offline evaluation no new rating is given after the model is trained, it is necessary to simulate a test set of ratings by splitting the original dataset into multiple subsets. Hence, the need to introduce the different approaches to data partitioning.
+\end{itemize}
+
+Data partitioning for offline evaluation is generally performed for cross-validation. Cross-validation is the approach of splitting the original dataset into three subsets:
+\begin{itemize}
+\item \textbf{Training set}: this set is used to train the model. Normally, to maximize the training efficiency, it is the biggest of the three sets.
+\item \textbf{Validation set}: this set is used to evaluate the model during training and optimize the model hyperparameters.
+\item \textbf{Test set}: this set is used to perform the final evaluation, after the training is finished, to test the recommender system performance with data it has never seen before.
+\end{itemize}
+While the validation and test sets could technically overlap, this would lead to overfitting. Overfitting is an error that occurs when a model is very efficient in providing recommendations for a restricted set of data but is unable to generalize to new scenarios.
+
+There exist many different techniques to build the three subsets. We will cover the most widely used:
+
+\begin{itemize}
+\item \textbf{Holdout}: it is the simplest approach to data partitioning. After specifying a size to each subset, each user-item interaction is assigned to one of the three subsets randomly or following \textit{leave-k-out} logic.\\
+With leave-k-out, for each user, $k$ interactions are assigned to the validation set and $k$ interactions are assigned to the test set.
+\item \textbf{K-Fold}: it splits the original in $k$ \textit{folds}. Each fold is then used in turn as train, validation or test set. For this reason, the amount of iterations to evaluate the model is equal to the amount of folds.\\
+With K-Fold the recommender system is evaluated with multiple data partition samples, thus allowing a better estimation of the model performance.
+\end{itemize}
+
+
+
 \section{Evaluation Metrics}
 
 When designing or evaluating a recommender system, metrics a fundamental point to understand and use correctly. Depending on the characteristics that need to be evaluated, different sets of metrics have different meanings.
@@ -253,7 +283,7 @@ Error metrics are used to compare actual and predicted ratings, thus are general
 MAE is defined as
 \[ MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} |r_{u,i} - \hat{r}_{u,i}| \]
 where $U$ is the amount of users, $I$ is the amount of items, $r_{u,i}$ is the predicted rating of item $i$ by user $u$ and $r_{u,i}$ is the true rating of item $i$ by user $u$.\\
-As the formula suggests, MAE does not apply a different weight to outliers, large error values.\par
+As the formula suggests, MAE does not apply a different weight to outliers, large error values.\\
 To compute a weighted error, we define RMSE as
 \[ RMSE = \sqrt{\frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} (r_{u,i} - \hat{r}_{u,i})^2} \]
 
@@ -395,7 +425,7 @@ Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$, $S^{(0)} \geq 0$\;
 
 \section{Cross-Domain Recommender Systems}
 
-While the majority of recommender systems provide recommendation targeted only to a single topic, in recent years large digital service companies like Amazon or Google started providing recommendation across a very eterogeneous set of services. Amazon, for example, provides recommendations both for its e-commerce website, for items of all categories, and for music, movies and so on. In this scenario it may be useful to provide recommendation across different domains.\\
+While the majority of recommender systems provide recommendation targeted only to a single topic, in recent years large digital service companies like Amazon or Google started providing recommendation across a very eterogeneous set of services. Amazon, for example, provides recommendations both for its e-commerce website, for items of all categories, and for music, movies and so on. In this scenario it may be useful to provide recommendation across different domains.\par
 Cross-domain recommender systems aim to generate higher quality recommendations in a target domain by leveraging data coming from one more different source domains. In particular, knowledge acquired in a source domain can be transferred with some knowledge-transfer technique to the target domain.\\
 The use cases for such approach are mainly two. First, building a user profile across domains allows to generate bundle recommendation \cite{10.1007/s11257-012-9131-2, 10.1007/s11257-007-9042-9, 10.1007/s11257-012-9128-x}. For example it may be possible to recommend the movie transposition of a book the user bought and then to recommend the movie soundtrack. A recommendation like that can only be inferred by exploiting data from multiple domains. The second scenario is the one of the cold start problem \cite{10.1145/2645710.2645777, 10.1007/978-3-642-22362-4_26, 10.1145/2507157.2507206}. Auxiliary source domain may be able information which is missing in the target domain. Both of these scenarios assume that there are correspondences between user and item profiles across domains.\par
 A complete review of recommender systems was given by Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}. To introduce their properties and categories we mainly follow their formalization of the problem.
@@ -404,7 +434,6 @@ A complete review of recommender systems was given by Cremonesi \textit{et al} \
 \subsection{Domain Definitions}
 
 The first step in introducting cross-domain recommender systems, is defining the concept of domain. We can distinguish four different levels of domain definition:
-
 \begin{itemize}
 \item \textbf{Attribute level}: Two items are considered to belong to different domains if they differ in some attribute. For example two books could be considered of different domains if the differ by genre. The attribute level definition is too weak to be considered for cross-domain recommender systems.
 \item \textbf{Type level}: Two items are considered to belong to different domains if they share some attributes but differ by others. For example, TV series and movies belong to different domains, according to this definition.
@@ -445,7 +474,6 @@ U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \end{equation*}
 \end{itemize}
-
 \begin{figure}[hbt!]
   \centering
   \includegraphics[width=\textwidth]{pictures/domains-overlap}
@@ -456,26 +484,45 @@ U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \subsection{Systems Categories}
 
 Given the previous attributes, different cross-domain recommender system trends have been defined into a categorization by Loizou \cite{crossdomain-recsys-categorization}, which was later enhanced by Cremonesi \textit{et al} \cite{crossdomain-recsys-categorization} into four groups:
-
 \begin{itemize}
 \item As proposed by Lee \cite{10.1016/S0957-41740100034-3}, extract association rules from rating behavior in source domains, to be used in the target domain.
 \item As proposed by Cao \textit{et al.} \cite{10.5555/3104322.3104344} and Zhang \textit{et al.} \cite{10.5555/3023549.3023635}, learn inter-domain similarity based on ratings and correlation matrices.
 \item As proposed by Zhuang \textit{et al.} \cite{10.1109/TKDE.2009.205}, combine estimations of rating probability distributions in source domains, to be used in the target domain.
 \item As proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773, 10.1145/1553374.1553454} and Pan \textit{et al.} \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}, transfer knowledge from source domains to the target domain to reduce rating sparsity.
 \end{itemize}
-
-Furthermore, it is possible to make another type of distinction based on the approach of knowledge exploitation, into two macro-groups and sub-groups:
-
+Furthermore, it is possible to make another type of distinction based on the approach of knowledge exploitation, into two macro-groups and sub-groups.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
+  \caption{Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
 \begin{itemize}
 \item \textbf{Aggregating knowledge}
 \begin{itemize}
-\item \textit{Merging user preferences}: the aggregated knowledge consists of user preferences.
-\item \textit{Mediating user modeling data}: the aggregated knowledge consists of user models, such as similarities or neighbors.
-\item \textit{Combining recommendations}: the aggregated knowledge is composed of single-domain recommendations.
+\item \textbf{\textit{Merging user preferences}}: the aggregated knowledge consists of user preferences. Combining user profiles from multiple domains requires a single type of representation of user preferences.\\
+This is the most used approach for cross domain recommendations. According to multiple sources \cite{10.1007/s11257-012-9131-2, 10.1007/978-3-540-88564-1_40, 10.1007/978-3-540-73078-1_44, 10.1145/1297231.1297238, 10.1007/s00354-008-0041-0}, by having user overlap between multiple domains and significant information about user preference in each domain, it is possible to extract a more complete user profile, to provide better recommendations with higher accuracy, by combining the user preferences in a single multi-domain profile. The aggregation of user preferences is able to provide knowledge about user tastes that cannot be extracted from a single domain.\\
+According to others, aggregating user preferences is also beneficial to address the problem of cold-start \cite{10.1007/978-3-642-38844-6_25} and data sparsity \cite{10.1007/s11257-012-9128-x}.\\
+While merging user preferences as ratings has proved the be the most efficient approach of building a multi-domain user profile, in real scenarios it is rarely possible to achieve a common represantion for ratings and to provide a sufficient user overlap, thus, more recent methods have focused on aggregating user tags. According to Szomszor \textit{et al.} \cite{10.1145/1379092.1379103, 10.1007/978-3-540-88564-1_40} it is possible to obtain higher quality recommendations by aggregating and correlating user social tags between domains. Such approach does not require user overlap.
+\item \textbf{\textit{Mediating user modeling data}}: the aggregated knowledge consists of user models, such as similarities or neighbors.\\
+This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach will enrich the user model and allow to provide higher quality recommendations in each aggregated domain.\\
+For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach could be applied to item models.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
+  \caption{Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
+\item \textbf{\textit{Combining recommendations}}: the aggregated knowledge is composed of single-domain recommendations.\\
+In this approach, recommendations made in the source domains are used to enrich the recommendations in the target domain. Aggregating user recommendations requires both user and item overlap. While the recommendations in the single domains can be computed with different approaches, the challenge of this scenario is to compute weights for aggregation.
+\begin{figure}[hbt!]
+  \centering
+  \includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
+  \caption{Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\end{figure}
 \end{itemize}
 \item \textbf{Linking and transferring knowledge}:
 \begin{itemize}
-\item \textbf{\textit{Linking domains}}: source and target domains are linked by common knowledge, such as item attributes. This correspondences can either be directly identified between the single domains, or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
+\item \textbf{\textit{Linking domains}}: source and target domains are linked by common knowledge, such as item attributes.\\
+This correspondences can either be directly identified between the single domains, or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
 Chung \textit{et al.} \cite{10.1145/1282100.1282113} initially proposed an approach using item attributes directly to identify a bridge between domains, but since items are generally very heterogeneus, it may be difficult to find directly corresponding features. To address this problem, Loizou \cite{crossdomain-recsys-categorization} proposed to use Wikipedia as a universal vocabulary to express and relate user preferences across multiple domains.\\
 The known problem of both approaches is building said knowledge repositories. Cremonesi \textit{et al.} \cite{10.1007/978-1-4899-7637-6_27} observed that the majority of approaches with the goal of linking domains does not require user or item overlap, but only feature overlap between domains. It was also observed that no particular approach outperforms the others in a general scenario.
 \begin{figure}[hbt!]
@@ -483,13 +530,17 @@ The known problem of both approaches is building said knowledge repositories. Cr
   \includegraphics[width=0.8\textwidth]{pictures/linking-domains}
   \caption{Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
-\item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features. This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches. These new representations are obtained with various factorization algorithms. As for the previous approach, at least a feature overlap is strictly needed.
+\item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features.\\
+This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}. These new representations are obtained with various factorization algorithms. Like for the previous approach, at least a feature overlap is strictly needed.
 \begin{figure}[hbt!]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
   \caption{Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
-\item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.
+\item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.\\
+The base assumption of this approach is that similar domains share the population used to sample user preferences, even if there is no user or item overlap between them. For this reason it may be possible to find a correlation between domains of the preferences of groups of users for groups of items. This correlation is called \textit{rating pattern}. Thus, the rating pattern is the only information transferred from source domains to the target domain.\\
+The first approach to transfer the rating pattern between domains was proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773} and named \textit{codebook transfer}. Since then, several variants of codebook transfer have surfaced, all based on the same assumptions.\\
+Being the focus of this thesis for evaluation purposes, the details of the codebook transfer theoretical model and its extensions are addressed in \autoref{theoretical-model}.
 \begin{figure}[hbt!]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
@@ -497,11 +548,4 @@ The known problem of both approaches is building said knowledge repositories. Cr
 \end{figure}
 \end{itemize}
 \end{itemize}
-
-\begin{figure}[hbt!]
-  \centering
-  \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
-  \caption{Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
-\end{figure}
-
 Since in this thesis we evaluate the codebook transfer technique, we will focus on transferring knowledge and, in particular, on transferring rating patterns.
