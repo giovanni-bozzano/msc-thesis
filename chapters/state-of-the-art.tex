@@ -356,7 +356,7 @@ $F$ and $G$ can be initialized randomly or using some other clustering method, s
 
 \subsection{Orthogonal Non-Negative Matrix Tri-Factorizations (ONMTF)}
 
-Orthogonal non-negative matrix factorizations (ONMF) is a type of NMF that, given a metrix $X$ with shape $m \times n$, computes matrices $F$, with shape $m \times p$, and $G$, with shape $n \times p$, such that:
+Orthogonal non-negative matrix factorizations (ONMF) is a type of NMF that, given a matrix $X$ with shape $m \times n$, computes matrices $F$, with shape $m \times p$, and $G$, with shape $n \times p$, such that:
 \begin{equation*}
 X = FG^T
 \end{equation*}
@@ -402,7 +402,7 @@ X = FSG^T
 \end{equation*}
 The optimization problem is the following:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} ||X - FG||^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} ||X - F S G^T||^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
 \end{equation*}
 According to Ding \textit{et al} \cite{10.1145/1150402.1150420}, tri-factorization is capable of clustering rows and columns of the input matrix simultaneously.\\
 The rules for updating $F$, $G$ and $S$, are according to the following algorithm:
