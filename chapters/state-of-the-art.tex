@@ -73,7 +73,7 @@ A similarity function is mathematical tool to compute the similarity between two
 \begin{itemize}
 
 \item \textbf{Cosine similarity}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
-\[ S_{xy} = \frac{x \times y}{||x||\||y|| + h} \]
+\[ S_{xy} = \frac{x \times y}{\norm{x}\\norm{y} + h} \]
 where $h$ is the shrink term for normalization.
 This similarity measures the angle between n-dimensional vectors. Since the angle can vary between 1 and -1, $S_{xy} \in [-1, 1]$. If $S_{xy} = 1$ we have complete similarity (parallel vectors); if $S_{xy} = 0$, we have no similarity (orthogonal vectors) and if $S_{xy} = -1$ we have inverse similarity (parallel vectors with inverse direction).\\
 The cosine similarity is between the two most popular similarities used in recommender systems.
@@ -330,11 +330,11 @@ X = FG
 \end{equation*}
 by solving the optimization problem:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG||^2_F
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG}^2_F
 \end{equation*}
-where $||X - FG||^2_F$ is the Frobenius norm, defined as:
+where $\norm{X - FG}^2_F$ is the Frobenius norm, defined as:
 \begin{equation*}
-||X - FG||^2_F = \sum_{i,j} (X - FG)^2_{i,j}
+\norm{X - FG}^2_F = \sum_{i,j} (X - FG)^2_{i,j}
 \end{equation*}
 The standard NMF algorithm is the following:
 \vskip 0.7cm
@@ -362,11 +362,11 @@ X = FG^T
 \end{equation*}
 by solving the optimization problem:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG^T||^2_F, \quad \text{s.t.} \quad F^TF = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}^2_F, \quad \text{s.t.} \quad F^TF = I
 \end{equation*}
 Alternatively, for the $G$-orthogonal problem is:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} ||X - FG^T||^2_F, \quad \text{s.t.} \quad G^TG = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}^2_F, \quad \text{s.t.} \quad G^TG = I
 \end{equation*}
 The algorithms for ONMF are the following:
 \vskip 0.7cm
@@ -402,7 +402,7 @@ X = FSG^T
 \end{equation*}
 The optimization problem is the following:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} ||X - F S G^T||^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} \norm{X - F S G^T}^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
 \end{equation*}
 According to Ding \textit{et al} \cite{10.1145/1150402.1150420}, tri-factorization is capable of clustering rows and columns of the input matrix simultaneously.\\
 The rules for updating $F$, $G$ and $S$, are according to the following algorithm:
