@@ -38,13 +38,13 @@ Recommender systems often make use of common data structures, which can identifi
 \begin{itemize}
 
 \item \textbf{User-Content Matrix (UCM)}: Given a set of users $U$ and a set of user labels $L$, the UCM is a matrix with shape $|U| \times |L|$ where each row represents a user $u \in U$ and each column represents a label $l \in L$. Each cell $(u,l)$ represents the value of label $l$ of the user $u$. It can be a real, integer or binary value depending on the nature of the label. For example, to describe the user age, we could either have a single integer label, where each cell value would represent the age of the user, or multiple binary labels representing different age brackets, where each cell value would be:
-\begin{equation}
+\begin{equation*}
   (u,l)=
   \begin{cases}
     0, & \text{if}\ u\ \text{belongs to the age bracket}\ l\\
     1, & \text{otherwise}
   \end{cases}
-\end{equation}
+\end{equation*}
 The approach of splitting a numerical label into multiple categorical labels is called one-hot encoding.\\
 The UCM is generally built in content based recommendation approaches.
 
@@ -73,7 +73,7 @@ A similarity function is mathematical tool to compute the similarity between two
 \begin{itemize}
 
 \item \textbf{Cosine similarity}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
-\[ S_{xy} = \frac{x \times y}{\norm{x}\\norm{y} + h} \]
+\[ S_{xy} = \frac{x \times y}{\norm{x} \norm{y} + h} \]
 where $h$ is the shrink term for normalization.
 This similarity measures the angle between n-dimensional vectors. Since the angle can vary between 1 and -1, $S_{xy} \in [-1, 1]$. If $S_{xy} = 1$ we have complete similarity (parallel vectors); if $S_{xy} = 0$, we have no similarity (orthogonal vectors) and if $S_{xy} = -1$ we have inverse similarity (parallel vectors with inverse direction).\\
 The cosine similarity is between the two most popular similarities used in recommender systems.
@@ -158,7 +158,7 @@ Items with the highest ratings, excluding items in $URM_u$, are recommended to u
 
 \subsection{Model-based Collaborative Filtering}
 
-Model-based collaborative filtering recommender systems exploit the URM with a machine learning model to provide recommendations. There are many different ways to do so and in this thesis we will cover matrix factorization in \autoref{matrix-factorization} and factorization machines in \autoref{factorization-machines}.
+Model-based collaborative filtering recommender systems exploit the URM with a machine learning model to provide recommendations. There are many different ways to do so and in this thesis we will cover matrix factorization in \autoref{sc:matrix-factorization} and factorization machines in \autoref{sc:factorization-machines}.
 
 
 \subsection{Hybrid}
@@ -168,7 +168,7 @@ Different recommender systems have different strengths and weaknesses. Many diff
 
 
 \section{Matrix Factorization}
-\label{matrix-factorization}
+\label{sc:matrix-factorization}
 
 Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009, it became a very popular approach in recommender systems.\par
 The assumption of matrix factorization is that it is possible to extract latent factors, to characterize users and items, from the rating pattern. For items, these factors represent an alternative to the human generated features. For users, the factors represent how much a user prefers items with a high score in the corresponding factor. For this reason, we say that matrix factorization is an approach for latent factors models.\par
@@ -195,7 +195,7 @@ where the costant $\lambda$ determines the extent of regularization.
 
 
 \section{Factorization Machines (FM)}
-\label{factorization-machines}
+\label{sc:factorization-machines}
 
 Factorization machines \cite{10.1109/ICDM.2010.127} are a relatively new technique of collaborative filtering with side information proposed by Steffen Rendle in 2010. Since they are a general-purpose supervised learning algorithm, they can be adapted to work with recommender systems.\\
 Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in \mathbb{R}^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM models all possible interactions between variables in $\bar{x}$.\\
@@ -281,7 +281,7 @@ Finally, nDCG is defined as
 
 Error metrics are used to compare actual and predicted ratings, thus are generally used for rating prediction. The most commonly used error metrics are Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
 MAE is defined as
-\[ MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} |r_{u,i} - \hat{r}_{u,i}| \]
+\[ MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} \abs{r_{u,i} - \hat{r}_{u,i}} \]
 where $U$ is the amount of users, $I$ is the amount of items, $r_{u,i}$ is the predicted rating of item $i$ by user $u$ and $r_{u,i}$ is the true rating of item $i$ by user $u$.\\
 As the formula suggests, MAE does not apply a different weight to outliers, large error values.\\
 To compute a weighted error, we define RMSE as
@@ -311,11 +311,12 @@ To apply K-Means clustering it is necessary to define the number of target clust
 \item The centroid is moved by computing the mean of the distances between it and all the elements assigned to it.
 \item The process is repeated until the the centroid are only slightly moved or until a maximum amount of iterations is reached.
 \end{itemize}
-\begin{figure}[htbp]
-	\begin{center}
-		\includegraphics[width=\textwidth]{pictures/k-means-clustering}
-		\caption{Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
-	\end{center}
+\begin{figure}[htb]
+	\centering
+	\includegraphics[width=\textwidth]{pictures/k-means-clustering}
+	\caption
+	[Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
+    {\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
 \end{figure}
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
 
@@ -330,11 +331,11 @@ X = FG
 \end{equation*}
 by solving the optimization problem:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG}^2_F
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG}_F^2
 \end{equation*}
-where $\norm{X - FG}^2_F$ is the Frobenius norm, defined as:
+where $\norm{X - FG}_F^2$ is the Frobenius norm, defined as:
 \begin{equation*}
-\norm{X - FG}^2_F = \sum_{i,j} (X - FG)^2_{i,j}
+\norm{X - FG}_F^2 = \sum_{i,j} (X - FG)_{i,j}^2
 \end{equation*}
 The standard NMF algorithm is the following:
 \vskip 0.7cm
@@ -362,11 +363,11 @@ X = FG^T
 \end{equation*}
 by solving the optimization problem:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}^2_F, \quad \text{s.t.} \quad F^TF = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}_F^2, \quad \text{s.t.} \quad F^TF = I
 \end{equation*}
 Alternatively, for the $G$-orthogonal problem is:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}^2_F, \quad \text{s.t.} \quad G^TG = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}_F^2, \quad \text{s.t.} \quad G^TG = I
 \end{equation*}
 The algorithms for ONMF are the following:
 \vskip 0.7cm
@@ -377,8 +378,8 @@ The algorithms for ONMF are the following:
 \Output{$(F,G) \geq 0$ : A rank-$r$ NMF of $X \approx FG^T$.}
 Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
 \For{$t \gets 1$ \KwTo $max\_iteration$}{
-  $G^{(t)} \gets G^{(t - 1)} \odot \frac{X^T F^{(t - 1)}}{G^{(t - 1)} (F^{(t - 1)})^T F^{(t - 1)}}$\;
-  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)}}{F^{(t - 1)} (F^{(t - 1)})^T X G^{(t)}}}$\;
+  $G^{(t)} \gets G^{(t - 1)} \odot \frac{X^T F^{(t - 1)}}{G^{(t - 1)} [F^{(t - 1)}]^T F^{(t - 1)}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)}}{F^{(t - 1)} [F^{(t - 1)}]^T X G^{(t)}}}$\;
 }
 \caption{The algorithm for $F$-orthogonal ONMF}
 \end{algorithm}
@@ -390,8 +391,8 @@ Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
 \Output{$(F,G) \geq 0$ : A rank-$r$ NMF of $X \approx FG^T$.}
 Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$\;
 \For{$t \gets 1$ \KwTo $max\_iteration$}{
-  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)}}{G^{(t - 1)} (G^{(t - 1)})^T X^T F^{(t - 1)}}}$\;
-  $F^{(t)} \gets F^{(t - 1)} \odot \frac{X (G^{(t)})^T}{F^{(t - 1)} (G^{(t)})^T G^{(t)}}$\;
+  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)}}{G^{(t - 1)} [G^{(t - 1)}]^T X^T F^{(t - 1)}}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \frac{X [G^{(t)}]^T}{F^{(t - 1)} [G^{(t)}]^T G^{(t)}}$\;
 }
 \caption{The algorithm for $G$-orthogonal ONMF}
 \end{algorithm}
@@ -402,7 +403,7 @@ X = FSG^T
 \end{equation*}
 The optimization problem is the following:
 \begin{equation*}
-\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} \norm{X - F S G^T}^2_F, \quad \text{s.t.} \quad F^TF = I, G^TG = I
+\min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+, S \in \mathbb{R}^{p \times r}_+} \norm{X - F S G^T}_F^2, \quad \text{s.t.} \quad F^TF = I, G^TG = I
 \end{equation*}
 According to Ding \textit{et al} \cite{10.1145/1150402.1150420}, tri-factorization is capable of clustering rows and columns of the input matrix simultaneously.\\
 The rules for updating $F$, $G$ and $S$, are according to the following algorithm:
@@ -414,9 +415,9 @@ The rules for updating $F$, $G$ and $S$, are according to the following algorith
 \Output{$(F,G,S) \geq 0$ : A rank-$r$ NMF of $X \approx FSG^T$.}
 Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$, $S^{(0)} \geq 0$\;
 \For{$t \gets 1$ \KwTo $max\_iteration$}{
-  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)} S^{(t - 1)}}{G^{(t - 1)} (G^{(t - 1)})^T X^T F^{(t - 1)} S^{(t - 1)}}}$\;
-  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)} (S^{(t - 1)})^T}{F^{(t - 1)} (F^{(t - 1)})^T X G^{(t)} (S^{(t - 1)})^T}}$\;
-  $S^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{(F^{(t)})^T X G^{(t)}}{(F^{(t)})^T F^{(t)} S^{(t - 1)} (G^{(t)})^T G^{(t)}}}$\;
+  $G^{(t)} \gets G^{(t - 1)} \odot \sqrt{\frac{X^T F^{(t - 1)} S^{(t - 1)}}{G^{(t - 1)} [G^{(t - 1)}]^T X^T F^{(t - 1)} S^{(t - 1)}}}$\;
+  $F^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{X G^{(t)} [S^{(t - 1)}]^T}{F^{(t - 1)} (F^{(t - 1)})^T X G^{(t)} [S^{(t - 1)}]^T}}$\;
+  $S^{(t)} \gets F^{(t - 1)} \odot \sqrt{\frac{[F^{(t)}]^T X G^{(t)}}{[F^{(t)}]^T F^{(t)} S^{(t - 1)} [G^{(t)}]^T G^{(t)}}}$\;
 }
 \caption{The algorithm for ONMTF}
 \end{algorithm}
@@ -474,10 +475,12 @@ U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \end{equation*}
 \end{itemize}
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=\textwidth]{pictures/domains-overlap}
-  \caption{Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 
 
@@ -491,10 +494,12 @@ Given the previous attributes, different cross-domain recommender system trends 
 \item As proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773, 10.1145/1553374.1553454} and Pan \textit{et al.} \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}, transfer knowledge from source domains to the target domain to reduce rating sparsity.
 \end{itemize}
 Furthermore, it is possible to make another type of distinction based on the approach of knowledge exploitation, into two macro-groups and sub-groups.
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
-  \caption{Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \begin{itemize}
 \item \textbf{Aggregating knowledge}
@@ -506,17 +511,21 @@ While merging user preferences as ratings has proved the be the most efficient a
 \item \textbf{\textit{Mediating user modeling data}}: the aggregated knowledge consists of user models, such as similarities or neighbors.\\
 This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach will enrich the user model and allow to provide higher quality recommendations in each aggregated domain.\\
 For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach could be applied to item models.
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
-  \caption{Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Combining recommendations}}: the aggregated knowledge is composed of single-domain recommendations.\\
 In this approach, recommendations made in the source domains are used to enrich the recommendations in the target domain. Aggregating user recommendations requires both user and item overlap. While the recommendations in the single domains can be computed with different approaches, the challenge of this scenario is to compute weights for aggregation.
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
-  \caption{Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]  
+  {\protect\raggedright Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \end{itemize}
 \item \textbf{Linking and transferring knowledge}:
@@ -525,26 +534,32 @@ In this approach, recommendations made in the source domains are used to enrich 
 This correspondences can either be directly identified between the single domains, or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
 Chung \textit{et al.} \cite{10.1145/1282100.1282113} initially proposed an approach using item attributes directly to identify a bridge between domains, but since items are generally very heterogeneus, it may be difficult to find directly corresponding features. To address this problem, Loizou \cite{crossdomain-recsys-categorization} proposed to use Wikipedia as a universal vocabulary to express and relate user preferences across multiple domains.\\
 The known problem of both approaches is building said knowledge repositories. Cremonesi \textit{et al.} \cite{10.1007/978-1-4899-7637-6_27} observed that the majority of approaches with the goal of linking domains does not require user or item overlap, but only feature overlap between domains. It was also observed that no particular approach outperforms the others in a general scenario.
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/linking-domains}
-  \caption{Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features.\\
 This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}. These new representations are obtained with various factorization algorithms. Like for the previous approach, at least a feature overlap is strictly needed.
-\begin{figure}[hbt!]
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
-  \caption{Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.\\
 The base assumption of this approach is that similar domains share the population used to sample user preferences, even if there is no user or item overlap between them. For this reason it may be possible to find a correlation between domains of the preferences of groups of users for groups of items. This correlation is called \textit{rating pattern}. Thus, the rating pattern is the only information transferred from source domains to the target domain.\\
 The first approach to transfer the rating pattern between domains was proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773} and named \textit{codebook transfer}. Since then, several variants of codebook transfer have surfaced, all based on the same assumptions.\\
-Being the focus of this thesis for evaluation purposes, the details of the codebook transfer theoretical model and its extensions are addressed in \autoref{theoretical-model}.
-\begin{figure}[hbt!]
+Being the focus of this thesis for evaluation purposes, the details of the codebook transfer theoretical model and its extensions are addressed in \autoref{ch:theoretical-model}.
+\begin{figure}[hbt]
   \centering
   \includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
-  \caption{Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+  \caption
+  [Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+  {\protect\raggedright Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \end{itemize}
 \end{itemize}

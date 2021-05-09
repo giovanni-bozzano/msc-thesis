@@ -1,1 +1,228 @@
 \chapter{Applied Model}
+\label{ch:applied-model}
+
+In this chapter we will cover the model implementations of CBT and LKT-FM. Both models are implemented using the Python programming language version 3.6 and multiple libraries, such as \textit{Numpy} \cite{10.1109/MCSE.2011.37} and \textit{Scipy} \cite{scipy} for matrix computation and \textit{Scikit-learn} \cite{10.5555/1953048.2078195} to compute KMeans. The experiments are built upon the RecSys@Polimi framework by Maurizio Ferrari Dacrema \cite{recsys-polimi-framework}, which offers dataset readers, baseline recommender systems, similarity computation and evaluation metrics.
+
+
+
+\section{Hyperparameter Tuning}
+
+To perform experiments, hyperparameters for each model are optimized using a wrapper of Scikit-optimize \cite{10.5281/zenodo.1170575} for bayesian optimization.\\
+Bayesian optimization \cite{bayesian-optimization} is a method to optimize black-box functions that take long time to evaluate by building a surrogate for the objective and quantifying the uncertainty in that surrogate using a bayesian machine learning technique called \textit{Gaussian process regression}. It then uses an acquisition function defined from this surrogate to decide where to sample in the provided hyperparameter ranges.\\
+The wrapper accepts as input a set of hyperparameter ranges, an amount of cases, which is the number of runs of training and evaluation to perform, an amount of random starts, which is the numbers of times the optimization process will initialize the hyperparameters randomly within the provided range, and a target evaluation metric, used to perform comparison between runs.\\
+Each training and evaluation run during hyperparameter tuning is performed using a training dataset and a validation dataset, which has the same properties as the final test dataset while they are disjoint.\\
+Further details about the hyperparameters and other tuning variables are covered in the single experiments in \autoref{ch:experiments}.
+
+
+
+\section{CBT}
+
+
+\subsection{Codebook Construction}
+
+Since ONMTF does not monotically decrease the function, we opted for and early stopping approach to ensure a suitable amount of iterations.\\
+The code for ONMFT is as follows:
+\begin{minted}[breaklines]{python}
+import numpy as np
+from numpy.linalg import multi_dot
+from sklearn.cluster import KMeans
+
+def initialize(self, X_s, k, l):
+
+    # Source user-rating matrix
+    self.X_s = X_s
+    self.m, self.n = X.shape
+    # Amount of codebook user clusters
+    self.k = k
+    # Amount of codebook item clusters
+    self.l = l
+    # ONMTF factorization matrices
+    self.F = None
+    self.G = None
+    self.S = None
+    
+    # Initialize the factorization matrices
+    _initialize_clustering()
+
+def update():
+    _update_G()
+    _update_F()
+    _update_S()
+    return _loss()
+
+def _initialize_clustering():
+    """
+    Initialize F, G, and S latent matrices according to Ding et al. 2006:
+    1. G is obtained via k means clustering of columns of X_s. G = G + 0.2
+    2. F is obtained via k means clustering of rows of X_s. F = F + 0.2
+    3. S is obtained via S = F.T @ X_s @ G
+    """
+    self.G = _cluster(self.X_s.T, self.l)
+    self.G += 0.2
+    self.F = _cluster(self.X_s, self.k)
+    self.F += 0.2
+    self.S = multi_dot([self.F.T, self.X_s, self.G])
+    
+def _cluster(X, k):
+    kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
+    labels = set(kmeans.labels_)
+    labeled_features = kmeans.labels_
+    return np.array([np.multiply([i == k for i in labeled_features], 1) for k in labels]).T.astype(np.float64)
+
+def _update_G():
+    enum = multi_dot([self.X_s.T, self.F, self.S])
+    denom = multi_dot([self.G, self.G.T, self.X_s.T, self.F, self.S])
+    self.G *= np.nan_to_num(np.sqrt(enum / denom))
+
+def _update_F():
+    enum = multi_dot([self.X_s, self.G, self.S.T])
+    denom = multi_dot([self.F, self.F.T, self.X_s, self.G, self.S.T])
+    self.F *= np.nan_to_num(np.sqrt(enum / denom))
+
+def _update_S():
+    enum = multi_dot([self.F.T, self.X_s, self.G])
+    denom = multi_dot([self.F.T, self.F, self.S, self.G.T, self.G])
+    self.S *= np.nan_to_num(np.sqrt(enum / denom))
+
+def _loss():
+    FSGt = multi_dot([self.F, self.S, self.G.T])
+    loss = np.linalg.norm(self.X_s - FSGt)
+    return loss
+\end{minted}
+where the \textit{update} function is called by the framework with an early stopping approach.\\
+The matrix binarization and codebook construction is then performed as follows:
+\begin{minted}[breaklines]{python}
+def codebook_construction(X_s, F, G):
+
+    F = _binarize_matrix(F)
+    G = _binarize_matrix(G)
+    
+    sum_vector = np.ones(X.shape)
+    enum = multi_dot([F.T, X_s, G])
+    denom = multi_dot([F.T, sum_vector, G])
+    
+    B = np.nan_to_num(enum / denom)
+    return B
+    
+def _binarize_matrix(X):
+    """
+    Binarize input matrix with 0 and 1
+    """
+    for i in range(X.shape[0]):
+        # Find largest score in the row
+        max_score = sorted(list(X[i, :])).pop()
+        # Replace all other scores into 0
+        X[i, :] = np.where(X[i, :] == max_score, X[i, :], 0)
+        # Replace largest score with 1
+        X[i, :] = np.where(X[i, :] == 0, X[i, :], 1)
+    return X_copy
+\end{minted}
+
+
+\subsection{Codebook Transfer}
+
+The codebook transfer technique provided in \autoref{sc:codebook-transfer} monotically decreases the loss function. Thus it is enough to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
+Since the algorithm always converges to a local minimum, it is possible to run it several times to further minimize the loss function in alternative local minima.\\
+The code for codebook transfer is as follows:
+\begin{minted}[breaklines]{python}
+import numpy as np
+from numpy.linalg import multi_dot
+
+def initialize(X_t, B, transfer_attempts, maximum_fill_iterations):
+
+    # Target user-rating matrix  to be filled
+    self.X_t = X_t
+    self.p, self.q = X_t.shape
+    # Codebook
+    self.B = B
+    self.k, self.l = B.shape
+    # Amount of searches for different local minima to perform
+    self.transfer_attempts = transfer_attempts
+    # Maximum iterations to perform before the attempt is forced to stop
+    self.maximum_fill_iterations = maximum_fill_iterations
+    # Masking matrix
+    self.W = None
+    self.W_flipped = None
+    # Factorization matrices
+    self.U = None
+    self.V = None
+    self.U_best = None
+    self.V_best = None
+    # Best loss until now
+    self.loss_best = np.inf
+    
+    # Initialize the masking matrix
+    _generate_W()
+    
+    # Search local minima
+    for attempt in range(self.transfer_attempts):
+    
+        _initialize_U()
+        _initialize_V()
+        iteration_loss_best = np.inf
+        
+        for i in range(self.maximum_fill_iterations):
+            _update_U()
+            _update_V()
+            # Remove the filled values from the generated target matrix and compare it to the original one
+            loss = np.linalg.norm((self.X_t - multi_dot([self.U, self.B, self.V.T])) * self.W)
+            # The loss function is monotone, so stop if we have reached the local minimum
+            if loss == iteration_loss_best:
+                break
+            iteration_loss_best = loss
+
+        # Generate multiple local minima and keep the best one
+        if iteration_loss_best < self.loss_best:
+            self.loss_best = iteration_loss_best
+            self.U_best = self.U
+            self.V_best = self.V
+
+def fill_matrix():
+    prediction = self.W_flipped * multi_dot([self.U_best, self.B, self.V_best.T])
+    X_t_filled = self.W * self.URM_target_train + prediction
+    return X_t_filled
+
+def _generate_W():
+    self.W = np.zeros((self.p, self.q))
+    self.W = np.divide(self.URM_target_train, self.URM_target_train)
+    self.W = np.nan_to_num(self.W)
+    self.W_flipped = 1 - self.W
+
+def _initialize_U():
+    self.U = np.zeros((self.p, self.k))
+
+def _initialize_V():
+    self.V = np.zeros((self.q, self.l))
+    for i in range(self.q):
+        j = np.random.randint(self.l)
+        self.V[i, j] = 1.0
+
+def _update_U():
+    BV_t = np.dot(self.B, self.V.T)
+    for i in range(self.p):
+        loss = np.ndarray(self.k)
+        for j in range(self.k):
+            loss[j] = np.linalg.norm((self.X_t[i, :] - BV_t[j, :]) * self.W[i, :])
+        j = np.argmin(loss)
+        self.U[i, :] = 0.0
+        self.U[i, j] = 1.0
+
+def _update_V():
+    UB = np.dot(self.U, self.B)
+    for i in range(self.q):
+        loss = np.ndarray(self.l)
+        for j in range(self.l):
+            loss[j] = np.linalg.norm((self.X_t[:, i] - UB[:, j]) * self.W[:, i])
+        j = np.argmin(loss)
+        self.V[i, :] = 0.0
+        self.V[i, j] = 1.0
+\end{minted}
+
+
+\section{LKT-FM}
+
+
+\subsection{Codebook Construction}
+
+
+\subsection{Codebook Transfer}

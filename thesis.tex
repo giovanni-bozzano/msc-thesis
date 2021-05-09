@@ -11,8 +11,11 @@
 \usepackage{hyperref}
 \usepackage{float}
 \usepackage[ruled,vlined]{algorithm2e}
+\usepackage[cache=false]{minted}
 
+\newcommand{\abs}[1]{\left\lvert#1\right\rvert}
 \newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\renewcommand{\algorithmautorefname}{Algorithm}
 
 % Equal margins when setting "twoside,openright"
 \setlength\oddsidemargin{\dimexpr(\paperwidth-\textwidth)/2 - 1in\relax}
