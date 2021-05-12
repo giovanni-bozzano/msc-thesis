@@ -1,12 +1,12 @@
 \chapter{Theoretical Model}
 \label{ch:theoretical-model}
 
-In this chapter we will cover the structure of the codebook transfer model, as provided by Li \textit{et al.} \cite{10.5555/1661445.1661773}, and explore the variant proposed by Zang \textit{et al.}, called LKT-FM \cite{10.1007/978-3-319-71246-8_39}.
+In this chapter we cover the structure of the codebook transfer model, as provided by Li \textit{et al.} \cite{10.5555/1661445.1661773}, and explore the variant proposed by Zang \textit{et al.}, called LKT-FM \cite{10.1007/978-3-319-71246-8_39}.
 
 
 \section{Codebook Transfer (CBT)}
 
-CBT is a cross-domain recommender system aiming to transfer the rating pattern from a source domain to a target domain, to improve data quantity and provide better recommendations in the target domain. According to Li \textit{et al.} \cite{10.5555/1661445.1661773} CBT "can transfer useful knowledge from the auxiliary rating matrix in some other domains to remedy the sparsity of the rating matrix in a target domain".\\
+CBT is a cross-domain recommender system aiming to transfer the rating pattern from a source domain to a target domain, to improve data quantity and provide better recommendations in the target domain. According to Li \textit{et al.} \cite{10.5555/1661445.1661773} CBT \textquote{can transfer useful knowledge from the auxiliary rating matrix in some other domains to remedy the sparsity of the rating matrix in a target domain}.\\
 Due to the nature of the model, we can distinguish three phases: codebook construction, codebook transfer and top-k recommendation.
 
 
@@ -19,10 +19,10 @@ While no user or item overlap is not required, CBT has only requirement for inpu
 \subsection{Codebook Construction}
 
 Codebook construction exploits the assumption that, in CF, users with similar tastes or items with similar attributes behave similarly. For this reason, it is possible to compute user and item clusters to obtain a much more compact user-rating matrix of the source domain, which represents the groups behavior. The obtained compact user-rating matrix is called \textit{codebook}.\\
-Li \textit{et al.} provided the following definition for \textit{codebook}:\\
-\begin{quotation}
-"Codebook is a $k \times l$ matrix which compresses the cluster-level user-item rating patterns of $k$ user clusters and $l$ item clusters in the original rating matrix."
-\end{quotation}
+Li \textit{et al.} provided the following definition for \textit{codebook}:
+\begin{displayquote}
+\enquote{Codebook is a $k \times l$ matrix which compresses the cluster-level user-item rating patterns of $k$ user clusters and $l$ item clusters in the original rating matrix.}
+\end{displayquote}
 Once the codebook has been computed, an approximation of the original user-rating matrix can be retrieved.\par
 The codebook construction has to be performed by clustering users and items simultaneously. The authors adopted ONMTF \cite{10.1145/1150402.1150420} as the clustering algorithm. Thus, given a source user-rating matrix $X_S$ with shape $n \times m$ and a target codebook size $k \times l$, the optimization problem is the following:
 \begin{equation}
@@ -105,29 +105,29 @@ The minimization problem for codebook transfer is defined as follows:
 \end{equation}
 where $U_T$ and $V_T$ are the matrices of cluster membership, respectively for users and items, such that:
 \begin{equation}
-  [U_T]_{ij} =
-  \begin{cases}
-    0, & \text{if user}\ [X_T]_{i}\ \text{belongs to cluster}\ j\\
-    1, & \text{otherwise}
-  \end{cases}
-  , \quad \text{s.t.} \quad i \in \{1,p\}, j \in \{1,k\}
+[U_T]_{ij} =
+\begin{cases}
+0, & \text{if user}\ [X_T]_{i}\ \text{belongs to cluster}\ j\\
+1, & \text{otherwise}
+\end{cases}
+, \quad \text{s.t.} \quad i \in \{1,p\}, j \in \{1,k\}
 \end{equation}
 \begin{equation}
-  [V_T]_{ij} =
-  \begin{cases}
-    0, & \text{if item}\ [X_T]_{i}\ \text{belongs to cluster}\ j\\
-    1, & \text{otherwise}
-  \end{cases}
-  , \quad \text{s.t.} \quad i \in \{1,q\}, j \in \{1,l\}
+[V_T]_{ij} =
+\begin{cases}
+0, & \text{if item}\ [X_T]_{i}\ \text{belongs to cluster}\ j\\
+1, & \text{otherwise}
+\end{cases}
+, \quad \text{s.t.} \quad i \in \{1,q\}, j \in \{1,l\}
 \end{equation}
 and $W$ is the masking matrix with shape $p \times q$ such that:
 \begin{equation}
-  W_{ij} =
-  \begin{cases}
-    0, & \text{if}\ [X_T]_{ij}\ \text{is not rated}\\
-    1, & \text{otherwise}
-  \end{cases}
-  , \quad \text{s.t.} \quad i \in \{1,p\}, j \in \{1,q\}
+W_{ij} =
+\begin{cases}
+0, & \text{if}\ [X_T]_{ij}\ \text{is not rated}\\
+1, & \text{otherwise}
+\end{cases}
+, \quad \text{s.t.} \quad i \in \{1,p\}, j \in \{1,q\}
 \end{equation}
 Once $U_T$ and $V_T$ have been obtained, it is possible to expand the codebook and fill the target user-rating matrix as follows:
 \begin{equation}

@@ -1,18 +1,24 @@
 \chapter{State of the Art}
+\label{ch:state-of-the-art}
 
 In this chapter we describe the state of the art of recommender systems.\\
-In the first section we start from the basic principles of recommender systems, covering the standard techniques, such as content-based, collaborative and hybrid recommender systems. After that, we will cover the matrix factorization model.\\
-In the second section we will cover the metrics used to evaluate datasets and recommender systems results.\\
-The third sections describes the state of the art of knowledge transfer techniques used in recommender systems.\\
-The fourth section describes clustering techniques and their use in recommender systems.
+In the first section we start from the basic principles of recommender systems, describing their elementary properties.\\
+After that, in the second section, we cover the standard techniques, such as content-based, collaborative and hybrid recommender systems.\\
+In the third and fourth sections, we cover the matrix factorization model and factorization machines.\\
+The fifth section covers the basic properties and usage of datasets.\\
+The sixth section describes evaluation metrics and their use cases.\\
+In the seventh sections we describe the main clustering techniques and their use in recommender systems.\\
+Finally, in the eighth section we describe the state of the art of knowledge transfer techniques used in recommender systems.
 
 
 
-\section{Basic principles of Recommender Systems}
+\section{Basic Principles of Recommender Systems}
 
-In this section we will start by giving a brief definition of recommender systems and the problems they are faced with.\\
-The most accurate definition of modern recommender systems can be found in Burke's statement:\\
-"Any system that produces individualized recommendations as output or has the effect of guiding the user in a personalized way to interesting or useful objects in a large space of possible options." (Burke, 2002)
+In this section we start by providing a brief definition of recommender systems and the problems they are faced with.
+The most accurate definition of modern recommender systems can be found in Burke's statement:
+\begin{displayquote}[Burke, 2002 \cite{10.1007/s10844-018-0530-7}]
+\enquote{Any system that produces individualized recommendations as output or has the effect of guiding the user in a personalized way to interesting or useful objects in a large space of possible options.}
+\end{displayquote}
 
 
 \subsection{Recommender Systems Tasks}
@@ -24,9 +30,8 @@ Rating prediction consists in providing a computed rating for each user unrated 
 
 \subsection{Types of Feedback}
 
-Since recommender systems can leverage historical data and user profiles, it is important to distinguish two types of feedback.
-Explicit feedback are clear and numerical values of how much a user liked or disliked an item he interacted with.
-While explicit feedback is the most accurate indicator of user preferences and, for this reason, it makes the recommendation task easier, they are usually hard to obtain from users, since a user input is required. Additionally, explicit feedback can easily be user biased, as different users could value a numeric rating differently.\\
+Since recommender systems can leverage historical data and user profiles, it is important to distinguish two types of feedback.\\
+Explicit feedback are clear and numerical values of how much a user liked or disliked an item he interacted with. While explicit feedback is the most accurate indicator of user preferences and, for this reason, it makes the recommendation task easier, they are usually hard to obtain from users, since a user input is required. Additionally, explicit feedback can easily be user biased, as different users could value a numeric rating differently.\\
 Implicit feedback is identified as the user interaction with an item. For example, the action of listening to a song on a streaming service is considered implicit feedback.
 Implicit feedback cannot differentiate between positive and negative feedback and as such it is always available but considered less reliable than explicit ratings.
 
@@ -34,73 +39,72 @@ Implicit feedback cannot differentiate between positive and negative feedback an
 \subsection{Data Structures}
 
 Recommender systems often make use of common data structures, which can identified in the following matrices:
-
 \begin{itemize}
-
 \item \textbf{User-Content Matrix (UCM)}: Given a set of users $U$ and a set of user labels $L$, the UCM is a matrix with shape $|U| \times |L|$ where each row represents a user $u \in U$ and each column represents a label $l \in L$. Each cell $(u,l)$ represents the value of label $l$ of the user $u$. It can be a real, integer or binary value depending on the nature of the label. For example, to describe the user age, we could either have a single integer label, where each cell value would represent the age of the user, or multiple binary labels representing different age brackets, where each cell value would be:
 \begin{equation*}
-  (u,l)=
-  \begin{cases}
-    0, & \text{if}\ u\ \text{belongs to the age bracket}\ l\\
-    1, & \text{otherwise}
-  \end{cases}
+(u,l)=
+\begin{cases}
+0, & \text{if}\ u\ \text{belongs to the age bracket}\ l\\
+1, & \text{otherwise}
+\end{cases}
 \end{equation*}
 The approach of splitting a numerical label into multiple categorical labels is called one-hot encoding.\\
 The UCM is generally built in content based recommendation approaches.
-
 \item \textbf{Item-Content Matrix (ICM)}: Given a set of items $I$ and a set of item labels $L$, the ICM is a matrix with shape $|I| \times |L|$ where each row represents an item $i \in I$ and each column represents a label $l \in L$. Each cell $(i,l)$ represents the value of label $l$ of the item $i$. It can be a real, integer or binary value depending on the nature of the label.\\
 Similarly to the UCM, the ICM is generally built in content based recommendation approaches.
-
 \item \textbf{Similarity Matrix}: Given a set of items $I$, the similarity matrix is a matrix with shape $|I| \times |I|$ where each row $i_r$ and column $i_c$ represent an item $i \in I$ and each cell represent the similarity between $i_r$ and $i_c$. The same structure is used for user similarity.
-
 \item \textbf{User-Rating Matrix (URM)}: Given a set of users $U$ and a set of items $I$, the URM is a matrix with shape $|U| \times |I|$ where each row represents a user $i \in I$ and each column represents an item $i \in I$. Each cell $(u,i)$ represents the value of the rating of the item $i$ by user $u$. It can be a real, integer or binary value depending on the nature of the feedback. For example, in the scenario of explicit feedback, each cell would have a real or integer value, usually with upper and lower bounds, while in the scenario of an implicit feedback, each cell value would be:\\
-\begin{equation}
-  (u,l)=
-  \begin{cases}
-    0, & \text{if}\ u\ \text{interacted with item}\ i\\
-    1, & \text{otherwise}
-  \end{cases}
-\end{equation}
+\begin{equation*}
+(u,l)=
+\begin{cases}
+0, & \text{if}\ u\ \text{interacted with item}\ i\\
+1, & \text{otherwise}
+\end{cases}
+\end{equation*}
 The URM is generally built in collaborative filtering recommendation approaches.
-
 \end{itemize}
 
 
 \subsection{Similarities}
 
 A similarity function is mathematical tool to compute the similarity between two entities represented in a space, as a numerical value. In the field of recommender systems similarity functions are often used to extract similar entities from a dataset, given a target user or item. It is then important to mention and describe the commonly used ones.
-
 \begin{itemize}
-
 \item \textbf{Cosine similarity}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
-\[ S_{xy} = \frac{x \times y}{\norm{x} \norm{y} + h} \]
+\begin{equation*}
+S_{xy} = \frac{x \times y}{\norm{x} \norm{y} + h}
+\end{equation*}
 where $h$ is the shrink term for normalization.
 This similarity measures the angle between n-dimensional vectors. Since the angle can vary between 1 and -1, $S_{xy} \in [-1, 1]$. If $S_{xy} = 1$ we have complete similarity (parallel vectors); if $S_{xy} = 0$, we have no similarity (orthogonal vectors) and if $S_{xy} = -1$ we have inverse similarity (parallel vectors with inverse direction).\\
 The cosine similarity is between the two most popular similarities used in recommender systems.
-
 \item \textbf{Pearson correlation}: given two random variables $X$ and $Y$, the Pearson correlation can be computed as follows:
-\[ \rho_{X,Y} = \frac{cov(X,Y)}{\sigma_x \sigma_y} \]
+\begin{equation*}
+\rho_{X,Y} = \frac{cov(X,Y)}{\sigma_x \sigma_y}
+\end{equation*}
 where $cov(X,Y)$ is the covariance between $X$ and $Y$ and $\sigma_x$ and $\sigma_y$ are respectively the standard deviations of $X$ and $Y$.\\
 Since we need to apply the formula to a sample, we can give the following definition. Given two vectors $x$ and $y$ of dimension $n$, the pearson correlation is computed as follows:
-\[ S_{xy} = \frac{\sum_{i}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i}^{n} (x_i - \bar{x})^2}\sqrt{\sum_{i}^{n} (y_i - \bar{y})^2} + h} \]
+\begin{equation*}
+S_{xy} = \frac{\sum_{i}^{n} (x_i - \bar{x})(y_i - \bar{y})}{\sqrt{\sum_{i}^{n} (x_i - \bar{x})^2}\sqrt{\sum_{i}^{n} (y_i - \bar{y})^2} + h}
+\end{equation*}
 where $\bar{x}$ and $\bar{y}$ are respectively the means of $x$ and $y$ and $h$ is the shrink term for normalization.\\
 Like with the cosine similarity $S_{xy} \in [-1, 1]$, where -1 means positive linear correlation, 0 means no linear correlation and -1 means negative linear correlation. It is very popular in recommender systems.
-
 \item \textbf{Jaccard coefficient}: given two vectors $x$ and $y$, the Jaccard coefficient is computed as follows:
-\[ S_{xy} = \frac{x \times y}{|x| + |y| - xy + h} \]
+\begin{equation*}
+S_{xy} = \frac{x \times y}{|x| + |y| - xy + h}
+\end{equation*}
 where $h$ is the shrink term for normalization.\\
 The Jaccard coefficient is ranged in the interval $[0, 1]$ and is used to compute the similarity between two finite sets and can be applied with binary values.
-
 \item \textbf{Dice coefficient}: given two vectors $x$ and $y$, the Dice coefficient is computed as follows:
-\[ S_{xy} = \frac{x \times y}{\frac{1}{2}|x| + \frac{1}{2}|y| - xy + h} \]
+\begin{equation*}
+S_{xy} = \frac{x \times y}{\frac{1}{2}|x| + \frac{1}{2}|y| - xy + h}
+\end{equation*}
 where $h$ is the shrink term for normalization.\\
 It ranges in the interval $[0, 1]$ and, like the Jaccard coefficient, it is used to compute the similarity between finite sets and can be applied with binary values.
-
 \item \textbf{Tanimoto coefficient}: given two vectors $x$ and $y$ of dimension $n$, the Tanimoto coefficient is computed as follows:
-\[ S_{xy} = \frac{\sum_{i = 1}^{n} x_iy_i}{\sum_{i = 1}^{n} x_i^2 + \sum_{i = 1}^{n} y_i^2 - \sum_{i = 1}^{n} x_iy_i} \]
+\begin{equation*}
+S_{xy} = \frac{\sum_{i = 1}^{n} x_iy_i}{\sum_{i = 1}^{n} x_i^2 + \sum_{i = 1}^{n} y_i^2 - \sum_{i = 1}^{n} x_iy_i}
+\end{equation*}
 where $h$ is the shrink term for normalization.\\
 It ranges in the interval $[0, 1]$ and, like Jaccard and Dice coefficients, it is used to compute the similarity between finite sets and can be applied with binary values.
-
 \end{itemize}
 
 
@@ -112,53 +116,54 @@ There exist several types of recommender systems, but they can mainly be divided
 
 \subsection{Content-based Filtering (CBF)}
 
-When users or items characteristics are available, it is possible to leverage them to create personalized recommendations. For example, clothing digital stores may use colors of clothing as a label to compute items similarity. The objective of this type of recommender systems is to use one or more labels for each user or item, starting from their characteristics, and exploit them to identify similar entities. We can distinguish between item-based and user-based CBF.
-
+When users or items characteristics are available, it is possible to leverage them to create personalized recommendations. For example, clothing digital stores may use colors of clothing as a label to compute items similarity.\\
+The objective of this type of recommender systems is to use one or more labels for each user or item, starting from their characteristics, and exploit them to identify similar entities.\\
+We can distinguish between item-based and user-based CBF \cite{10.1007/978-0-387-85820-3_1, 10.1007/978-3-540-72079-9_10}.
 \begin{itemize}
-
 \item \textbf{Item-based}: given the set of items $I$ and the set of users $U$, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. To recommend items to user $u$, the system exploits the ICM to compute the similarities between each item $i_u \in I_u$ and $i \in I$ by building an item similarity matrix with shape $|I_u| \times |I|$.\\
 Then, it computes the estimated rating of each item $i$ by user $u$ as follows:
-\[ \hat{r}_{ui} = \frac{\sum_{i_u \in I_u} r_{ui_u} * ISIM_{i_u,i}}{\sum_{i_u \in I_u} ISIM_{i_u,i}} \]
+\begin{equation*}
+\hat{r}_{ui} = \frac{\sum_{i_u \in I_u} r_{ui_u} * ISIM_{i_u,i}}{\sum_{i_u \in I_u} ISIM_{i_u,i}}
+\end{equation*}
 where $r_{ui_u}$ is the rating of item $i_u$ by user $u$ and $ISIM$ is the item similarity matrix. The normalization is useful to compute accurate ratings, but can be left out for top-n recommendation.\\
 Items with the highest ratings, excluding items in $I_u$, are recommended to user $u$.
 To avoid computing the similarity matrix for each user, it is possible to build a single item similarity matrix with shape $|I| \times |I|$ and consider, for each user, only the items contained in $I_u$.
-
 \item \textbf{User-based}: given the set of items $I$ and the set of users $U$, for each user $u \in U$ we define $I_u$ as the set of items rated by user $u$. Similarly to the item-based approach, a user similarity matrix with shape $|U| \times |U|$ is built starting from the UCM.\\
 The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
-\[ \hat{r}_{ui} = \frac{\sum_{v \in U} r_{vi_u} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}} \]
+\begin{equation*}
+\hat{r}_{ui} = \frac{\sum_{v \in U} r_{vi_u} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}}
+\end{equation*}
 Items with the highest ratings, excluding items in $I_u$, are recommended to user $u$.
-
-\end{itemize}
-
+\end{itemize}\par
 The main advantage of CBF is that it makes possible to solve the cold start problem, both for users and items, when their features are available. By leveraging the users and items features to provide recommendations, CBF bypasses the problem completely.
 
 
 \subsection{Memory-based Collaborative Filtering}
 
-Memory-based collaborative filtering recommender systems exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood for target users or items. In order to describe the methodology, we must distinguish between user-based and item-based.
-
+Memory-based collaborative filtering recommender systems \cite{10.1007/978-0-387-85820-3_1} exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood for target users or items. In order to describe the methodology, we must distinguish between user-based and item-based.
 \begin{itemize}
-
 \item \textbf{User-based}: in the user-based approach, the goal of the system is to compute a neighborhood for the user $u$ needing recommendations. This is defined as the set of users similar to $u$ based on their preferences. Their own preferences are then used to extract recommendation for the user $u$.\\
 Given the set of users $U$ and the set of items $I$, the system exploits the URM to build a user similarity matrix with shape $|U| \times |U|$.\\
 We define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
 The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
-\[ \hat{r}_{ui} = \frac{\sum_{v \in U \wedge v \neq u} URM_{v,i} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}} \]
+\begin{equation*}
+\hat{r}_{ui} = \frac{\sum_{v \in U \wedge v \neq u} URM_{v,i} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}}
+\end{equation*}
 Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
-
 \item \textbf{Item-based}: the item-based approach is slightly different. In this scenario, the system computes the neighborhood of the item $i$ and then recommends it to users belonging to the neighborhood that are yet to interact with it.\\
 Given the set of users $U$ and the set of items $I$, the system exploits the URM to build an item similarity matrix with shape $|I| \times |I|$.\\
 Like in the user-based approach, we define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
 The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
-\[ \hat{r}_{ui} = \frac{\sum_{j \in I \wedge j \neq i} URM_{u,j} * USIM_{i,j}}{\sum_{j \in I} USIM_{i,j}} \]
+\begin{equation*}
+\hat{r}_{ui} = \frac{\sum_{j \in I \wedge j \neq i} URM_{u,j} * USIM_{i,j}}{\sum_{j \in I} USIM_{i,j}}
+\end{equation*}
 Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
-
 \end{itemize}
 
 
 \subsection{Model-based Collaborative Filtering}
 
-Model-based collaborative filtering recommender systems exploit the URM with a machine learning model to provide recommendations. There are many different ways to do so and in this thesis we will cover matrix factorization in \autoref{sc:matrix-factorization} and factorization machines in \autoref{sc:factorization-machines}.
+Model-based collaborative filtering recommender systems exploit the URM with a machine learning model to provide recommendations. There are many different ways to do so and in this thesis we cover matrix factorization in \autoref{sc:matrix-factorization} and factorization machines in \autoref{sc:factorization-machines}.
 
 
 \subsection{Hybrid}
@@ -170,19 +175,23 @@ Different recommender systems have different strengths and weaknesses. Many diff
 \section{Matrix Factorization}
 \label{sc:matrix-factorization}
 
-Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009, it became a very popular approach in recommender systems.\par
+Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009 \cite{netflix-prize}, it became a very popular approach in recommender systems.\par
 The assumption of matrix factorization is that it is possible to extract latent factors, to characterize users and items, from the rating pattern. For items, these factors represent an alternative to the human generated features. For users, the factors represent how much a user prefers items with a high score in the corresponding factor. For this reason, we say that matrix factorization is an approach for latent factors models.\par
 Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in \mathbb{R}^f$ and each item $i \in I$ is associated with a vector $q_i \in \mathbb{R}^f$.\\
 For each user $u$, the values of $p_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $q_i$ measure how much the item is characterized by that factor.\\
 The estimated rating of item $i$ by user $u$ is then computed as follows:
-\[ \hat{r}_{ui} = q_i^T p_u \]\\
+\begin{equation*}
+\hat{r}_{ui} = q_i^T p_u
+\end{equation*}
 The challenge of matrix factorization is building the mappings for users and items.
 
 
 \subsection{Stochastic Gradient Descent (SGD)}
 
 SGD is a popular approach \cite{ImprovingSVD, 10.1145/1401890.1401944, 10.1145/1345448.1345466} to compute the latent factors mappings. It involves cycling all the training ratings and computing the error:
-\[ e_{ui} = r_{ui} - q_i^T p_u \]
+\begin{equation*}
+e_{ui} = r_{ui} - q_i^T p_u
+\end{equation*}
 Then, the values are modified by a magnitude proportional to $\gamma$ in the opposite direction of the gradient, as follows:
 \begin{equation*}
 \begin{split}
@@ -210,33 +219,31 @@ where $w_0 \in \mathbb{R}$ is the global bias, $w_i \in \mathbb{R}$ is the bias 
 
 
 
-\section{Dataset Metrics}
-
-The main characteristic of a dataset is sparsity. Given a user rating matrix, sparsity is the ratio of observed to total ratings. %(https://arxiv.org/pdf/1205.3193.pdf)
+\section{Datasets}
 
 
+\subsection{Metrics}
 
-\section{Data Partitioning}
+The main characteristic of a dataset is sparsity. Given a user rating matrix, sparsity is the ratio of observed to total ratings \cite{sparsity}.
+
+
+\subsection{Data Partitioning}
 
 To address the evaluation of a recommender system, it is important to introduce in detail the different methodologies of how it can be performed.\\
 There can be three types of evaluation:
-
 \begin{itemize}
 \item \textbf{Online evaluation}: a controlled environment is set up and a group of selected users is asked to use it and to report on the experience.
 \item \textbf{Live trials}: similarly to the previous methodology, it is performed by real users. With this approach, real users are asked to provide feedback in a production environment.
 \item \textbf{Offline evaluation}: the most used evaluation technique consists in analyzing past user interactions. Since in offline evaluation no new rating is given after the model is trained, it is necessary to simulate a test set of ratings by splitting the original dataset into multiple subsets. Hence, the need to introduce the different approaches to data partitioning.
-\end{itemize}
-
+\end{itemize}\par
 Data partitioning for offline evaluation is generally performed for cross-validation. Cross-validation is the approach of splitting the original dataset into three subsets:
 \begin{itemize}
 \item \textbf{Training set}: this set is used to train the model. Normally, to maximize the training efficiency, it is the biggest of the three sets.
 \item \textbf{Validation set}: this set is used to evaluate the model during training and optimize the model hyperparameters.
 \item \textbf{Test set}: this set is used to perform the final evaluation, after the training is finished, to test the recommender system performance with data it has never seen before.
 \end{itemize}
-While the validation and test sets could technically overlap, this would lead to overfitting. Overfitting is an error that occurs when a model is very efficient in providing recommendations for a restricted set of data but is unable to generalize to new scenarios.
-
-There exist many different techniques to build the three subsets. We will cover the most widely used:
-
+While the validation and test sets could technically overlap, this would lead to overfitting. Overfitting is an error that occurs when a model is very efficient in providing recommendations for a restricted set of data but is unable to generalize to new scenarios.\par
+There exist many different techniques to build the three subsets. We cover the most widely used:
 \begin{itemize}
 \item \textbf{Holdout}: it is the simplest approach to data partitioning. After specifying a size to each subset, each user-item interaction is assigned to one of the three subsets randomly or following \textit{leave-k-out} logic.\\
 With leave-k-out, for each user, $k$ interactions are assigned to the validation set and $k$ interactions are assigned to the test set.
@@ -256,50 +263,71 @@ When designing or evaluating a recommender system, metrics a fundamental point t
 Accuracy metrics are meant to evaluate ranking. They measure the predictiveness of the recommender system; how good its decisions are. The most popular accuracy metrics are Mean Average Precision (mAP) and Normalized Discounted Cumulative Gain (nDCG). Both of them evaluate how good the recommender is to put the most relevant items first in the recommendation list.\par
 mAP is outfitted with a top-n threshold which defines how many recommended items are considered for the metric computation. mAP@n is then used to indicate mAP computed on the first n items recommended to each user.\\
 We define Precision of the query for user $i$ as
-\[ P@k_i = \frac{relevant\_items@k_i}{k} \]
+\begin{equation*}
+P@k_i = \frac{relevant\_items@k_i}{k}
+\end{equation*}
 Where $relevant\_items@k$ is the amount of relevant items included in the recommendations list up to rank $k$.\\
 We then define Average Precision of the query for user $i$ as
-\[ AP@n_i = \frac{1}{TP} \sum_{k=1}^{n} (P@k_i * rel@k) \]
+\begin{equation*}
+AP@n_i = \frac{1}{TP} \sum_{k=1}^{n} (P@k_i * rel@k)
+\end{equation*}
 where $TP$ is the total amount of ground truth items and $rel@k$ equals 1 if the item at rank k is relevant and equals to 0 otherwise.\\
 Finally, mAP is defined as
-\[ mAP@n = \frac{1}{U} \sum_{i=1}^{U} AP@n_i \]
+\begin{equation*}
+mAP@n = \frac{1}{U} \sum_{i=1}^{U} AP@n_i
+\end{equation*}
 where $U$ is the amount of users.\par
 Like mAP, nDCG is computed with a top-n threshold.\\
 We define Cumulative Gain as
-\[ CG@n = \sum_{k=1}^{n} rating@k \]
+\begin{equation*}
+CG@n = \sum_{k=1}^{n} rating@k
+\end{equation*}
 where $rating@k$ is the predicted rating of the item at rank $k$.\\
 Discounted Cumulative Gain is then computed to penalize ratings based on their position
-\[ DCG@n = \sum_{k=1}^{n} \frac{rating@k}{\log(i+1)} \]
+\begin{equation*}
+DCG@n = \sum_{k=1}^{n} \frac{rating@k}{\log(i+1)}
+\end{equation*}
 Then the result is normalized to make it irrelevant of the query. To do so, we compute the Ideal DCG
-\[ IDCG@n = \sum_{k=1}^{|REL_n|} \frac{rating@k}{\log(i+1)} \]
+\begin{equation*}
+IDCG@n = \sum_{k=1}^{|REL_n|} \frac{rating@k}{\log(i+1)}
+\end{equation*}
 where $REL_p$ is the list of relevant items up to position $n$.\\
 Finally, nDCG is defined as
-\[ nDCG@n = \frac{DCG@n}{IDCG@n} \]
+\begin{equation*}
+nDCG@n = \frac{DCG@n}{IDCG@n}
+\end{equation*}
 
 
 \subsection{Error metrics}
 
 Error metrics are used to compare actual and predicted ratings, thus are generally used for rating prediction. The most commonly used error metrics are Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
 MAE is defined as
-\[ MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} \abs{r_{u,i} - \hat{r}_{u,i}} \]
+\begin{equation*}
+MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} \abs{r_{u,i} - \hat{r}_{u,i}}
+\end{equation*}
 where $U$ is the amount of users, $I$ is the amount of items, $r_{u,i}$ is the predicted rating of item $i$ by user $u$ and $r_{u,i}$ is the true rating of item $i$ by user $u$.\\
 As the formula suggests, MAE does not apply a different weight to outliers, large error values.\\
 To compute a weighted error, we define RMSE as
-\[ RMSE = \sqrt{\frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} (r_{u,i} - \hat{r}_{u,i})^2} \]
+\begin{equation*}
+RMSE = \sqrt{\frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} (r_{u,i} - \hat{r}_{u,i})^2}
+\end{equation*}
 
 
 \subsection{Diversity}
 
 Gini index, or Gini coefficient, is a well known statistical metric used to measure income inequality. It can be slightly changed in and used in the field of recommender systems to evaluate a system diversity. We call the variation, where higher values mean higher diversity, Gini diversity \cite{Diversity}.\\
 It is computed as follows:
-\[ gini\_diversity = 2 \sum_{i=1}^{n} \frac{(n + 1 - i) * x_i}{(n + 1) * \sum_{i=1}^{n} x_i} \]
+\begin{equation*}
+gini\_diversity = 2 \sum_{i=1}^{n} \frac{(n + 1 - i) * x_i}{(n + 1) * \sum_{i=1}^{n} x_i}
+\end{equation*}
 where $n$ is the amount of items and $x_i$ is the numbers of times item $i$ has been recommended.
 
 
 
 \section{Clustering Techniques}
 
-Clustering is the operation of grouping similar unclassified elements together according to some properties or features. It is used in many fields of machine learning with different applications and implementations. In this section we cover the main clustering algorithms used in recommender systems, paying particular attention to the one used in this thesis.
+Clustering is the operation of grouping similar unclassified elements together according to some properties or features. It is used in many fields of machine learning with different applications and implementations.\\
+In this section we cover the main clustering algorithms used in recommender systems, paying particular attention to the one used in this thesis.
 
 
 \subsection{K-Means Clustering}
@@ -312,11 +340,11 @@ To apply K-Means clustering it is necessary to define the number of target clust
 \item The process is repeated until the the centroid are only slightly moved or until a maximum amount of iterations is reached.
 \end{itemize}
 \begin{figure}[htb]
-	\centering
-	\includegraphics[width=\textwidth]{pictures/k-means-clustering}
-	\caption
-	[Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
-    {\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
+  \centering
+  \includegraphics[width=\textwidth]{pictures/k-means-clustering}
+  \caption
+  [Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
+  {\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
 \end{figure}
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
 
@@ -509,7 +537,7 @@ This is the most used approach for cross domain recommendations. According to mu
 According to others, aggregating user preferences is also beneficial to address the problem of cold-start \cite{10.1007/978-3-642-38844-6_25} and data sparsity \cite{10.1007/s11257-012-9128-x}.\\
 While merging user preferences as ratings has proved the be the most efficient approach of building a multi-domain user profile, in real scenarios it is rarely possible to achieve a common represantion for ratings and to provide a sufficient user overlap, thus, more recent methods have focused on aggregating user tags. According to Szomszor \textit{et al.} \cite{10.1145/1379092.1379103, 10.1007/978-3-540-88564-1_40} it is possible to obtain higher quality recommendations by aggregating and correlating user social tags between domains. Such approach does not require user overlap.
 \item \textbf{\textit{Mediating user modeling data}}: the aggregated knowledge consists of user models, such as similarities or neighbors.\\
-This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach will enrich the user model and allow to provide higher quality recommendations in each aggregated domain.\\
+This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach enriches the user model and allows to provide higher quality recommendations in each aggregated domain.\\
 For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach could be applied to item models.
 \begin{figure}[hbt]
   \centering
@@ -563,4 +591,4 @@ Being the focus of this thesis for evaluation purposes, the details of the codeb
 \end{figure}
 \end{itemize}
 \end{itemize}
-Since in this thesis we evaluate the codebook transfer technique, we will focus on transferring knowledge and, in particular, on transferring rating patterns.
+Since in this thesis we evaluate the codebook transfer technique, we focus on transferring knowledge and, in particular, on transferring rating patterns.
