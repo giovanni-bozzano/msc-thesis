@@ -2,26 +2,1933 @@
 \label{ch:experiments}
 
 In this chapter we cover the experiments performed on CBT and LKT-FM. We describe the datasets and data split, the used hyperparamenters and the goals of the experiments.\\
-The first section summarizes the previous experiments performed on CBT by Massimo Quadrana.\\
+The first section summarizes the previous experiments performed on CBT.\\
 The second and third sections cover the new experiments performed on CBT and LKT-FM.
 
 
 
 \section{Previous Experiments}
 
+In 2014, Cremonesi and Quadrana \cite{10.1145/2645710.2645769} performed experiments on CBT to evaluate its performance in recommendations. According to them, CBT is not able to transfer knowledge between non-overlapping domains. In their experiments, they provided an alternative explaination based on three points to the apparent increase of accuracy obtained with CBT:
+\begin{itemize}
+\item Empirical proof that CBT can improve accuracy without transferring knowledge.
+\item The the injection of the codebook in the target domain is equivalent to a two-matrix factorization algorithm without transfer of knowledge from the source domain.
+\item The increase apparent increase accuracy is due to a pitfall in the evaluation procedure, as it compares a user-based nearest neighborhood algorithm (before the injection) with a matrix factorization algorithm (after the injection) and matrix factorization is known to outperform kNN.
+\end{itemize}
+To reach these conclusions, Cremonesi and Quadrana implemented the CBT algorithm in MATLAB and performed five experiments on three different datasets. The experiments were the following:
+\begin{itemize}
+\item \textbf{kNN}: user-based $k$-nearest neighborhood with Pearson correlation. Recommendations are extracted from the target domain without codebook transfer, with $k = 20$. The missing ratings are filled with the average of the ratings.
+\item \textbf{CBT}: the codebook transfer approach with 50 user and item clusters, followed by kNN.
+\item \textbf{RND}: a "false" codebook containing random ratings is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
+\item \textbf{AsySVD}: a "false" codebook containing ratings generated with the Asymmetric SVD matrix factorization algorithm \cite{10.1145/1401890.1401944} is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
+\item \textbf{GE}: a "false" codebook containing ratings generated with the global effects method \cite{10.1145/1401890.1401944} is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
+\end{itemize}
 
 
-\section{CBT}
+\subsection{Datasets}
+
+Cremonesi and Quadrana performed experiments on MovieLens, Netflix and BookCrossing. Each dataset was used as a target domain, while MovieLens and Netflix were used as source domain.\\
+The datasets were preprocessed in the following way:
+\begin{itemize}
+\item The ratings of BookCrossing are normalized to 1-5 to be in the same range of MovieLens and Netflix.
+\item For each dataset, 500 users with at least 40 ratings and 1000 items are selected.
+\item For each target dataset, 200 users are randomly removed to form the test set.
+\item For each user in the test set, 15 ratings are randomly removed to form the validation set.
+\end{itemize}
 
 
-\subsection{Preprocessed Datasets}
+\subsection{Results}
+
+According to the MAE and RMSE metrics, CBT outperfors the kNN baseline in all the dataset combinations. Surprisingly their results underlined a similar accuracy by transferring a randomly filled codebook.
+\begin{table}[hbtp]
+\centering
+\begin{tabulary}{1.0\textwidth}{|L|CCCCC|}
+\hline
+\multicolumn{6}{|c|}{source: MovieLens $\rightarrow$ target: BookCrossing} \\
+\hline
+& kNN & CBT & RND & AsySVD & GE \\
+\hline
+MAE & 0.5216 & \textbf{0.5064} & \textbf{0.4963} & \textbf{0.5089} & \textbf{0.5109} \\
+RMSE & 0.4736 & 0.4492 & \textbf{0.4380} & 0.4556 & 0.4578 \\
+\hline
+\hline
+\multicolumn{6}{|c|}{source: MovieLens $\rightarrow$ target: Netflix} \\
+\hline
+& kNN & CBT & RND & AsySVD & GE \\
+\hline
+MAE & 0.7285 & \textbf{0.7090} & \textbf{0.7047} & \textbf{0.7085} & \textbf{0.7124} \\
+RMSE & 0.8630 & \textbf{0.8208} & \textbf{0.8149} & \textbf{0.8245} & \textbf{0.8313} \\
+\hline
+\hline
+\multicolumn{6}{|c|}{source: Netflix $\rightarrow$ target: BookCrossing} \\
+\hline
+& kNN & CBT & RND & AsySVD & GE \\
+\hline
+MAE & 0.5580 & \textbf{0.5456} & \textbf{0.5388} & \textbf{0.5474} & \textbf{0.5486} \\
+RMSE & 0.5437 & \textbf{0.5231} & \textbf{0.5113} & \textbf{0.5269} & \textbf{0.5290} \\
+\hline
+\hline
+\multicolumn{6}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& kNN & CBT & RND & AsySVD & GE \\
+\hline
+MAE & 0.7640 & \textbf{0.7446} & \textbf{0.7425} & \textbf{0.7397} & \textbf{0.7417} \\
+RMSE & 0.9388 & \textbf{0.8988} & \textbf{0.8932} & \textbf{0.8915} & \textbf{0.8935} \\
+\hline
+\end{tabulary}
+\caption{Accuracy of different methods. Bold numbers are significantly different from the baseline method kNN. Source: https://doi.org/10.1145/2645710.2645769}
+\end{table}
+For this reason, Cremonesi and Quadrana concluded that the obtained accuracy does not depend on the transferred knowledge but on the codebook transfer methodology described in \autoref{ss:codebook-transfer}. The structure of the optimization problem closely resembles regularized SVD matrix factorization, as the minimization is performed only on the non-zero elements of the user-rating matrix \cite{10.1145/1401890.1401944}:
+\begin{equation*}
+\min_{U_T \geq 0, V_T \geq 0} \norm{X_T - U_T V_T^T}^2
+\end{equation*}
+The difference is in the presence of the codebook $B$ and constraints on $U_T$ and $V_T$.\\
+According to Cremonesi and Quadrana, this step of codebook transfer is equivalent to the training of a matrix factorization algorithm, provided that $B$ has a wide enough range of ratings to account for the constraints imposed on $U_T$ and $V_T$.
 
 
-\subsection{Full Target Dataset (Netflix to Movielens)}
+
+\section{CBT: Preprocessed Datasets}
 
 
 
-\section{LKT-FM}
+\section{CBT: Original Datasets}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCC|}
+\hline
+\multicolumn{4}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} & Fold 1 \\
+\hline
+\hline
+& mAP & nDCG & Precision & Recall \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN CF Pearson & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN CF Cosine & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Random Pearson & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Random Cosine & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Pearson & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cosine & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+& \multicolumn{2}{c}{Gini Diversity} & \multicolumn{2}{c|}{Item Coverage} \\
+\hline
+TopPop & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+Random & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+kNN CF Pearson & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+kNN CF Cosine & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+CBT Random Pearson & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+CBT Random Cosine & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+CBT Pearson & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+CBT Cosine & \multicolumn{2}{c}{0.0000} & \multicolumn{2}{c|}{0.0000} \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense-0}
+\end{table}
 
 
-\subsection{Full Target Dataset (Netflix to Movielens)}
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0077 $\pm$ 0.0017 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0004 & False \\
+TopPop & 0.0130 $\pm$ 0.0024 & False \\
+kNN Prs. & 0.0242 $\pm$ 0.0036 & True \\
+kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
+rCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
+rCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Amazon (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0073 $\pm$ 0.0027 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0004 & False \\
+TopPop & 0.0130 $\pm$ 0.0024 & False \\
+kNN Prs. & 0.0242 $\pm$ 0.0036 & False \\
+kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
+rCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
+rCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-dense}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-sparse-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-sparse-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-sparse-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Amazon (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0641 $\pm$ 0.0088 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0007 & True \\
+TopPop & 0.0795 $\pm$ 0.0099 & True \\
+kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
+kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
+rCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
+rCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-sparse}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Amazon (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0624 $\pm$ 0.0060 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0007 & True \\
+TopPop & 0.0795 $\pm$ 0.0099 & True \\
+kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
+kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
+rCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
+rCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+\hline
+\end{tabulary}
+\caption{movielens-to-amazon-sparse}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Dense)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-dense-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Dense)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-dense-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Dense)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-dense-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Netflix (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0546 $\pm$ 0.0040 & \\
+\hline
+Random & 0.0063 $\pm$ 0.0014 & True \\
+TopPop & 0.1079 $\pm$ 0.0032 & True \\
+kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
+kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
+rCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
+rCBT Cos. & 0.0588 $\pm$ 0.0048 & True \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-dense}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Netflix (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0607 $\pm$ 0.0016 & \\
+\hline
+Random & 0.0063 $\pm$ 0.0014 & True \\
+TopPop & 0.1079 $\pm$ 0.0032 & True \\
+kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
+kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
+rCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
+rCBT Cos. & 0.0588 $\pm$ 0.0048 & False \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-dense}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Sparse)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-sparse-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Sparse)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-sparse-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: MovieLens $\rightarrow$ target: Netflix (Sparse)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-sparse-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Netflix (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.1006 $\pm$ 0.0120 & \\
+\hline
+Random & 0.0026 $\pm$ 0.0015 & True \\
+TopPop & 0.1522 $\pm$ 0.0103 & True \\
+kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
+kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
+rCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
+rCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-sparse}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: MovieLens $\rightarrow$ target: Netflix (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0870 $\pm$ 0.0053 & \\
+\hline
+Random & 0.0026 $\pm$ 0.0015 & True \\
+TopPop & 0.1522 $\pm$ 0.0103 & True \\
+kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
+kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
+rCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
+rCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+\hline
+\end{tabulary}
+\caption{movielens-to-netflix-sparse}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-dense-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-dense-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Dense)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-dense-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: Amazon (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0099 $\pm$ 0.0008 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0018 & True \\
+TopPop & 0.0142 $\pm$ 0.0044 & False \\
+kNN Prs. & 0.0244 $\pm$ 0.0018 & True \\
+kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
+rCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
+rCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-dense}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: Amazon (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0148 $\pm$ 0.0032 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0018 & True \\
+TopPop & 0.0142 $\pm$ 0.0044 & False \\
+kNN Prs. & 0.0244 $\pm$ 0.0018 & False \\
+kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
+rCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
+rCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-dense}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-sparse-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-sparse-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: Amazon (Sparse)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-sparse-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: Amazon (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0574 $\pm$ 0.0232 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0015 & False \\
+TopPop & 0.0922 $\pm$ 0.0131 & False \\
+kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
+kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
+rCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
+rCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-sparse}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: Amazon (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0454 $\pm$ 0.0232 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0015 & False \\
+TopPop & 0.0922 $\pm$ 0.0131 & False \\
+kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
+kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
+rCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
+rCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-amazon-sparse}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Dense)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-dense-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Dense)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-dense-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Dense)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-dense-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0242 $\pm$ 0.0015 & \\
+\hline
+Random & 0.0048 $\pm$ 0.0011 & False \\
+TopPop & 0.0321 $\pm$ 0.0029 & False \\
+kNN Prs. & 0.0377 $\pm$ 0.0032 & False \\
+kNN Cos. & 0.0576 $\pm$ 0.0062 & False \\
+rCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
+rCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-dense}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens (Dense)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0247 $\pm$ 0.0014 & \\
+\hline
+Random & 0.0048 $\pm$ 0.0011 & True \\
+TopPop & 0.0321 $\pm$ 0.0029 & True \\
+kNN Prs. & 0.0377 $\pm$ 0.0032 & True \\
+kNN Cos. & 0.0576 $\pm$ 0.0062 & True \\
+rCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
+rCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-dense}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Sparse)} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-sparse-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Sparse)} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-sparse-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens (Sparse)} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-sparse-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0124 $\pm$ 0.0023 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0010 & True \\
+TopPop & 0.0192 $\pm$ 0.0018 & False \\
+kNN Prs. & 0.0232 $\pm$ 0.0032 & False \\
+kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
+rCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
+rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-sparse}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens (Sparse)} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Prs. & 0.0069 $\pm$ 0.0031 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0010 & False \\
+TopPop & 0.0192 $\pm$ 0.0018 & True \\
+kNN Prs. & 0.0232 $\pm$ 0.0032 & True \\
+kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
+rCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
+rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-sparse}
+\end{table}
+
+\clearpage
+
+
+
+\section{CBT: Full Target Dataset (Netflix to Movielens)}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 4} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-3}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 5} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-4}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 6} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-5}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 7} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-6}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 8} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-7}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 9} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-8}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 10} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-9}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & True \\
+TopPop & 0.0000 $\pm$ 0.0000 & True \\
+kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens}
+\end{table}
+
+\clearpage
+
+
+\subsection{Ablation Study}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 4} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-3}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 5} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-4}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 6} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-5}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 7} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-6}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 8} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-7}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 9} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-8}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 10} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source-9}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & True \\
+TopPop & 0.0000 $\pm$ 0.0000 & True \\
+kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-mixed-source}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 4} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-3}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 5} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-4}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 6} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-5}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 7} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-6}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 8} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-7}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 9} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-8}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 10} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source-9}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & True \\
+TopPop & 0.0000 $\pm$ 0.0000 & True \\
+kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-random-source}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 4} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-3}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 5} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-4}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 6} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-5}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 7} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-6}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 8} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-7}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 9} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-8}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 10} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal-9}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& mAP & Is Significant \\
+\hline
+CBT Cos. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & True \\
+TopPop & 0.0000 $\pm$ 0.0000 & True \\
+kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-source-removal}
+\end{table}
+
+\clearpage
+
+
+
+\section{LKT-FM: Full Target Dataset (Netflix to Movielens)}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 1} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-0}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 2} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-1}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 3} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-2}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 4} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-3}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 5} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-4}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 6} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-5}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 7} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-6}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 8} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-7}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 9} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-8}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{6}{|c}{source: Netflix $\rightarrow$ target: MovieLens} & \multicolumn{1}{r|}{Fold 10} \\
+\hline
+& mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+LKT-FM Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens-9}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{source: Netflix $\rightarrow$ target: MovieLens} \\
+\hline
+& mAP & Is Significant \\
+\hline
+LKT-FM Cos. & 0.0015 $\pm$ 0.0009 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN Cos. & 0.0672 $\pm$ 0.0027 & True \\
+\hline
+\end{tabulary}
+\caption{netflix-to-movielens}
+\end{table}

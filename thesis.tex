@@ -5,7 +5,7 @@
 \usepackage[nottoc]{tocbibind}
 
 \usepackage{graphicx}
-\usepackage{tabularx}
+\usepackage{tabulary}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{hyperref}
@@ -34,20 +34,29 @@
 \begin{document}
 
 \include{chapters/front}
+\clearpage
 
 \normalfont
 
 \include{chapters/abstract}
+\clearpage
 \include{chapters/acknowledgements}
+\clearpage
 
 \tableofcontents
 
 \include{chapters/introduction}
+\clearpage
 \include{chapters/state-of-the-art}
+\clearpage
 \include{chapters/theoretical-model}
+\clearpage
 \include{chapters/applied-model}
+\clearpage
 \include{chapters/experiments}
+\clearpage
 \include{chapters/conclusion}
+\clearpage
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography}

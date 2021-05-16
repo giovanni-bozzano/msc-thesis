@@ -125,7 +125,7 @@ def _binarize_matrix(X):
 
 \subsection{Codebook Transfer}
 
-The codebook transfer technique provided in \autoref{sc:codebook-transfer} monotically decreases the loss function. Thus it is enough to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
+The codebook transfer technique provided in \autoref{ss:codebook-transfer} monotically decreases the loss function. Thus it is enough to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
 Since the algorithm always converges to a local minimum, it is possible to run it several times to further minimize the loss function in alternative local minima.\\
 The code for codebook transfer is as follows:
 \begin{minted}[breaklines]{python}

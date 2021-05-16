@@ -140,7 +140,7 @@ The main advantage of CBF is that it makes possible to solve the cold start prob
 
 \subsection{Memory-based Collaborative Filtering}
 
-Memory-based collaborative filtering recommender systems \cite{10.1007/978-0-387-85820-3_1} exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood for target users or items. In order to describe the methodology, we must distinguish between user-based and item-based.
+Memory-based collaborative filtering recommender systems \cite{10.1007/978-0-387-85820-3_1} exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood composed by $k$ neighbors for target users or items. Thus the name of the algorithm: $k$-nearest neighbors (kNN). In order to describe the methodology, we must distinguish between user-based and item-based.
 \begin{itemize}
 \item \textbf{User-based}: in the user-based approach, the goal of the system is to compute a neighborhood for the user $u$ needing recommendations. This is defined as the set of users similar to $u$ based on their preferences. Their own preferences are then used to extract recommendation for the user $u$.\\
 Given the set of users $U$ and the set of items $I$, the system exploits the URM to build a user similarity matrix with shape $|U| \times |U|$.\\
