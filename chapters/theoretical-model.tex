@@ -78,11 +78,11 @@ $B = \frac{U_S^T X_S V_S}{U_S^T 11^T V_S}$;
 \vskip 0.7cm
 According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few cluster could be insufficient to encode the users and items information, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/codebook-construction}
-  \caption
-  [Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
-  {\protect\raggedright Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/codebook-construction}
+\caption
+[Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
+{\protect\raggedright Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
 \end{figure}
 
 
@@ -90,11 +90,11 @@ According to Li \textit{et al.}, too many clusters can comprise redundant inform
 \label{ss:codebook-transfer}
 
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/codebook-transfer}
-  \caption
-  [Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
-  {\protect\raggedright Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/codebook-transfer}
+\caption
+[Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
+{\protect\raggedright Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
 \end{figure}
 Having constructed the codebook $B$, the model applies it to the target domain. To do this, it assumes that there is correspondence of user and item clusters between the two domains. Transferring the rating pattern consists in the inverse operation to codebook construction. The codebook is expanded to reconstruct an approximation of the target user-rating matrix $X_T$.\\
 The duplication of a row or column of the codebook implies that there is a set of users or items in the target domain that behaves like the cluster represented by the row or column.\\
@@ -242,7 +242,7 @@ Similarly to the original codebook transfer model, it is comprised of three step
 
 \subsection{Codebook Construction}
 
-According to  Zang \textit{et al.}, constructing rating patterns through user-item co-clustering has potential issues when the source matrix is sparse. For this reason they propose a new construction method to alleviate this problem.\par
+According to Zang \textit{et al.}, constructing rating patterns through user-item co-clustering has potential issues when the source matrix is sparse. For this reason they propose a new construction method to alleviate this problem.\par
 Given a source user-rating matrix $X_S$ with shape $m \times n$, a target codebook size $k \times l$, $X_S$ is processed with basic matrix factorization and factorized into two latent factor matrices: $U_S$, with shape $m \times d$, for users and $V_S$, with shape $n \times h$ for items, where $d$ and $h$ are the latent factors dimensions.\\
 Then KMeans is applied to $U_S$ and $V_S$ to obtain cluster membership matrices $P_S$, with shape $m \times k$, for users and $Q_S$, with shape $n \times l$, for items.\\
 Like in CBT, the codebook $B$ is computed with the following equation:
@@ -268,9 +268,9 @@ x_{ui} = (\underbrace{0,...,1,...,0}_{\abs{U_T}},\underbrace{0,...,1,...,0}_{\ab
 where $k$ and $l$ are the amount of user and item clusters and $B_{C_uC_i}$ is the codebook rating of users of cluster $C_u$ to items of cluster $C_i$. In the added part, the $k$ binary indicator represent which cluster the user belongs to and the $l$ binary indicator represents which cluster the item belongs to.\\
 The feature vector $x_{ui}$ is then used as input for a factorization machine. The output $y$ represents the predicted rating of user $u$ to item $i$.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=\textwidth]{pictures/lkt-fm}
-  \caption
-  [Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39]
-  {\protect\raggedright Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39}
+\centering
+\includegraphics[width=\textwidth]{pictures/lkt-fm}
+\caption
+[Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39]
+{\protect\raggedright Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39}
 \end{figure}
