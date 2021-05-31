@@ -101,7 +101,14 @@ According to Cremonesi and Quadrana, this step of codebook transfer is equivalen
 
 The following section covers CBT experiments performed on well known datasets in the field of recommender systems.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
-A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The metrics of its results are reported with a cutoff of 20.
+A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The metrics of its results are reported with a cutoff of 20.\\
+To compare the results, the following baseline recommender systems are used with the same datasets:
+\begin{itemize}
+\item \textbf{Random}: random items are chosen for recommendation.
+\item \textbf{TopPop}: the most popular items are chosen for recommendation.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{fCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\end{itemize}
 
 
 \subsection{Datasets}
@@ -190,7 +197,6 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 \end{figure}
 
 
-
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
@@ -200,38 +206,38 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+TopPop & 0.0100 & 0.0160 & 0.0019 & 0.0380 & 0.3362 & 0.0700 \\
+Random & 0.0042 & 0.0093 & 0.0014 & 0.0280 & \textbf{0.9798} & \textbf{1.0000} \\
+kNN Prs. & \textbf{0.0214} & \textbf{0.0351} & \textbf{0.0042} & \textbf{0.0840} & \textbf{0.7096} & \textbf{0.4300} \\
+kNN Cos. & \textbf{0.0392} & \textbf{0.0630} & \textbf{0.0075} & \textbf{0.1500} & \textbf{0.9571} & \textbf{0.9440} \\
+fCBT Prs. & 0.0107 & 0.0181 & 0.0022 & 0.0440 & 0.3730 & 0.1420 \\
+fCBT Cos. & 0.0093 & 0.0162 & 0.0021 & 0.0420 & 0.2598 & 0.0580 \\
+CBT Prs. & 0.0110 & 0.0199 & 0.0026 & 0.0520 & 0.3026 & 0.0740 \\
+CBT Cos. & 0.0099 & 0.0185 & 0.0025 & 0.0500 & 0.2794 & 0.0590 \\
 \hline
 \hline
 Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+TopPop & \textbf{0.0158} & \textbf{0.0261} & \textbf{0.0032} & \textbf{0.0640} & 0.3374 & 0.0700 \\
+Random & 0.0048 & 0.0110 & 0.0017 & 0.0340 & \textbf{0.9798} & \textbf{1.0000} \\
+kNN Prs. & \textbf{0.0292} & \textbf{0.0451} & \textbf{0.0051} & \textbf{0.1020} & 0.6225 & 0.2710 \\
+kNN Cos. & \textbf{0.0528} & \textbf{0.0782} & \textbf{0.0086} & \textbf{0.1720} & 0.9256 & 0.7660 \\
+fCBT Prs. & 0.0074 & 0.0155 & 0.0023 & 0.0460 & 0.9327 & 0.8540 \\
+fCBT Cos. & 0.0067 & 0.0136 & 0.0020 & 0.0400 & 0.6979 & 0.3970 \\
+CBT Prs. & 0.0047 & 0.0100 & 0.0015 & 0.0300 & 0.8546 & 0.6850 \\
+CBT Cos. & 0.0059 & 0.0117 & 0.0017 & 0.0340 & 0.8133 & 0.8170 \\
 \hline
 \hline
 Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+TopPop & \textbf{0.0132} & \textbf{0.0237} & \textbf{0.0032} & \textbf{0.0640} & 0.3371 & 0.0700 \\
+Random & 0.0051 & 0.0090 & 0.0012 & 0.0240 & \textbf{0.9798} & \textbf{1.0000} \\
+kNN Prs. & \textbf{0.0220} & \textbf{0.0362} & \textbf{0.0044} & \textbf{0.0880} & \textbf{0.8633} & \textbf{0.6630} \\
+kNN Cos. & \textbf{0.0506} & \textbf{0.0727} & \textbf{0.0078} & \textbf{0.1560} & \textbf{0.9691} & \textbf{0.9820} \\
+fCBT Prs. & 0.0102 & 0.0156 & 0.0018 & 0.0360 & 0.7620 & 0.5950 \\
+fCBT Cos. & 0.0073 & 0.0142 & 0.0020 & 0.0400 & 0.7485 & 0.4200 \\
+CBT Prs. & 0.0060 & 0.0130 & 0.0019 & 0.0380 & 0.5951 & 0.5450 \\
+CBT Cos. & 0.0071 & 0.0150 & 0.0022 & 0.0440 & 0.2082 & 0.0550 \\
 \hline
 \end{tabulary}
 \caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. Higher values are better. Best results are in bold.}
@@ -252,8 +258,8 @@ Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
 kNN Prs. & 0.0242 $\pm$ 0.0036 & True \\
 kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
-rCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
-rCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+fCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
+fCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -264,8 +270,8 @@ Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
 kNN Prs. & 0.0242 $\pm$ 0.0036 & False \\
 kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
-rCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
-rCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+fCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
+fCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain.}
@@ -284,8 +290,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -296,8 +302,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -308,8 +314,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -332,8 +338,8 @@ Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
 kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
 kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
-rCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
-rCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+fCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
+fCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -344,8 +350,8 @@ Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
 kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
 kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
-rCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
-rCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+fCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
+fCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain.}
@@ -364,8 +370,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -376,8 +382,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -388,8 +394,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -412,8 +418,8 @@ Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
 kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
 kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
-rCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
-rCBT Cos. & 0.0588 $\pm$ 0.0048 & True \\
+fCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
+fCBT Cos. & 0.0588 $\pm$ 0.0048 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -424,8 +430,8 @@ Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
 kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
 kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
-rCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
-rCBT Cos. & 0.0588 $\pm$ 0.0048 & False \\
+fCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
+fCBT Cos. & 0.0588 $\pm$ 0.0048 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 20M as source domain.}
@@ -444,8 +450,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -456,8 +462,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -468,8 +474,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -492,8 +498,8 @@ Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
 kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
 kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
-rCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
-rCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+fCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
+fCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -504,8 +510,8 @@ Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
 kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
 kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
-rCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
-rCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+fCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
+fCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 20M as source domain.}
@@ -524,8 +530,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -536,8 +542,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -548,8 +554,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -572,8 +578,8 @@ Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
 kNN Prs. & 0.0244 $\pm$ 0.0018 & True \\
 kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
-rCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
-rCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+fCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
+fCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -584,8 +590,8 @@ Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
 kNN Prs. & 0.0244 $\pm$ 0.0018 & False \\
 kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
-rCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
-rCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+fCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
+fCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with Netflix Prize as source domain.}
@@ -604,8 +610,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -616,8 +622,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -628,8 +634,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -652,8 +658,8 @@ Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
 kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
 kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
-rCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
-rCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+fCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
+fCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -664,8 +670,8 @@ Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
 kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
 kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
-rCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
-rCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+fCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
+fCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain.}
@@ -684,8 +690,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -696,8 +702,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -708,8 +714,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -732,8 +738,8 @@ Random & 0.0048 $\pm$ 0.0011 & False \\
 TopPop & 0.0321 $\pm$ 0.0029 & False \\
 kNN Prs. & 0.0377 $\pm$ 0.0032 & False \\
 kNN Cos. & 0.0576 $\pm$ 0.0062 & False \\
-rCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
-rCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+fCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
+fCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -744,8 +750,8 @@ Random & 0.0048 $\pm$ 0.0011 & True \\
 TopPop & 0.0321 $\pm$ 0.0029 & True \\
 kNN Prs. & 0.0377 $\pm$ 0.0032 & True \\
 kNN Cos. & 0.0576 $\pm$ 0.0062 & True \\
-rCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
-rCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+fCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
+fCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain.}
@@ -764,8 +770,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -776,8 +782,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -788,8 +794,8 @@ TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
-rCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+fCBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
@@ -812,8 +818,8 @@ Random & 0.0039 $\pm$ 0.0010 & True \\
 TopPop & 0.0192 $\pm$ 0.0018 & False \\
 kNN Prs. & 0.0232 $\pm$ 0.0032 & False \\
 kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
-rCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
-rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+fCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
+fCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -824,8 +830,8 @@ Random & 0.0039 $\pm$ 0.0010 & False \\
 TopPop & 0.0192 $\pm$ 0.0018 & True \\
 kNN Prs. & 0.0232 $\pm$ 0.0032 & True \\
 kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
-rCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
-rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+fCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
+fCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain.}
@@ -839,7 +845,13 @@ rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
 
 The following section covers CBT experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
-The metrics of its results are reported with a cutoff of 20.
+The metrics of its results are reported with a cutoff of 20.\\
+To compare the results, the following baseline recommender systems are used with the same datasets:
+\begin{itemize}
+\item \textbf{Random}: random items are chosen for recommendation.
+\item \textbf{TopPop}: the most popular items are chosen for recommendation.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
+\end{itemize}
 
 
 \subsection{Datasets}
@@ -858,14 +870,14 @@ Finally, the preprocessed and full datasets used in the experiments have the fol
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-Netflix Prize & 0 & 0 & 0 & 0 \\
+Netflix Prize & 56.77 & 500 & 500 & 141934 \\
 \hline
 \hline
 \multicolumn{5}{|c|}{Target Domain} \\
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-MovieLens Hetrec 2011 & 0 & 0 & 0 & 0 \\
+MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 \hline
 \end{tabulary}
 \end{center}
@@ -1401,7 +1413,13 @@ kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 
 The following section covers LKT-FM experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
-The metrics of its results are reported with a cutoff of 20.
+The metrics of its results are reported with a cutoff of 20.\\
+To compare the results, the following baseline recommender systems are used with the same datasets:
+\begin{itemize}
+\item \textbf{Random}: random items are chosen for recommendation.
+\item \textbf{TopPop}: the most popular items are chosen for recommendation.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
+\end{itemize}
 
 
 \subsection{Datasets}
@@ -1420,14 +1438,14 @@ Finally, the preprocessed and full datasets used in the experiments have the fol
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-Netflix Prize & 0 & 0 & 0 & 0 \\
+Netflix Prize & 56.77 & 500 & 500 & 141934 \\
 \hline
 \hline
 \multicolumn{5}{|c|}{Target Domain} \\
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-MovieLens Hetrec 2011 & 0 & 0 & 0 & 0 \\
+MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 \hline
 \end{tabulary}
 \end{center}
