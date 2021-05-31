@@ -107,12 +107,13 @@ A bayesian optimization process is performed on each fold by using the validatio
 \subsection{Datasets}
 
 \begin{itemize}
-\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20 million ratings by 138,000 users on 27,000 movies, with range 1 to 5.
+\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20,000,263 ratings by 138,493 users on 27,278 movies, with range 1 to 5.
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
-\item \textbf{Amazon Movies TV Series} \cite{amazon-movies-tv-series-dataset}:
+\item \textbf{Amazon Movies TV Series} \cite{amazon-movies-tv-series-dataset}: 4,607,047 ratings by 2,088,620 users on 200,941 movies and TV series, with range 1 to 5.
 \end{itemize}
-MovieLens 20M and Netflix are preprocessed to extract very dense datasets to be used as source domain.\\
-Each dataset is preprocessed to extract sparse and dense versions, both to be used as target domain.\\
+MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
+MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
 Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions. Then by removing items with a low amount of interactions. The missing ratings of the source domain are filled with the average of ratings.\\
 Finally, the preprocessed datasets used in the experiments have the following properties:\\
 \begin{center}
@@ -120,22 +121,22 @@ Finally, the preprocessed datasets used in the experiments have the following pr
 \hline
 \multicolumn{5}{|c|}{Source Domains} \\
 \hline
-& Density & Users & Items & Ratings \\
+& Density (\%) & Users & Items & Ratings \\
 \hline
-MovieLens 20M & 0 & 0 & 0 & 0 \\
-Netflix Prize & 0 & 0 & 0 & 0 \\
+MovieLens 20M & 81.44 & 500 & 500 & 203610 \\
+Netflix Prize & 56.77 & 500 & 500 & 141934 \\
 \hline
 \hline
 \multicolumn{5}{|c|}{Target Domains} \\
 \hline
-& Density & Users & Items & Ratings \\
+& Density (\%) & Users & Items & Ratings \\
 \hline
-MovieLens 20M Dense & 0 & 0 & 0 & 0 \\
-MovieLens 20M Sparse & 0 & 0 & 0 & 0 \\
-Netflix Prize Dense & 0 & 0 & 0 & 0 \\
-Netflix Prize Sparse & 0 & 0 & 0 & 0 \\
-Amazon Movies TV Series Dense & 0 & 0 & 0 & 0 \\
-Amazon Movies TV Series Sparse & 0 & 0 & 0 & 0 \\
+MovieLens Hetrec 2011 D. & 11.66 & 500 & 1000 & 58298 \\
+MovieLens Hetrec 2011 S. & 2.93 & 500 & 1000 & 14627 \\
+Netflix Prize D. & 11.53 & 500 & 1000 & 57656 \\
+Netflix Prize S. & 3.78 & 500 & 1000 & 18904 \\
+Amazon Movies TV Series D. & 10.21 & 500 & 1000 & 51048 \\
+Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
 \hline
 \end{tabulary}
 \end{center}
@@ -161,6 +162,19 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 \item $\texttt{knn\_similarity} = \{pearson,cosine\}$: The similarity type to use for kNN.
 \item $\texttt{knn\_normalize} = \{true,false\}$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
 \end{itemize}
+
+
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{pictures/movielens-dense-target}
+  \caption
+  [Representation of the MovieLens 20M Dense training set.]
+  {\protect\raggedright Representation of the MovieLens 20M Dense training set.}
+  \includegraphics[width=\textwidth]{pictures/movielens-sparse-target}
+  \caption
+  [Representation of the MovieLens 20M Sparse training set.]
+  {\protect\raggedright Representation of the MovieLens 20M Sparse training set.}
+\end{figure}
 
 
 \begin{table}[hbt]
@@ -863,6 +877,19 @@ The following hyperparameters are set:
 \end{itemize}
 
 
+\begin{figure}[htb]
+  \centering
+  \includegraphics[width=\textwidth]{pictures/movielens-full-target}
+  \caption
+  [Heatmap of the MovieLens 20M original training set.]
+  {\protect\raggedright Heatmap of the MovieLens 20M original training set.}
+  \includegraphics[width=\textwidth]{pictures/movielens-full-target-filled}
+  \caption
+  [Heatmap of the MovieLens 20M filled training set.]
+  {\protect\raggedright Heatmap of the MovieLens 20M filled training set.}
+\end{figure}
+
+
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
@@ -987,6 +1014,13 @@ kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 
 \subsection{Ablation Study}
 
+The ablation study for this experiment is performed in three different ways:
+\begin{itemize}
+\item \textbf{Source domain mix}: All the ratings of the source domain are shuffled without keeping rows and column relation.
+\item \textbf{Random source domain}: A $500 \times 500$ source domain matrix is randomly generated with rating from 1 to 5.
+\item \textbf{Source domain reduction}: One-tenth of the ratings of the source domain are removed before the source matrix is filled with the average of ratings.
+\end{itemize}
+
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
@@ -1103,14 +1137,14 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain.  The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain.  The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Random) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1153,14 +1187,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Random) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1203,14 +1237,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize (Random) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1222,7 +1256,7 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is randomly generated to perform the ablation study.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study.}
 \end{table}
 
 \begin{table}[hbt]
