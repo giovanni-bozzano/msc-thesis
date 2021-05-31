@@ -168,12 +168,12 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
   \centering
   \includegraphics[width=\textwidth]{pictures/movielens-dense-target}
   \caption
-  [Representation of the MovieLens 20M Dense training set.]
-  {\protect\raggedright Representation of the MovieLens 20M Dense training set.}
+  [Representation of the MovieLens Hetrec 2011 Dense training set.]
+  {\protect\raggedright Representation of the MovieLens Hetrec 2011 Dense training set.}
   \includegraphics[width=\textwidth]{pictures/movielens-sparse-target}
   \caption
-  [Representation of the MovieLens 20M Sparse training set.]
-  {\protect\raggedright Representation of the MovieLens 20M Sparse training set.}
+  [Representation of the MovieLens Hetrec 2011 Sparse training set.]
+  {\protect\raggedright Representation of the MovieLens Hetrec 2011 Sparse training set.}
 \end{figure}
 
 
@@ -661,7 +661,7 @@ rCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Dense)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Dense)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -700,14 +700,14 @@ CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens 20M (Dense), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Dense)} \\
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Dense)} \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -734,14 +734,14 @@ rCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
 rCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Dense), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Sparse)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Sparse)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -780,14 +780,14 @@ CBT Prs. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens 20M (Sparse), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Sparse)} \\
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Sparse)} \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
@@ -814,16 +814,16 @@ rCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
 rCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Sparse), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain.}
 \end{table}
 
 \clearpage
 
 
 
-\section{CBT: Full Target Dataset (Netflix Prize to Movielens 20M)}
+\section{CBT: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
-The following section covers CBT experiments performed on the full Movielens 20M domain, using Netflix Prize as the source domain.\\
+The following section covers CBT experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The metrics of its results are reported with a cutoff of 20.
 
@@ -831,7 +831,7 @@ The metrics of its results are reported with a cutoff of 20.
 \subsection{Datasets}
 
 \begin{itemize}
-\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20 million ratings by 138,000 users on 27,000 movies, with range 1 to 5.
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
 \end{itemize}
 Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
@@ -851,7 +851,7 @@ Netflix Prize & 0 & 0 & 0 & 0 \\
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-MovieLens 20M & 0 & 0 & 0 & 0 \\
+MovieLens Hetrec 2011 & 0 & 0 & 0 & 0 \\
 \hline
 \end{tabulary}
 \end{center}
@@ -881,12 +881,12 @@ The following hyperparameters are set:
   \centering
   \includegraphics[width=\textwidth]{pictures/movielens-full-target}
   \caption
-  [Heatmap of the MovieLens 20M original training set.]
-  {\protect\raggedright Heatmap of the MovieLens 20M original training set.}
+  [Heatmap of the MovieLens Hetrec 2011 original training set.]
+  {\protect\raggedright Heatmap of the MovieLens Hetrec 2011 original training set.}
   \includegraphics[width=\textwidth]{pictures/movielens-full-target-filled}
   \caption
-  [Heatmap of the MovieLens 20M filled training set.]
-  {\protect\raggedright Heatmap of the MovieLens 20M filled training set.}
+  [Heatmap of the MovieLens Hetrec 2011 filled training set.]
+  {\protect\raggedright Heatmap of the MovieLens Hetrec 2011 filled training set.}
 \end{figure}
 
 
@@ -894,7 +894,7 @@ The following hyperparameters are set:
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -937,14 +937,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -987,14 +987,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1006,7 +1006,7 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
 \end{table}
 
 \clearpage
@@ -1025,7 +1025,7 @@ The ablation study for this experiment is performed in three different ways:
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1068,14 +1068,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1118,14 +1118,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1137,14 +1137,14 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain.  The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain.  The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1187,14 +1187,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1237,14 +1237,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Random $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1256,14 +1256,14 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full). The source domain is randomly generated to perform the ablation study.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1306,14 +1306,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1356,7 +1356,7 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 
@@ -1364,7 +1364,7 @@ CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1376,16 +1376,16 @@ TopPop & 0.0000 $\pm$ 0.0000 & True \\
 kNN Cos. & 0.0000 $\pm$ 0.0000 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
 \end{table}
 
 \clearpage
 
 
 
-\section{LKT-FM: Full Target Dataset (Netflix Prize to Movielens 20M)}
+\section{LKT-FM: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
-The following section covers LKT-FM experiments performed on the full Movielens 20M domain, using Netflix Prize as the source domain.\\
+The following section covers LKT-FM experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The metrics of its results are reported with a cutoff of 20.
 
@@ -1393,7 +1393,7 @@ The metrics of its results are reported with a cutoff of 20.
 \subsection{Datasets}
 
 \begin{itemize}
-\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20 million ratings by 138,000 users on 27,000 movies, with range 1 to 5.
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
 \end{itemize}
 Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
@@ -1413,7 +1413,7 @@ Netflix Prize & 0 & 0 & 0 & 0 \\
 \hline
 & Density & Users & Items & Ratings \\
 \hline
-MovieLens 20M & 0 & 0 & 0 & 0 \\
+MovieLens Hetrec 2011 & 0 & 0 & 0 & 0 \\
 \hline
 \end{tabulary}
 \end{center}
@@ -1443,7 +1443,7 @@ The following hyperparameters are set:
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1486,14 +1486,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCCCCC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
@@ -1536,14 +1536,14 @@ kNN Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 CBT Cos. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens 20M (Full)} \\
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
 & mAP & Difference is Significant \\
@@ -1555,5 +1555,5 @@ TopPop & 0.0489 $\pm$ 0.0041 & True \\
 kNN Cos. & 0.0672 $\pm$ 0.0027 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of LKT-FM experiment on full target dataset for mAP@20 differences between LKT-FM and baselines on MovieLens 20M (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
+\caption{Significance tests of LKT-FM experiment on full target dataset for mAP@20 differences between LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
 \end{table}
