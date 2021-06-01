@@ -89,11 +89,799 @@ According to Cremonesi and Quadrana, this step of codebook transfer is equivalen
 
 \section{CBT: Preprocessed Datasets}
 
+The following section covers CBT experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}.\\
+Experiments are run over 3 folds for each combination of source and target domains.\\
+A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
+To compare the results, the following baseline recommender systems are used with the same datasets:
+\begin{itemize}
+\item \textbf{Random}: random items are chosen for recommendation.
+\item \textbf{TopPop}: the most popular items are chosen for recommendation.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{CBTf}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\end{itemize}
+
 
 \subsection{Datasets}
 
+\begin{itemize}
+\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20,000,263 ratings by 138,493 users on 27,278 movies, with range 1 to 5.
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
+\item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
+\item \textbf{Amazon Movies TV Series} \cite{amazon-movies-tv-series-dataset}: 4,607,047 ratings by 2,088,620 users on 200,941 movies and TV series, with range 1 to 5.
+\end{itemize}
+MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
+MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
+Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions. Then by removing items with a low amount of interactions. The missing ratings of the source domain are filled with the average of ratings.\\
+Finally, the preprocessed datasets used in the experiments have the following properties:\\
+\begin{center}
+\begin{tabulary}{1.0\textwidth}{|L|CCCC|}
+\hline
+\multicolumn{5}{|c|}{Source Domains} \\
+\hline
+& Density (\%) & Users & Items & Ratings \\
+\hline
+MovieLens 20M & 81.44 & 500 & 500 & 203610 \\
+Netflix Prize & 56.77 & 500 & 500 & 141934 \\
+\hline
+\hline
+\multicolumn{5}{|c|}{Target Domains} \\
+\hline
+& Density (\%) & Users & Items & Ratings \\
+\hline
+MovieLens Hetrec 2011 D. & 11.66 & 500 & 1000 & 58298 \\
+MovieLens Hetrec 2011 S. & 2.93 & 500 & 1000 & 14627 \\
+Netflix Prize D. & 11.53 & 500 & 1000 & 57656 \\
+Netflix Prize S. & 3.78 & 500 & 1000 & 18904 \\
+Amazon Movies TV Series D. & 10.21 & 500 & 1000 & 51048 \\
+Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
+\hline
+\end{tabulary}
+\end{center}
+Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the training set.
+
 
 \subsection{Hyperparameters}
+
+The following hyperparameters are set:
+\begin{itemize}
+\item $\texttt{construct\_validation\_every\_n} = 1$: The amount of iterations after which the codebook construction loss is evaluated by the early stopping training.
+\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: The amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
+\item $\texttt{maximum\_construct\_iterations} = 20000$: The maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
+\item $\texttt{transfer\_attempts} = 30$: The amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{maximum\_fill\_iterations} = 100$: The maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
+\end{itemize}
+The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
+\begin{itemize}
+\item $\texttt{user\_clusters} = [5,100]$: The amount of user cluster used to build the codebook.
+\item $\texttt{item\_clusters} = [5,100]$: The amount of item cluster used to build the codebook.
+\item $\texttt{knn\_topk} = [5,1000]$: The amount of similar user to consider when computing similarity for kNN.
+\item $\texttt{knn\_shrink} = [0,1000]$: Shrinkage to apply when computing the similarity for kNN.
+\item $\texttt{knn\_similarity} = \{pearson,cosine\}$: The similarity type to use for kNN.
+\item $\texttt{knn\_normalize} = \{true,false\}$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
+\end{itemize}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{EachMovie $\rightarrow$ MovieLens 100K} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on EachMovie, with MovieLens 100K as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{EachMovie $\rightarrow$ MovieLens 100K} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 100K, with EachMovie as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{MovieLens (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on BookCrossing, with MovieLens (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{MovieLens (Dense) $\rightarrow$ Netflix (Dense)} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix (Dense), with MovieLens (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens (Dense) $\rightarrow$ Netflix (Dense)} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix (Dense), with MovieLens (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{MovieLens (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on BookCrossing, with MovieLens (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{MovieLens (Sparse) $\rightarrow$ Netflix (Sparse)} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix (Sparse), with MovieLens (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens (Sparse) $\rightarrow$ Netflix (Sparse)} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix (Sparse), with MovieLens (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on BookCrossing, with Netflix (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix (Dense) $\rightarrow$ MovieLens (Dense)} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens (Dense), with Netflix (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix (Dense) $\rightarrow$ MovieLens (Dense)} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens (Dense), with Netflix (Dense) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on BookCrossing, with Netflix (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix (Sparse) $\rightarrow$ MovieLens (Sparse)} \\
+\hline
+\hline
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+Random & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+kNN C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBTf C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT P. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+CBT C. & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens (Sparse), with Netflix (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix (Sparse) $\rightarrow$ MovieLens (Sparse)} \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT C. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\hline
+& mAP@20 & Difference is Significant \\
+\hline
+CBT P. & 0.0000 $\pm$ 0.0000 & \\
+\hline
+Random & 0.0000 $\pm$ 0.0000 & False \\
+TopPop & 0.0000 $\pm$ 0.0000 & False \\
+kNN P. & 0.0000 $\pm$ 0.0000 & False \\
+kNN C. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf P. & 0.0000 $\pm$ 0.0000 & False \\
+CBTf C. & 0.0000 $\pm$ 0.0000 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens (Sparse), with Netflix (Sparse) as source domain. "P." and "C." stand for Pearson and cosine similarity.}
+\end{table}
+
+\clearpage
 
 
 
@@ -240,7 +1028,7 @@ CBT P. & 0.0060 & 0.0130 & 0.0019 & 0.0380 & 0.5951 & 0.5450 \\
 CBT C. & 0.0071 & 0.0150 & 0.0022 & 0.0440 & 0.2082 & 0.0550 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -320,7 +1108,7 @@ CBT P. & 0.0670 & 0.0788 & 0.0061 & 0.1220 & 0.2113 & 0.0700 \\
 CBT C. & 0.0647 & 0.0734 & 0.0052 & 0.1040 & 0.1611 & 0.0590 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -400,7 +1188,7 @@ CBT P. & 0.0604 & 0.0898 & 0.0100 & 0.1920 & 0.7932 & 0.4460 \\
 CBT C. & 0.0570 & 0.0914 & 0.0110 & 0.2120 & 0.4967 & 0.1390 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Dense), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Dense), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -480,7 +1268,7 @@ CBT P. & 0.0822 & 0.1119 & 0.0107 & 0.2140 & 0.3496 & 0.0610 \\
 CBT C. & 0.0837 & 0.1127 & 0.0106 & 0.2120 & 0.2989 & 0.0410 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Sparse), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Sparse), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -560,7 +1348,7 @@ CBT P. & 0.0114 & 0.0216 & 0.0030 & 0.0600 & 0.2997 & 0.1140 \\
 CBT C. & 0.0098 & 0.0174 & 0.0023 & 0.0460 & 0.2548 & 0.0590 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -640,7 +1428,7 @@ CBT P. & 0.0286 & 0.0418 & 0.0044 & 0.0880 & 0.7644 & 0.5110 \\
 CBT C. & 0.0702 & 0.0843 & 0.0068 & 0.1360 & 0.1627 & 0.0580 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -720,7 +1508,7 @@ CBT P. & 0.0259 & 0.0419 & 0.0050 & 0.1000 & 0.3675 & 0.0810 \\
 CBT C. & 0.0263 & 0.0437 & 0.0054 & 0.1080 & 0.3666 & 0.0790 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -800,7 +1588,7 @@ CBT P. & 0.0104 & 0.0172 & 0.0021 & 0.0420 & 0.3511 & 0.1450 \\
 CBT C. & 0.0103 & 0.0179 & 0.0023 & 0.0460 & 0.0844 & 0.0340 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity. Higher values are better. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -942,7 +1730,7 @@ CBTmix & 0.0100 & 0.0142 & 0.0015 & 0.0293 & 0.5746 & 0.0828 \\
 CBTrnd & 0.0103 & 0.0149 & 0.0016 & 0.0317 & 0.5720 & 0.0928 \\
 CBTrem & 0.0089 & 0.0153 & 0.0019 & 0.0388 & 0.6000 & 0.0705 \\
 CBT & 0.0077 & 0.0116 & 0.0013 & 0.0256 & 0.5841 & 0.0817 \\
-LKT-FM & 0.0016 &           0.0030 &           0.0004 &           0.0080 &                                            0.0062 &                                            0.0603 \\
+LKT-FM & 0.0016 & 0.0030 & 0.0004 & 0.0080 & 0.0062 & 0.0603 \\
 \hline
 \hline
 Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -954,7 +1742,7 @@ CBTmix & 0.0097 & 0.0145 & 0.0016 & 0.0317 & 0.5891 & 0.0866 \\
 CBTrnd & 0.0115 & 0.0162 & 0.0017 & 0.0331 & 0.5718 & 0.0919 \\
 CBTrem & 0.0081 & 0.0131 & 0.0016 & 0.0312 & 0.5887 & 0.0645 \\
 CBT & 0.0067 & 0.0109 & 0.0013 & 0.0260 & 0.5846 & 0.0816 \\
-LKT-FM & 0.0006 &           0.0012 &           0.0002 &           0.0033 &                                            0.0058 &                                            0.0664 \\
+LKT-FM & 0.0006 & 0.0012 & 0.0002 & 0.0033 & 0.0058 & 0.0664 \\
 \hline
 \hline
 Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -966,7 +1754,7 @@ CBTmix & 0.0121 & 0.0176 & 0.0019 & 0.0374 & 0.5896 & 0.0874 \\
 CBTrnd & 0.0085 & 0.0139 & 0.0017 & 0.0341 & 0.5713 & 0.0925 \\
 CBTrem & 0.0130 & 0.0180 & 0.0018 & 0.0364 & 0.5874 & 0.0638 \\
 CBT & 0.0134 & 0.0191 & 0.0020 & 0.0393 & 0.5844 & 0.0806 \\
-LKT-FM & 0.0034 &           0.0047 &           0.0005 &           0.0095 &                                            0.0063 &                                            0.0684 \\
+LKT-FM & 0.0034 & 0.0047 & 0.0005 & 0.0095 & 0.0063 & 0.0684 \\
 \hline
 \end{tabulary}
 \caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-3.}
@@ -988,7 +1776,7 @@ CBTmix & 0.0083 & 0.0137 & 0.0017 & 0.0336 & 0.5891 & 0.0847 \\
 CBTrnd & 0.0126 & 0.0179 & 0.0019 & 0.0374 & 0.5724 & 0.0908 \\
 CBTrem & 0.0087 & 0.0129 & 0.0014 & 0.0284 & 0.5857 & 0.0597 \\
 CBT & 0.0087 & 0.0133 & 0.0015 & 0.0303 & 0.5838 & 0.0785 \\
-LKT-FM & 0.0004 &           0.0009 &           0.0001 &           0.0024 &                                            0.0058 &                                            0.0636 \\
+LKT-FM & 0.0004 & 0.0009 & 0.0001 & 0.0024 & 0.0058 & 0.0636 \\
 \hline
 \hline
 Fold 5 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -1000,7 +1788,7 @@ CBTmix & 0.0097 & 0.0153 & 0.0018 & 0.0360 & 0.5884 & 0.0851 \\
 CBTrnd & 0.0100 & 0.0155 & 0.0018 & 0.0355 & 0.5725 & 0.0927 \\
 CBTrem & 0.0073 & 0.0123 & 0.0015 & 0.0303 & 0.5854 & 0.0544 \\
 CBT & 0.0070 & 0.0119 & 0.0015 & 0.0298 & 0.5856 & 0.0849 \\
-LKT-FM & 0.0006 &           0.0009 &           0.0001 &           0.0019 &                                            0.0060 &                                            0.0625 \\
+LKT-FM & 0.0006 & 0.0009 & 0.0001 & 0.0019 & 0.0060 & 0.0625 \\
 \hline
 \hline
 Fold 6 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -1012,7 +1800,7 @@ CBTmix & 0.0108 & 0.0165 & 0.0019 & 0.0374 & 0.5892 & 0.0877 \\
 CBTrnd & 0.0088 & 0.0136 & 0.0015 & 0.0308 & 0.5719 & 0.0919 \\
 CBTrem & 0.0095 & 0.0153 & 0.0018 & 0.0360 & 0.5872 & 0.0606 \\
 CBT & 0.0097 & 0.0141 & 0.0015 & 0.0293 & 0.5873 & 0.0848 \\
-LKT-FM & 0.0017 &           0.0035 &           0.0005 &           0.0104 &                                            0.0060 &                                            0.0582 \\
+LKT-FM & 0.0017 & 0.0035 & 0.0005 & 0.0104 & 0.0060 & 0.0582 \\
 \hline
 \end{tabulary}
 \caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 4-6.}
@@ -1034,7 +1822,7 @@ CBTmix & 0.0102 & 0.0146 & 0.0015 & 0.0308 & 0.5897 & 0.0906 \\
 CBTrnd & 0.0116 & 0.0173 & 0.0019 & 0.0379 & 0.5719 & 0.0911 \\
 CBTrem & 0.0082 & 0.0128 & 0.0015 & 0.0293 & 0.5888 & 0.0652 \\
 CBT & 0.0106 & 0.0143 & 0.0014 & 0.0274 & 0.5876 & 0.0833 \\
-LKT-FM & 0.0010 &           0.0020 &           0.0003 &           0.0057 &                                            0.0057 &                                            0.0582 \\
+LKT-FM & 0.0010 & 0.0020 & 0.0003 & 0.0057 & 0.0057 & 0.0582 \\
 \hline
 \hline
 Fold 8 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -1046,7 +1834,7 @@ CBTmix & 0.0104 & 0.0153 & 0.0017 & 0.0331 & 0.5889 & 0.0859 \\
 CBTrnd & 0.0123 & 0.0167 & 0.0016 & 0.0322 & 0.5712 & 0.0900 \\
 CBTrem & 0.0084 & 0.0128 & 0.0014 & 0.0284 & 0.5872 & 0.0607 \\
 CBT & 0.0088 & 0.0132 & 0.0014 & 0.0289 & 0.5835 & 0.0767 \\
-LKT-FM & 0.0014 &           0.0023 &           0.0003 &           0.0057 &                                            0.0059 &                                            0.0641 \\
+LKT-FM & 0.0014 & 0.0023 & 0.0003 & 0.0057 & 0.0059 & 0.0641 \\
 \hline
 \hline
 Fold 9 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
@@ -1058,7 +1846,7 @@ CBTmix & 0.0094 & 0.0159 & 0.0020 & 0.0398 & 0.5891 & 0.0866 \\
 CBTrnd & 0.0124 & 0.0182 & 0.0020 & 0.0393 & 0.5715 & 0.0891 \\
 CBTrem & 0.0082 & 0.0132 & 0.0016 & 0.0317 & 0.5841 & 0.0560 \\
 CBT & 0.0099 & 0.0142 & 0.0015 & 0.0298 & 0.5833 & 0.0784 \\
-LKT-FM & 0.0022 &           0.0027 &           0.0002 &           0.0043 &                                            0.0056 &                                            0.0526 \\
+LKT-FM & 0.0022 & 0.0027 & 0.0002 & 0.0043 & 0.0056 & 0.0526 \\
 \hline
 \end{tabulary}
 \caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 7-9.}
@@ -1080,7 +1868,7 @@ CBTmix & 0.0127 & 0.0168 & 0.0016 & 0.0312 & 0.5890 & 0.0865 \\
 CBTrnd & 0.0112 & 0.0161 & 0.0017 & 0.0336 & 0.5725 & 0.0923 \\
 CBTrem & 0.0117 & 0.0165 & 0.0017 & 0.0336 & 0.5869 & 0.0586 \\
 CBT & 0.0076 & 0.0114 & 0.0012 & 0.0246 & 0.5825 & 0.0767 \\
-LKT-FM & 0.0019 &           0.0031 &           0.0004 &           0.0076 &                                            0.0059 &                                            0.0581 \\
+LKT-FM & 0.0019 & 0.0031 & 0.0004 & 0.0076 & 0.0059 & 0.0581 \\
 \hline
 \end{tabulary}
 \caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Fold 10.}
