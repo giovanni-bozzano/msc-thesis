@@ -44,7 +44,7 @@ def initialize(self, X_s, k, l):
     self.F = None
     self.G = None
     self.S = None
-    
+
     # Initialize the factorization matrices
     _initialize_clustering()
 
@@ -66,7 +66,7 @@ def _initialize_clustering():
     self.F = _cluster(self.X_s, self.k)
     self.F += 0.2
     self.S = multi_dot([self.F.T, self.X_s, self.G])
-    
+
 def _cluster(X, k):
     kmeans = KMeans(n_clusters=k, random_state=0).fit(X)
     labels = set(kmeans.labels_)
@@ -100,14 +100,14 @@ def codebook_construction(X_s, F, G):
 
     F = _binarize_matrix(F)
     G = _binarize_matrix(G)
-    
+
     sum_vector = np.ones(X.shape)
     enum = multi_dot([F.T, X_s, G])
     denom = multi_dot([F.T, sum_vector, G])
-    
+
     B = np.nan_to_num(enum / denom)
     return B
-    
+
 def _binarize_matrix(X):
     """
     Binarize input matrix with 0 and 1
@@ -134,7 +134,7 @@ from numpy.linalg import multi_dot
 
 def initialize(X_t, B, transfer_attempts, maximum_fill_iterations):
 
-    # Target user-rating matrix  to be filled
+    # Target user-rating matrix to be filled
     self.X_t = X_t
     self.p, self.q = X_t.shape
     # Codebook
@@ -154,17 +154,17 @@ def initialize(X_t, B, transfer_attempts, maximum_fill_iterations):
     self.V_best = None
     # Best loss until now
     self.loss_best = np.inf
-    
+
     # Initialize the masking matrix
     _generate_W()
-    
+
     # Search local minima
     for attempt in range(self.transfer_attempts):
-    
+
         _initialize_U()
         _initialize_V()
         iteration_loss_best = np.inf
-        
+
         for i in range(self.maximum_fill_iterations):
             _update_U()
             _update_V()

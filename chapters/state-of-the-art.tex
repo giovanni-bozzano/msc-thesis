@@ -340,11 +340,11 @@ To apply K-Means clustering it is necessary to define the number of target clust
 \item The process is repeated until the the centroid are only slightly moved or until a maximum amount of iterations is reached.
 \end{itemize}
 \begin{figure}[htb]
-  \centering
-  \includegraphics[width=\textwidth]{pictures/k-means-clustering}
-  \caption
-  [Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
-  {\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
+\centering
+\includegraphics[width=\textwidth]{pictures/k-means-clustering}
+\caption
+[Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
+{\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
 \end{figure}
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
 
@@ -504,11 +504,11 @@ U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \end{equation*}
 \end{itemize}
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=\textwidth]{pictures/domains-overlap}
-  \caption
-  [Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=\textwidth]{pictures/domains-overlap}
+\caption
+[Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 
 
@@ -523,11 +523,11 @@ Given the previous attributes, different cross-domain recommender system trends 
 \end{itemize}
 Furthermore, it is possible to make another type of distinction based on the approach of knowledge exploitation, into two macro-groups and sub-groups.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
-  \caption
-  [Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
+\caption
+[Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \begin{itemize}
 \item \textbf{Aggregating knowledge}
@@ -540,20 +540,20 @@ While merging user preferences as ratings has proved the be the most efficient a
 This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach enriches the user model and allows to provide higher quality recommendations in each aggregated domain.\\
 For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach could be applied to item models.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
-  \caption
-  [Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
+\caption
+[Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Combining recommendations}}: the aggregated knowledge is composed of single-domain recommendations.\\
 In this approach, recommendations made in the source domains are used to enrich the recommendations in the target domain. Aggregating user recommendations requires both user and item overlap. While the recommendations in the single domains can be computed with different approaches, the challenge of this scenario is to compute weights for aggregation.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
-  \caption
-  [Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]  
-  {\protect\raggedright Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
+\caption
+[Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \end{itemize}
 \item \textbf{Linking and transferring knowledge}:
@@ -563,31 +563,31 @@ This correspondences can either be directly identified between the single domain
 Chung \textit{et al.} \cite{10.1145/1282100.1282113} initially proposed an approach using item attributes directly to identify a bridge between domains, but since items are generally very heterogeneus, it may be difficult to find directly corresponding features. To address this problem, Loizou \cite{crossdomain-recsys-categorization} proposed to use Wikipedia as a universal vocabulary to express and relate user preferences across multiple domains.\\
 The known problem of both approaches is building said knowledge repositories. Cremonesi \textit{et al.} \cite{10.1007/978-1-4899-7637-6_27} observed that the majority of approaches with the goal of linking domains does not require user or item overlap, but only feature overlap between domains. It was also observed that no particular approach outperforms the others in a general scenario.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/linking-domains}
-  \caption
-  [Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/linking-domains}
+\caption
+[Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features.\\
 This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}. These new representations are obtained with various factorization algorithms. Like for the previous approach, at least a feature overlap is strictly needed.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
-  \caption
-  [Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
+\caption
+[Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.\\
 The base assumption of this approach is that similar domains share the population used to sample user preferences, even if there is no user or item overlap between them. For this reason it may be possible to find a correlation between domains of the preferences of groups of users for groups of items. This correlation is called \textit{rating pattern}. Thus, the rating pattern is the only information transferred from source domains to the target domain.\\
 The first approach to transfer the rating pattern between domains was proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773} and named \textit{codebook transfer}. Since then, several variants of codebook transfer have surfaced, all based on the same assumptions.\\
 Being the focus of this thesis for evaluation purposes, the details of the codebook transfer theoretical model and its extensions are addressed in \autoref{ch:theoretical-model}.
 \begin{figure}[hbt]
-  \centering
-  \includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
-  \caption
-  [Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-  {\protect\raggedright Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
+\caption
+[Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
+{\protect\raggedright Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
 \end{figure}
 \end{itemize}
 \end{itemize}
