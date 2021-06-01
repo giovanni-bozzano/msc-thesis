@@ -101,13 +101,13 @@ According to Cremonesi and Quadrana, this step of codebook transfer is equivalen
 
 The following section covers CBT experiments performed on well known datasets in the field of recommender systems.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
-A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The metrics of its results are reported with a cutoff of 20.\\
+A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
 \item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
-\item \textbf{fCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{CBTf}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \end{itemize}
 
 
@@ -204,43 +204,43 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 \multicolumn{7}{|c|}{MovieLens 20M $\rightarrow$ Amazon Movies TV Series (Dense)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & 0.0100 & 0.0160 & 0.0019 & 0.0380 & 0.3362 & 0.0700 \\
 Random & 0.0042 & 0.0093 & 0.0014 & 0.0280 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0214} & \textbf{0.0351} & \textbf{0.0042} & \textbf{0.0840} & \textbf{0.7096} & \textbf{0.4300} \\
-kNN Cos. & \textbf{0.0392} & \textbf{0.0630} & \textbf{0.0075} & \textbf{0.1500} & \textbf{0.9571} & \textbf{0.9440} \\
-fCBT Prs. & 0.0107 & 0.0181 & 0.0022 & 0.0440 & 0.3730 & 0.1420 \\
-fCBT Cos. & 0.0093 & 0.0162 & 0.0021 & 0.0420 & 0.2598 & 0.0580 \\
-CBT Prs. & 0.0110 & 0.0199 & 0.0026 & 0.0520 & 0.3026 & 0.0740 \\
-CBT Cos. & 0.0099 & 0.0185 & 0.0025 & 0.0500 & 0.2794 & 0.0590 \\
+kNN P. & \textbf{0.0214} & \textbf{0.0351} & \textbf{0.0042} & \textbf{0.0840} & \textbf{0.7096} & \textbf{0.4300} \\
+kNN C. & \textbf{0.0392} & \textbf{0.0630} & \textbf{0.0075} & \textbf{0.1500} & \textbf{0.9571} & \textbf{0.9440} \\
+CBTf P. & 0.0107 & 0.0181 & 0.0022 & 0.0440 & 0.3730 & 0.1420 \\
+CBTf C. & 0.0093 & 0.0162 & 0.0021 & 0.0420 & 0.2598 & 0.0580 \\
+CBT P. & 0.0110 & 0.0199 & 0.0026 & 0.0520 & 0.3026 & 0.0740 \\
+CBT C. & 0.0099 & 0.0185 & 0.0025 & 0.0500 & 0.2794 & 0.0590 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0158} & \textbf{0.0261} & \textbf{0.0032} & \textbf{0.0640} & 0.3374 & 0.0700 \\
 Random & 0.0048 & 0.0110 & 0.0017 & 0.0340 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0292} & \textbf{0.0451} & \textbf{0.0051} & \textbf{0.1020} & 0.6225 & 0.2710 \\
-kNN Cos. & \textbf{0.0528} & \textbf{0.0782} & \textbf{0.0086} & \textbf{0.1720} & 0.9256 & 0.7660 \\
-fCBT Prs. & 0.0074 & 0.0155 & 0.0023 & 0.0460 & 0.9327 & 0.8540 \\
-fCBT Cos. & 0.0067 & 0.0136 & 0.0020 & 0.0400 & 0.6979 & 0.3970 \\
-CBT Prs. & 0.0047 & 0.0100 & 0.0015 & 0.0300 & 0.8546 & 0.6850 \\
-CBT Cos. & 0.0059 & 0.0117 & 0.0017 & 0.0340 & 0.8133 & 0.8170 \\
+kNN P. & \textbf{0.0292} & \textbf{0.0451} & \textbf{0.0051} & \textbf{0.1020} & 0.6225 & 0.2710 \\
+kNN C. & \textbf{0.0528} & \textbf{0.0782} & \textbf{0.0086} & \textbf{0.1720} & 0.9256 & 0.7660 \\
+CBTf P. & 0.0074 & 0.0155 & 0.0023 & 0.0460 & 0.9327 & 0.8540 \\
+CBTf C. & 0.0067 & 0.0136 & 0.0020 & 0.0400 & 0.6979 & 0.3970 \\
+CBT P. & 0.0047 & 0.0100 & 0.0015 & 0.0300 & 0.8546 & 0.6850 \\
+CBT C. & 0.0059 & 0.0117 & 0.0017 & 0.0340 & 0.8133 & 0.8170 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0132} & \textbf{0.0237} & \textbf{0.0032} & \textbf{0.0640} & 0.3371 & 0.0700 \\
 Random & 0.0051 & 0.0090 & 0.0012 & 0.0240 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0220} & \textbf{0.0362} & \textbf{0.0044} & \textbf{0.0880} & \textbf{0.8633} & \textbf{0.6630} \\
-kNN Cos. & \textbf{0.0506} & \textbf{0.0727} & \textbf{0.0078} & \textbf{0.1560} & \textbf{0.9691} & \textbf{0.9820} \\
-fCBT Prs. & 0.0102 & 0.0156 & 0.0018 & 0.0360 & 0.7620 & 0.5950 \\
-fCBT Cos. & 0.0073 & 0.0142 & 0.0020 & 0.0400 & 0.7485 & 0.4200 \\
-CBT Prs. & 0.0060 & 0.0130 & 0.0019 & 0.0380 & 0.5951 & 0.5450 \\
-CBT Cos. & 0.0071 & 0.0150 & 0.0022 & 0.0440 & 0.2082 & 0.0550 \\
+kNN P. & \textbf{0.0220} & \textbf{0.0362} & \textbf{0.0044} & \textbf{0.0880} & \textbf{0.8633} & \textbf{0.6630} \\
+kNN C. & \textbf{0.0506} & \textbf{0.0727} & \textbf{0.0078} & \textbf{0.1560} & \textbf{0.9691} & \textbf{0.9820} \\
+CBTf P. & 0.0102 & 0.0156 & 0.0018 & 0.0360 & 0.7620 & 0.5950 \\
+CBTf C. & 0.0073 & 0.0142 & 0.0020 & 0.0400 & 0.7485 & 0.4200 \\
+CBT P. & 0.0060 & 0.0130 & 0.0019 & 0.0380 & 0.5951 & 0.5450 \\
+CBT C. & 0.0071 & 0.0150 & 0.0022 & 0.0440 & 0.2082 & 0.0550 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -252,29 +252,29 @@ CBT Cos. & 0.0071 & 0.0150 & 0.0022 & 0.0440 & 0.2082 & 0.0550 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0077 $\pm$ 0.0017 & \\
+CBT C. & 0.0077 $\pm$ 0.0017 & \\
 \hline
 Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
-kNN Prs. & 0.0242 $\pm$ 0.0036 & True \\
-kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
-fCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
-fCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+kNN P. & 0.0242 $\pm$ 0.0036 & True \\
+kNN C. & 0.0476 $\pm$ 0.0060 & True \\
+CBTf P. & 0.0094 $\pm$ 0.0015 & False \\
+CBTf C. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0073 $\pm$ 0.0027 & \\
+CBT P. & 0.0073 $\pm$ 0.0027 & \\
 \hline
 Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
-kNN Prs. & 0.0242 $\pm$ 0.0036 & False \\
-kNN Cos. & 0.0476 $\pm$ 0.0060 & True \\
-fCBT Prs. & 0.0094 $\pm$ 0.0015 & False \\
-fCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
+kNN P. & 0.0242 $\pm$ 0.0036 & False \\
+kNN C. & 0.0476 $\pm$ 0.0060 & True \\
+CBTf P. & 0.0094 $\pm$ 0.0015 & False \\
+CBTf C. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -284,43 +284,43 @@ fCBT Cos. & 0.0078 $\pm$ 0.0011 & False \\
 \multicolumn{7}{|c|}{MovieLens 20M $\rightarrow$ Amazon Movies TV Series (Sparse)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0900} & \textbf{0.1104} & \textbf{0.0094} & \textbf{0.1880} & 0.1840 & 0.0570 \\
 Random & 0.0030 & 0.0062 & 0.0009 & 0.0180 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0922} & \textbf{0.1085} & \textbf{0.0083} & \textbf{0.1660} & 0.7109 & \textbf{0.6260} \\
-kNN Cos. & \textbf{0.1045} & \textbf{0.1272} & \textbf{0.0105} & \textbf{0.2100} & 0.5186 & 0.2850 \\
-fCBT Prs. & 0.0091 & 0.0153 & 0.0019 & 0.0380 & 0.7979 & 0.4080 \\
-fCBT Cos. & 0.0138 & 0.0213 & 0.0024 & 0.0480 & 0.1304 & 0.0510 \\
-CBT Prs. & 0.0663 & 0.0802 & 0.0066 & 0.1320 & 0.2823 & 0.0860 \\
-CBT Cos. & 0.0747 & 0.0889 & 0.0071 & 0.1420 & 0.1639 & 0.0600 \\
+kNN P. & \textbf{0.0922} & \textbf{0.1085} & \textbf{0.0083} & \textbf{0.1660} & 0.7109 & \textbf{0.6260} \\
+kNN C. & \textbf{0.1045} & \textbf{0.1272} & \textbf{0.0105} & \textbf{0.2100} & 0.5186 & 0.2850 \\
+CBTf P. & 0.0091 & 0.0153 & 0.0019 & 0.0380 & 0.7979 & 0.4080 \\
+CBTf C. & 0.0138 & 0.0213 & 0.0024 & 0.0480 & 0.1304 & 0.0510 \\
+CBT P. & 0.0663 & 0.0802 & 0.0066 & 0.1320 & 0.2823 & 0.0860 \\
+CBT C. & 0.0747 & 0.0889 & 0.0071 & 0.1420 & 0.1639 & 0.0600 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0662} & \textbf{0.0871} & \textbf{0.0082} & \textbf{0.1640} & 0.1840 & 0.0580 \\
 Random & 0.0042 & 0.0078 & 0.0011 & 0.0220 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0565} & \textbf{0.0743} & \textbf{0.0069} & \textbf{0.1380} & \textbf{0.7199} & \textbf{0.4710} \\
-kNN Cos. & \textbf{0.0765} & \textbf{0.0983} & \textbf{0.0088} & \textbf{0.1760} & 0.4411 & 0.2030 \\
-fCBT Prs. & 0.0220 & 0.0333 & 0.0038 & 0.0760 & 0.5939 & 0.3510 \\
-fCBT Cos. & 0.0080 & 0.0154 & 0.0021 & 0.0420 & 0.6468 & 0.3200 \\
-CBT Prs. & 0.0539 & 0.0672 & 0.0058 & 0.1160 & 0.2899 & 0.0840 \\
-CBT Cos. & 0.0530 & 0.0648 & 0.0054 & 0.1080 & 0.1646 & 0.0580 \\
+kNN P. & \textbf{0.0565} & \textbf{0.0743} & \textbf{0.0069} & \textbf{0.1380} & \textbf{0.7199} & \textbf{0.4710} \\
+kNN C. & \textbf{0.0765} & \textbf{0.0983} & \textbf{0.0088} & \textbf{0.1760} & 0.4411 & 0.2030 \\
+CBTf P. & 0.0220 & 0.0333 & 0.0038 & 0.0760 & 0.5939 & 0.3510 \\
+CBTf C. & 0.0080 & 0.0154 & 0.0021 & 0.0420 & 0.6468 & 0.3200 \\
+CBT P. & 0.0539 & 0.0672 & 0.0058 & 0.1160 & 0.2899 & 0.0840 \\
+CBT C. & 0.0530 & 0.0648 & 0.0054 & 0.1080 & 0.1646 & 0.0580 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0824} & \textbf{0.0989} & \textbf{0.0080} & \textbf{0.1600} & 0.1842 & 0.0580 \\
 Random & 0.0027 & 0.0059 & 0.0009 & 0.0180 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0756} & \textbf{0.0912} & \textbf{0.0073} & \textbf{0.1460} & \textbf{0.7250} & \textbf{0.5970} \\
-kNN Cos. & \textbf{0.0922} & \textbf{0.1106} & \textbf{0.0087} & \textbf{0.1740} & 0.4464 & 0.2000 \\
-fCBT Prs. & 0.0085 & 0.0136 & 0.0016 & 0.0320 & 0.6222 & 0.3170 \\
-fCBT Cos. & 0.0129 & 0.0196 & 0.0022 & 0.0440 & 0.1283 & 0.0460 \\
-CBT Prs. & 0.0670 & 0.0788 & 0.0061 & 0.1220 & 0.2113 & 0.0700 \\
-CBT Cos. & 0.0647 & 0.0734 & 0.0052 & 0.1040 & 0.1611 & 0.0590 \\
+kNN P. & \textbf{0.0756} & \textbf{0.0912} & \textbf{0.0073} & \textbf{0.1460} & \textbf{0.7250} & \textbf{0.5970} \\
+kNN C. & \textbf{0.0922} & \textbf{0.1106} & \textbf{0.0087} & \textbf{0.1740} & 0.4464 & 0.2000 \\
+CBTf P. & 0.0085 & 0.0136 & 0.0016 & 0.0320 & 0.6222 & 0.3170 \\
+CBTf C. & 0.0129 & 0.0196 & 0.0022 & 0.0440 & 0.1283 & 0.0460 \\
+CBT P. & 0.0670 & 0.0788 & 0.0061 & 0.1220 & 0.2113 & 0.0700 \\
+CBT C. & 0.0647 & 0.0734 & 0.0052 & 0.1040 & 0.1611 & 0.0590 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -332,29 +332,29 @@ CBT Cos. & 0.0647 & 0.0734 & 0.0052 & 0.1040 & 0.1611 & 0.0590 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0641 $\pm$ 0.0088 & \\
+CBT C. & 0.0641 $\pm$ 0.0088 & \\
 \hline
 Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
-kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
-kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
-fCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
-fCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+kNN P. & 0.0748 $\pm$ 0.0146 & False \\
+kNN C. & 0.0911 $\pm$ 0.0115 & True \\
+CBTf P. & 0.0132 $\pm$ 0.0062 & True \\
+CBTf C. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0624 $\pm$ 0.0060 & \\
+CBT P. & 0.0624 $\pm$ 0.0060 & \\
 \hline
 Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
-kNN Prs. & 0.0748 $\pm$ 0.0146 & False \\
-kNN Cos. & 0.0911 $\pm$ 0.0115 & True \\
-fCBT Prs. & 0.0132 $\pm$ 0.0062 & True \\
-fCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
+kNN P. & 0.0748 $\pm$ 0.0146 & False \\
+kNN C. & 0.0911 $\pm$ 0.0115 & True \\
+CBTf P. & 0.0132 $\pm$ 0.0062 & True \\
+CBTf C. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -364,43 +364,43 @@ fCBT Cos. & 0.0116 $\pm$ 0.0026 & True \\
 \multicolumn{7}{|c|}{MovieLens 20M $\rightarrow$ Netflix Prize (Dense)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1124} & \textbf{0.1604} & \textbf{0.0170} & \textbf{0.3320} & 0.6775 & 0.2280 \\
 Random & 0.0079 & 0.0156 & 0.0026 & 0.0440 & \textbf{0.9796} & \textbf{0.9990} \\
-kNN Prs. & \textbf{0.1089} & \textbf{0.1648} & \textbf{0.0187} & \textbf{0.3660} & 0.7330 & 0.3370 \\
-kNN Cos. & \textbf{0.1617} & \textbf{0.2210} & \textbf{0.0218} & \textbf{0.4280} & \textbf{0.8409} & 0.4360 \\
-fCBT Prs. & 0.0609 & 0.0951 & 0.0112 & 0.2160 & 0.8323 & 0.5100 \\
-fCBT Cos. & 0.0636 & 0.0996 & 0.0118 & 0.2280 & 0.5220 & 0.2430 \\
-CBT Prs. & 0.0629 & 0.1004 & 0.0121 & 0.2340 & 0.5161 & 0.1540 \\
-CBT Cos. & 0.0578 & 0.0889 & 0.0103 & 0.1980 & 0.5961 & 0.5600 \\
+kNN P. & \textbf{0.1089} & \textbf{0.1648} & \textbf{0.0187} & \textbf{0.3660} & 0.7330 & 0.3370 \\
+kNN C. & \textbf{0.1617} & \textbf{0.2210} & \textbf{0.0218} & \textbf{0.4280} & \textbf{0.8409} & 0.4360 \\
+CBTf P. & 0.0609 & 0.0951 & 0.0112 & 0.2160 & 0.8323 & 0.5100 \\
+CBTf C. & 0.0636 & 0.0996 & 0.0118 & 0.2280 & 0.5220 & 0.2430 \\
+CBT P. & 0.0629 & 0.1004 & 0.0121 & 0.2340 & 0.5161 & 0.1540 \\
+CBT C. & 0.0578 & 0.0889 & 0.0103 & 0.1980 & 0.5961 & 0.5600 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1057} & \textbf{0.1537} & \textbf{0.0167} & \textbf{0.3260} & \textbf{0.6777} & 0.2260 \\
 Random & 0.0065 & 0.0098 & 0.0015 & 0.0220 & \textbf{0.9796} & \textbf{0.9990} \\
-kNN Prs. & \textbf{0.1257} & \textbf{0.1767} & \textbf{0.0183} & \textbf{0.3580} & \textbf{0.7108} & 0.2680 \\
-kNN Cos. & \textbf{0.1434} & \textbf{0.2012} & \textbf{0.0208} & \textbf{0.4080} & \textbf{0.8117} & \textbf{0.3500} \\
-fCBT Prs. & 0.0648 & 0.0986 & 0.0112 & 0.2160 & 0.6538 & 0.2390 \\
-fCBT Cos. & 0.0521 & 0.0859 & 0.0106 & 0.2040 & 0.5274 & 0.1420 \\
-CBT Prs. & 0.0589 & 0.0921 & 0.0109 & 0.2100 & 0.6302 & 0.3060 \\
-CBT Cos. & 0.0489 & 0.0802 & 0.0099 & 0.1900 & 0.4959 & 0.1400 \\
+kNN P. & \textbf{0.1257} & \textbf{0.1767} & \textbf{0.0183} & \textbf{0.3580} & \textbf{0.7108} & 0.2680 \\
+kNN C. & \textbf{0.1434} & \textbf{0.2012} & \textbf{0.0208} & \textbf{0.4080} & \textbf{0.8117} & \textbf{0.3500} \\
+CBTf P. & 0.0648 & 0.0986 & 0.0112 & 0.2160 & 0.6538 & 0.2390 \\
+CBTf C. & 0.0521 & 0.0859 & 0.0106 & 0.2040 & 0.5274 & 0.1420 \\
+CBT P. & 0.0589 & 0.0921 & 0.0109 & 0.2100 & 0.6302 & 0.3060 \\
+CBT C. & 0.0489 & 0.0802 & 0.0099 & 0.1900 & 0.4959 & 0.1400 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1055} & \textbf{0.1555} & \textbf{0.0171} & \textbf{0.3340} & 0.6778 & 0.2250 \\
 Random & 0.0044 & 0.0092 & 0.0017 & 0.0260 & \textbf{0.9796} & \textbf{0.9990} \\
-kNN Prs. & \textbf{0.1197} & \textbf{0.1746} & \textbf{0.0189} & \textbf{0.3700} & 0.7368 & 0.3310 \\
-kNN Cos. & \textbf{0.1670} & \textbf{0.2258} & \textbf{0.0220} & \textbf{0.4320} & \textbf{0.8223} & 0.3790 \\
-fCBT Prs. & 0.0539 & 0.0854 & 0.0102 & 0.1960 & 0.5836 & 0.2560 \\
-fCBT Cos. & 0.0606 & 0.0963 & 0.0115 & 0.2220 & 0.5054 & 0.1350 \\
-CBT Prs. & 0.0604 & 0.0898 & 0.0100 & 0.1920 & 0.7932 & 0.4460 \\
-CBT Cos. & 0.0570 & 0.0914 & 0.0110 & 0.2120 & 0.4967 & 0.1390 \\
+kNN P. & \textbf{0.1197} & \textbf{0.1746} & \textbf{0.0189} & \textbf{0.3700} & 0.7368 & 0.3310 \\
+kNN C. & \textbf{0.1670} & \textbf{0.2258} & \textbf{0.0220} & \textbf{0.4320} & \textbf{0.8223} & 0.3790 \\
+CBTf P. & 0.0539 & 0.0854 & 0.0102 & 0.1960 & 0.5836 & 0.2560 \\
+CBTf C. & 0.0606 & 0.0963 & 0.0115 & 0.2220 & 0.5054 & 0.1350 \\
+CBT P. & 0.0604 & 0.0898 & 0.0100 & 0.1920 & 0.7932 & 0.4460 \\
+CBT C. & 0.0570 & 0.0914 & 0.0110 & 0.2120 & 0.4967 & 0.1390 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Dense), with MovieLens 20M as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Dense), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -412,29 +412,29 @@ CBT Cos. & 0.0570 & 0.0914 & 0.0110 & 0.2120 & 0.4967 & 0.1390 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0546 $\pm$ 0.0040 & \\
+CBT C. & 0.0546 $\pm$ 0.0040 & \\
 \hline
 Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
-kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
-kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
-fCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
-fCBT Cos. & 0.0588 $\pm$ 0.0048 & True \\
+kNN P. & 0.1181 $\pm$ 0.0070 & True \\
+kNN C. & 0.1573 $\pm$ 0.0101 & True \\
+CBTf P. & 0.0599 $\pm$ 0.0045 & False \\
+CBTf C. & 0.0588 $\pm$ 0.0048 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0607 $\pm$ 0.0016 & \\
+CBT P. & 0.0607 $\pm$ 0.0016 & \\
 \hline
 Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
-kNN Prs. & 0.1181 $\pm$ 0.0070 & True \\
-kNN Cos. & 0.1573 $\pm$ 0.0101 & True \\
-fCBT Prs. & 0.0599 $\pm$ 0.0045 & False \\
-fCBT Cos. & 0.0588 $\pm$ 0.0048 & False \\
+kNN P. & 0.1181 $\pm$ 0.0070 & True \\
+kNN C. & 0.1573 $\pm$ 0.0101 & True \\
+CBTf P. & 0.0599 $\pm$ 0.0045 & False \\
+CBTf C. & 0.0588 $\pm$ 0.0048 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 20M as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -444,43 +444,43 @@ fCBT Cos. & 0.0588 $\pm$ 0.0048 & False \\
 \multicolumn{7}{|c|}{MovieLens 20M $\rightarrow$ Netflix Prize (Sparse)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1512} & \textbf{0.2184} & \textbf{0.0229} & \textbf{0.4580} & \textbf{0.5231} & 0.1060 \\
 Random & 0.0014 & 0.0036 & 0.0006 & 0.0120 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.1597} & \textbf{0.2290} & \textbf{0.0238} & \textbf{0.4760} & \textbf{0.5794} & \textbf{0.1430} \\
-kNN Cos. & \textbf{0.1905} & \textbf{0.2639} & \textbf{0.0263} & \textbf{0.5260} & \textbf{0.6681} & \textbf{0.1920} \\
-fCBT Prs. & 0.1305 & 0.1849 & 0.0188 & 0.3760 & 0.4888 & 0.1360 \\
-fCBT Cos. & 0.1314 & 0.1867 & 0.0190 & 0.3800 & 0.4466 & 0.0780 \\
-CBT Prs. & 0.0843 & 0.1020 & 0.0081 & 0.1620 & 0.2108 & 0.0380 \\
-CBT Cos. & 0.1101 & 0.1433 & 0.0128 & 0.2560 & 0.3036 & 0.0440 \\
+kNN P. & \textbf{0.1597} & \textbf{0.2290} & \textbf{0.0238} & \textbf{0.4760} & \textbf{0.5794} & \textbf{0.1430} \\
+kNN C. & \textbf{0.1905} & \textbf{0.2639} & \textbf{0.0263} & \textbf{0.5260} & \textbf{0.6681} & \textbf{0.1920} \\
+CBTf P. & 0.1305 & 0.1849 & 0.0188 & 0.3760 & 0.4888 & 0.1360 \\
+CBTf C. & 0.1314 & 0.1867 & 0.0190 & 0.3800 & 0.4466 & 0.0780 \\
+CBT P. & 0.0843 & 0.1020 & 0.0081 & 0.1620 & 0.2108 & 0.0380 \\
+CBT C. & 0.1101 & 0.1433 & 0.0128 & 0.2560 & 0.3036 & 0.0440 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1652} & \textbf{0.2344} & \textbf{0.0241} & \textbf{0.4820} & \textbf{0.5234} & 0.1050 \\
 Random & 0.0016 & 0.0038 & 0.0006 & 0.0120 & \textbf{0.9797} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.1744} & \textbf{0.2453} & \textbf{0.0248} & \textbf{0.4960} & \textbf{0.5724} & 0.1390 \\
-kNN Cos. & \textbf{0.1972} & \textbf{0.2706} & \textbf{0.0266} & \textbf{0.5320} & \textbf{0.5931} & 0.1220 \\
-fCBT Prs. & 0.1394 & 0.1939 & 0.0193 & 0.3860 & 0.4762 & 0.1420 \\
-fCBT Cos. & 0.1421 & 0.1971 & 0.0195 & 0.3900 & 0.4473 & 0.0780 \\
-CBT Prs. & 0.0944 & 0.1200 & 0.0102 & 0.2040 & 0.2630 & 0.0400 \\
-CBT Cos. & 0.1081 & 0.1416 & 0.0128 & 0.2560 & 0.3020 & 0.0470 \\
+kNN P. & \textbf{0.1744} & \textbf{0.2453} & \textbf{0.0248} & \textbf{0.4960} & \textbf{0.5724} & 0.1390 \\
+kNN C. & \textbf{0.1972} & \textbf{0.2706} & \textbf{0.0266} & \textbf{0.5320} & \textbf{0.5931} & 0.1220 \\
+CBTf P. & 0.1394 & 0.1939 & 0.0193 & 0.3860 & 0.4762 & 0.1420 \\
+CBTf C. & 0.1421 & 0.1971 & 0.0195 & 0.3900 & 0.4473 & 0.0780 \\
+CBT P. & 0.0944 & 0.1200 & 0.0102 & 0.2040 & 0.2630 & 0.0400 \\
+CBT C. & 0.1081 & 0.1416 & 0.0128 & 0.2560 & 0.3020 & 0.0470 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1401} & \textbf{0.2064} & \textbf{0.0223} & \textbf{0.4460} & \textbf{0.5231} & 0.1100 \\
 Random & 0.0047 & 0.0061 & 0.0006 & 0.0120 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.1469} & \textbf{0.2100} & \textbf{0.0218} & \textbf{0.4360} & \textbf{0.6111} & 0.1550 \\
-kNN Cos. & \textbf{0.1665} & \textbf{0.2312} & \textbf{0.0230} & \textbf{0.4600} & \textbf{0.5961} & 0.1220 \\
-fCBT Prs. & 0.1081 & 0.1572 & 0.0164 & 0.3280 & 0.4789 & 0.1540 \\
-fCBT Cos. & 0.1057 & 0.1538 & 0.0161 & 0.3220 & 0.4980 & 0.2490 \\
-CBT Prs. & 0.0822 & 0.1119 & 0.0107 & 0.2140 & 0.3496 & 0.0610 \\
-CBT Cos. & 0.0837 & 0.1127 & 0.0106 & 0.2120 & 0.2989 & 0.0410 \\
+kNN P. & \textbf{0.1469} & \textbf{0.2100} & \textbf{0.0218} & \textbf{0.4360} & \textbf{0.6111} & 0.1550 \\
+kNN C. & \textbf{0.1665} & \textbf{0.2312} & \textbf{0.0230} & \textbf{0.4600} & \textbf{0.5961} & 0.1220 \\
+CBTf P. & 0.1081 & 0.1572 & 0.0164 & 0.3280 & 0.4789 & 0.1540 \\
+CBTf C. & 0.1057 & 0.1538 & 0.0161 & 0.3220 & 0.4980 & 0.2490 \\
+CBT P. & 0.0822 & 0.1119 & 0.0107 & 0.2140 & 0.3496 & 0.0610 \\
+CBT C. & 0.0837 & 0.1127 & 0.0106 & 0.2120 & 0.2989 & 0.0410 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Sparse), with MovieLens 20M as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Netflix Prize (Sparse), with MovieLens 20M as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -492,29 +492,29 @@ CBT Cos. & 0.0837 & 0.1127 & 0.0106 & 0.2120 & 0.2989 & 0.0410 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.1006 $\pm$ 0.0120 & \\
+CBT C. & 0.1006 $\pm$ 0.0120 & \\
 \hline
 Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
-kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
-kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
-fCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
-fCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+kNN P. & 0.1604 $\pm$ 0.0112 & True \\
+kNN C. & 0.1847 $\pm$ 0.0132 & True \\
+CBTf P. & 0.1260 $\pm$ 0.0132 & True \\
+CBTf C. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0870 $\pm$ 0.0053 & \\
+CBT P. & 0.0870 $\pm$ 0.0053 & \\
 \hline
 Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
-kNN Prs. & 0.1604 $\pm$ 0.0112 & True \\
-kNN Cos. & 0.1847 $\pm$ 0.0132 & True \\
-fCBT Prs. & 0.1260 $\pm$ 0.0132 & True \\
-fCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
+kNN P. & 0.1604 $\pm$ 0.0112 & True \\
+kNN C. & 0.1847 $\pm$ 0.0132 & True \\
+CBTf P. & 0.1260 $\pm$ 0.0132 & True \\
+CBTf C. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 20M as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 20M as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -524,43 +524,43 @@ fCBT Cos. & 0.1264 $\pm$ 0.0153 & True \\
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ Amazon Movies TV Series (Dense)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & 0.0119 & 0.0203 & 0.0026 & 0.0520 & 0.3381 & 0.0710 \\
 Random & 0.0037 & 0.0074 & 0.0011 & 0.0220 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0221} & \textbf{0.0368} & \textbf{0.0045} & \textbf{0.0900} & 0.7904 & 0.5150 \\
-kNN Cos. & \textbf{0.0379} & \textbf{0.0617} & \textbf{0.0074} & \textbf{0.1480} & 0.8939 & 0.6190 \\
-fCBT Prs. & 0.0047 & 0.0098 & 0.0014 & 0.0280 & 0.8367 & 0.8500 \\
-fCBT Cos. & 0.0093 & 0.0148 & 0.0018 & 0.0360 & 0.2683 & 0.0600 \\
-CBT Prs. & 0.0138 & 0.0246 & 0.0032 & 0.0640 & 0.9073 & 0.8580 \\
-CBT Cos. & 0.0089 & 0.0147 & 0.0018 & 0.0360 & 0.2809 & 0.0580 \\
+kNN P. & \textbf{0.0221} & \textbf{0.0368} & \textbf{0.0045} & \textbf{0.0900} & 0.7904 & 0.5150 \\
+kNN C. & \textbf{0.0379} & \textbf{0.0617} & \textbf{0.0074} & \textbf{0.1480} & 0.8939 & 0.6190 \\
+CBTf P. & 0.0047 & 0.0098 & 0.0014 & 0.0280 & 0.8367 & 0.8500 \\
+CBTf C. & 0.0093 & 0.0148 & 0.0018 & 0.0360 & 0.2683 & 0.0600 \\
+CBT P. & 0.0138 & 0.0246 & 0.0032 & 0.0640 & 0.9073 & 0.8580 \\
+CBT C. & 0.0089 & 0.0147 & 0.0018 & 0.0360 & 0.2809 & 0.0580 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & 0.0102 & 0.0220 & 0.0033 & 0.0660 & 0.3370 & 0.0710 \\
 Random & 0.0072 & 0.0148 & 0.0021 & 0.0420 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0245} & \textbf{0.0423} & \textbf{0.0054} & \textbf{0.1080} & 0.7202 & 0.4830 \\
-kNN Cos. & \textbf{0.0556} & \textbf{0.0797} & \textbf{0.0083} & \textbf{0.1660} & \textbf{0.9586} & \textbf{0.9400} \\
-fCBT Prs. & 0.0113 & 0.0190 & 0.0024 & 0.0480 & 0.9477 & 0.8650 \\
-fCBT Cos. & 0.0101 & 0.0170 & 0.0021 & 0.0420 & 0.2419 & 0.0570 \\
-CBT Prs. & 0.0191 & 0.0321 & 0.0040 & 0.0800 & 0.8151 & 0.6830 \\
-CBT Cos. & 0.0109 & 0.0169 & 0.0019 & 0.0380 & 0.6780 & 0.5530 \\
+kNN P. & \textbf{0.0245} & \textbf{0.0423} & \textbf{0.0054} & \textbf{0.1080} & 0.7202 & 0.4830 \\
+kNN C. & \textbf{0.0556} & \textbf{0.0797} & \textbf{0.0083} & \textbf{0.1660} & \textbf{0.9586} & \textbf{0.9400} \\
+CBTf P. & 0.0113 & 0.0190 & 0.0024 & 0.0480 & 0.9477 & 0.8650 \\
+CBTf C. & 0.0101 & 0.0170 & 0.0021 & 0.0420 & 0.2419 & 0.0570 \\
+CBT P. & 0.0191 & 0.0321 & 0.0040 & 0.0800 & 0.8151 & 0.6830 \\
+CBT C. & 0.0109 & 0.0169 & 0.0019 & 0.0380 & 0.6780 & 0.5530 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0204} & \textbf{0.0304} & \textbf{0.0033} & \textbf{0.0660} & 0.3348 & 0.0700 \\
 Random & 0.0030 & 0.0078 & 0.0013 & 0.0260 & \textbf{0.9798} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0265} & \textbf{0.0417} & \textbf{0.0049} & \textbf{0.0980} & \textbf{0.6336} & 0.2840 \\
-kNN Cos. & \textbf{0.0331} & \textbf{0.0581} & \textbf{0.0075} & \textbf{0.1500} & \textbf{0.8778} & \textbf{0.5780} \\
-fCBT Prs. & 0.0107 & 0.0179 & 0.0022 & 0.0440 & 0.3047 & 0.1040 \\
-fCBT Cos. & 0.0095 & 0.0172 & 0.0023 & 0.0460 & 0.5255 & 0.5700 \\
-CBT Prs. & 0.0114 & 0.0216 & 0.0030 & 0.0600 & 0.2997 & 0.1140 \\
-CBT Cos. & 0.0098 & 0.0174 & 0.0023 & 0.0460 & 0.2548 & 0.0590 \\
+kNN P. & \textbf{0.0265} & \textbf{0.0417} & \textbf{0.0049} & \textbf{0.0980} & \textbf{0.6336} & 0.2840 \\
+kNN C. & \textbf{0.0331} & \textbf{0.0581} & \textbf{0.0075} & \textbf{0.1500} & \textbf{0.8778} & \textbf{0.5780} \\
+CBTf P. & 0.0107 & 0.0179 & 0.0022 & 0.0440 & 0.3047 & 0.1040 \\
+CBTf C. & 0.0095 & 0.0172 & 0.0023 & 0.0460 & 0.5255 & 0.5700 \\
+CBT P. & 0.0114 & 0.0216 & 0.0030 & 0.0600 & 0.2997 & 0.1140 \\
+CBT C. & 0.0098 & 0.0174 & 0.0023 & 0.0460 & 0.2548 & 0.0590 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -572,29 +572,29 @@ CBT Cos. & 0.0098 & 0.0174 & 0.0023 & 0.0460 & 0.2548 & 0.0590 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0099 $\pm$ 0.0008 & \\
+CBT C. & 0.0099 $\pm$ 0.0008 & \\
 \hline
 Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
-kNN Prs. & 0.0244 $\pm$ 0.0018 & True \\
-kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
-fCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
-fCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+kNN P. & 0.0244 $\pm$ 0.0018 & True \\
+kNN C. & 0.0422 $\pm$ 0.0096 & True \\
+CBTf P. & 0.0089 $\pm$ 0.0030 & False \\
+CBTf C. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0148 $\pm$ 0.0032 & \\
+CBT P. & 0.0148 $\pm$ 0.0032 & \\
 \hline
 Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
-kNN Prs. & 0.0244 $\pm$ 0.0018 & False \\
-kNN Cos. & 0.0422 $\pm$ 0.0096 & True \\
-fCBT Prs. & 0.0089 $\pm$ 0.0030 & False \\
-fCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
+kNN P. & 0.0244 $\pm$ 0.0018 & False \\
+kNN C. & 0.0422 $\pm$ 0.0096 & True \\
+CBTf P. & 0.0089 $\pm$ 0.0030 & False \\
+CBTf C. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -604,43 +604,43 @@ fCBT Cos. & 0.0096 $\pm$ 0.0004 & False \\
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ Amazon Movies TV Series (Sparse)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0823} & \textbf{0.1000} & \textbf{0.0083} & \textbf{0.1660} & 0.1884 & 0.0570 \\
 Random & 0.0031 & 0.0075 & 0.0012 & 0.0240 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0841} & \textbf{0.1019} & \textbf{0.0083} & \textbf{0.1660} & 0.7379 & \textbf{0.6260} \\
-kNN Cos. & \textbf{0.0911} & \textbf{0.1092} & \textbf{0.0087} & \textbf{0.1740} & 0.4460 & 0.1670 \\
-fCBT Prs. & 0.0206 & 0.0305 & 0.0033 & 0.0660 & 0.7454 & 0.2280 \\
-fCBT Cos. & 0.0090 & 0.0177 & 0.0025 & 0.0500 & 0.6709 & 0.3480 \\
-CBT Prs. & 0.0783 & 0.0906 & 0.0068 & 0.1360 & 0.2160 & 0.0700 \\
-CBT Cos. & 0.0773 & 0.0886 & 0.0065 & 0.1300 & 0.1625 & 0.0610 \\
+kNN P. & \textbf{0.0841} & \textbf{0.1019} & \textbf{0.0083} & \textbf{0.1660} & 0.7379 & \textbf{0.6260} \\
+kNN C. & \textbf{0.0911} & \textbf{0.1092} & \textbf{0.0087} & \textbf{0.1740} & 0.4460 & 0.1670 \\
+CBTf P. & 0.0206 & 0.0305 & 0.0033 & 0.0660 & 0.7454 & 0.2280 \\
+CBTf C. & 0.0090 & 0.0177 & 0.0025 & 0.0500 & 0.6709 & 0.3480 \\
+CBT P. & 0.0783 & 0.0906 & 0.0068 & 0.1360 & 0.2160 & 0.0700 \\
+CBT C. & 0.0773 & 0.0886 & 0.0065 & 0.1300 & 0.1625 & 0.0610 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.1108} & \textbf{0.1288} & \textbf{0.0098} & \textbf{0.1960} & 0.1914 & 0.0580 \\
 Random & 0.0067 & 0.0122 & 0.0016 & 0.0320 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0829} & \textbf{0.0999} & \textbf{0.0081} & \textbf{0.1620} & \textbf{0.7253} & 0.4790 \\
-kNN Cos. & \textbf{0.1129} & \textbf{0.1320} & \textbf{0.0100} & \textbf{0.2000} & 0.4543 & 0.1740 \\
-fCBT Prs. & 0.0125 & 0.0236 & 0.0032 & 0.0640 & 0.6953 & 0.5620 \\
-fCBT Cos. & 0.0181 & 0.0247 & 0.0024 & 0.0480 & 0.1128 & 0.0450 \\
-CBT Prs. & 0.0293 & 0.0553 & 0.0073 & 0.1460 & 0.2258 & 0.0800 \\
-CBT Cos. & 0.0249 & 0.0531 & 0.0079 & 0.1580 & 0.1620 & 0.0620 \\
+kNN P. & \textbf{0.0829} & \textbf{0.0999} & \textbf{0.0081} & \textbf{0.1620} & \textbf{0.7253} & 0.4790 \\
+kNN C. & \textbf{0.1129} & \textbf{0.1320} & \textbf{0.0100} & \textbf{0.2000} & 0.4543 & 0.1740 \\
+CBTf P. & 0.0125 & 0.0236 & 0.0032 & 0.0640 & 0.6953 & 0.5620 \\
+CBTf C. & 0.0181 & 0.0247 & 0.0024 & 0.0480 & 0.1128 & 0.0450 \\
+CBT P. & 0.0293 & 0.0553 & 0.0073 & 0.1460 & 0.2258 & 0.0800 \\
+CBT C. & 0.0249 & 0.0531 & 0.0079 & 0.1580 & 0.1620 & 0.0620 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0836} & \textbf{0.1042} & \textbf{0.0090} & \textbf{0.1800} & 0.1826 & 0.0580 \\
 Random & 0.0043 & 0.0079 & 0.0010 & 0.0200 & \textbf{0.9799} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0857} & \textbf{0.1099} & \textbf{0.0097} & \textbf{0.1940} & 0.7174 & \textbf{0.5960} \\
-kNN Cos. & \textbf{0.1002} & \textbf{0.1247} & \textbf{0.0105} & \textbf{0.2100} & 0.5888 & 0.3620 \\
-fCBT Prs. & 0.0105 & 0.0192 & 0.0026 & 0.0520 & 0.7420 & 0.2940 \\
-fCBT Cos. & 0.0157 & 0.0233 & 0.0025 & 0.0500 & 0.1095 & 0.0530 \\
-CBT Prs. & 0.0286 & 0.0418 & 0.0044 & 0.0880 & 0.7644 & 0.5110 \\
-CBT Cos. & 0.0702 & 0.0843 & 0.0068 & 0.1360 & 0.1627 & 0.0580 \\
+kNN P. & \textbf{0.0857} & \textbf{0.1099} & \textbf{0.0097} & \textbf{0.1940} & 0.7174 & \textbf{0.5960} \\
+kNN C. & \textbf{0.1002} & \textbf{0.1247} & \textbf{0.0105} & \textbf{0.2100} & 0.5888 & 0.3620 \\
+CBTf P. & 0.0105 & 0.0192 & 0.0026 & 0.0520 & 0.7420 & 0.2940 \\
+CBTf C. & 0.0157 & 0.0233 & 0.0025 & 0.0500 & 0.1095 & 0.0530 \\
+CBT P. & 0.0286 & 0.0418 & 0.0044 & 0.0880 & 0.7644 & 0.5110 \\
+CBT C. & 0.0702 & 0.0843 & 0.0068 & 0.1360 & 0.1627 & 0.0580 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -652,29 +652,29 @@ CBT Cos. & 0.0702 & 0.0843 & 0.0068 & 0.1360 & 0.1627 & 0.0580 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0574 $\pm$ 0.0232 & \\
+CBT C. & 0.0574 $\pm$ 0.0232 & \\
 \hline
 Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
-kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
-kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
-fCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
-fCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+kNN P. & 0.0843 $\pm$ 0.0012 & False \\
+kNN C. & 0.1014 $\pm$ 0.0090 & False \\
+CBTf P. & 0.0145 $\pm$ 0.0044 & False \\
+CBTf C. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0454 $\pm$ 0.0232 & \\
+CBT P. & 0.0454 $\pm$ 0.0232 & \\
 \hline
 Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
-kNN Prs. & 0.0843 $\pm$ 0.0012 & False \\
-kNN Cos. & 0.1014 $\pm$ 0.0090 & False \\
-fCBT Prs. & 0.0145 $\pm$ 0.0044 & False \\
-fCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
+kNN P. & 0.0843 $\pm$ 0.0012 & False \\
+kNN C. & 0.1014 $\pm$ 0.0090 & False \\
+CBTf P. & 0.0145 $\pm$ 0.0044 & False \\
+CBTf C. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -684,43 +684,43 @@ fCBT Cos. & 0.0143 $\pm$ 0.0038 & False \\
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Dense)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0284} & \textbf{0.0469} & \textbf{0.0058} & \textbf{0.1160} & 0.5164 & 0.1380 \\
 Random & 0.0061 & 0.0111 & 0.0015 & 0.0300 & \textbf{0.9797} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0333} & \textbf{0.0540} & \textbf{0.0066} & \textbf{0.1320} & 0.6052 & 0.1780 \\
-kNN Cos. & \textbf{0.0509} & \textbf{0.0867} & \textbf{0.0110} & \textbf{0.2200} & \textbf{0.8605} & \textbf{0.5520} \\
-fCBT Prs. & 0.0154 & 0.0286 & 0.0039 & 0.0780 & 0.7685 & 0.5150 \\
-fCBT Cos. & 0.0235 & 0.0378 & 0.0045 & 0.0900 & 0.3630 & 0.0810 \\
-CBT Prs. & 0.0228 & 0.0400 & 0.0052 & 0.1040 & 0.3651 & 0.0800 \\
-CBT Cos. & 0.0232 & 0.0371 & 0.0044 & 0.0880 & 0.3614 & 0.0810 \\
+kNN P. & \textbf{0.0333} & \textbf{0.0540} & \textbf{0.0066} & \textbf{0.1320} & 0.6052 & 0.1780 \\
+kNN C. & \textbf{0.0509} & \textbf{0.0867} & \textbf{0.0110} & \textbf{0.2200} & \textbf{0.8605} & \textbf{0.5520} \\
+CBTf P. & 0.0154 & 0.0286 & 0.0039 & 0.0780 & 0.7685 & 0.5150 \\
+CBTf C. & 0.0235 & 0.0378 & 0.0045 & 0.0900 & 0.3630 & 0.0810 \\
+CBT P. & 0.0228 & 0.0400 & 0.0052 & 0.1040 & 0.3651 & 0.0800 \\
+CBT C. & 0.0232 & 0.0371 & 0.0044 & 0.0880 & 0.3614 & 0.0810 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0354} & \textbf{0.0564} & \textbf{0.0067} & \textbf{0.1340} & 0.5159 & 0.1400 \\
 Random & 0.0035 & 0.0061 & 0.0008 & 0.0160 & \textbf{0.9797} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0388} & \textbf{0.0611} & \textbf{0.0072} & \textbf{0.1440} & \textbf{0.7246} & 0.3170 \\
-kNN Cos. & \textbf{0.0658} & \textbf{0.0970} & \textbf{0.0105} & \textbf{0.2100} & \textbf{0.8613} & \textbf{0.5010} \\
-fCBT Prs. & 0.0242 & 0.0360 & 0.0041 & 0.0820 & 0.3855 & 0.0900 \\
-fCBT Cos. & 0.0245 & 0.0355 & 0.0039 & 0.0780 & 0.3636 & 0.0820 \\
-CBT Prs. & 0.0255 & 0.0361 & 0.0038 & 0.0760 & 0.5481 & 0.3820 \\
-CBT Cos. & 0.0231 & 0.0336 & 0.0037 & 0.0740 & 0.3591 & 0.0790 \\
+kNN P. & \textbf{0.0388} & \textbf{0.0611} & \textbf{0.0072} & \textbf{0.1440} & \textbf{0.7246} & 0.3170 \\
+kNN C. & \textbf{0.0658} & \textbf{0.0970} & \textbf{0.0105} & \textbf{0.2100} & \textbf{0.8613} & \textbf{0.5010} \\
+CBTf P. & 0.0242 & 0.0360 & 0.0041 & 0.0820 & 0.3855 & 0.0900 \\
+CBTf C. & 0.0245 & 0.0355 & 0.0039 & 0.0780 & 0.3636 & 0.0820 \\
+CBT P. & 0.0255 & 0.0361 & 0.0038 & 0.0760 & 0.5481 & 0.3820 \\
+CBT C. & 0.0231 & 0.0336 & 0.0037 & 0.0740 & 0.3591 & 0.0790 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0325} & \textbf{0.0550} & \textbf{0.0069} & \textbf{0.1380} & \textbf{0.5161} & \textbf{0.1370} \\
 Random & 0.0049 & 0.0107 & 0.0016 & 0.0320 & \textbf{0.9797} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0410} & \textbf{0.0678} & \textbf{0.0084} & \textbf{0.1680} & \textbf{0.6467} & \textbf{0.2380} \\
-kNN Cos. & \textbf{0.0561} & \textbf{0.0904} & \textbf{0.0107} & \textbf{0.2140} & \textbf{0.7975} & \textbf{0.3740} \\
-fCBT Prs. & 0.0295 & 0.0472 & 0.0056 & 0.1120 & 0.4404 & 0.1280 \\
-fCBT Cos. & 0.0262 & 0.0429 & 0.0052 & 0.1040 & 0.3664 & 0.0810 \\
-CBT Prs. & 0.0259 & 0.0419 & 0.0050 & 0.1000 & 0.3675 & 0.0810 \\
-CBT Cos. & 0.0263 & 0.0437 & 0.0054 & 0.1080 & 0.3666 & 0.0790 \\
+kNN P. & \textbf{0.0410} & \textbf{0.0678} & \textbf{0.0084} & \textbf{0.1680} & \textbf{0.6467} & \textbf{0.2380} \\
+kNN C. & \textbf{0.0561} & \textbf{0.0904} & \textbf{0.0107} & \textbf{0.2140} & \textbf{0.7975} & \textbf{0.3740} \\
+CBTf P. & 0.0295 & 0.0472 & 0.0056 & 0.1120 & 0.4404 & 0.1280 \\
+CBTf C. & 0.0262 & 0.0429 & 0.0052 & 0.1040 & 0.3664 & 0.0810 \\
+CBT P. & 0.0259 & 0.0419 & 0.0050 & 0.1000 & 0.3675 & 0.0810 \\
+CBT C. & 0.0263 & 0.0437 & 0.0054 & 0.1080 & 0.3666 & 0.0790 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -732,29 +732,29 @@ CBT Cos. & 0.0263 & 0.0437 & 0.0054 & 0.1080 & 0.3666 & 0.0790 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0242 $\pm$ 0.0015 & \\
+CBT C. & 0.0242 $\pm$ 0.0015 & \\
 \hline
 Random & 0.0048 $\pm$ 0.0011 & False \\
 TopPop & 0.0321 $\pm$ 0.0029 & False \\
-kNN Prs. & 0.0377 $\pm$ 0.0032 & False \\
-kNN Cos. & 0.0576 $\pm$ 0.0062 & False \\
-fCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
-fCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+kNN P. & 0.0377 $\pm$ 0.0032 & False \\
+kNN C. & 0.0576 $\pm$ 0.0062 & False \\
+CBTf P. & 0.0230 $\pm$ 0.0058 & False \\
+CBTf C. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0247 $\pm$ 0.0014 & \\
+CBT P. & 0.0247 $\pm$ 0.0014 & \\
 \hline
 Random & 0.0048 $\pm$ 0.0011 & True \\
 TopPop & 0.0321 $\pm$ 0.0029 & True \\
-kNN Prs. & 0.0377 $\pm$ 0.0032 & True \\
-kNN Cos. & 0.0576 $\pm$ 0.0062 & True \\
-fCBT Prs. & 0.0230 $\pm$ 0.0058 & False \\
-fCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
+kNN P. & 0.0377 $\pm$ 0.0032 & True \\
+kNN C. & 0.0576 $\pm$ 0.0062 & True \\
+CBTf P. & 0.0230 $\pm$ 0.0058 & False \\
+CBTf C. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -764,43 +764,43 @@ fCBT Cos. & 0.0247 $\pm$ 0.0011 & False \\
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Sparse)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0182} & \textbf{0.0294} & \textbf{0.0035} & \textbf{0.0700} & 0.1564 & 0.0440 \\
 Random & 0.0041 & 0.0070 & 0.0009 & 0.0180 & \textbf{0.9800} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0242} & \textbf{0.0390} & \textbf{0.0046} & \textbf{0.0920} & \textbf{0.8937} & \textbf{0.8250} \\
-kNN Cos. & \textbf{0.0491} & \textbf{0.0772} & \textbf{0.0090} & \textbf{0.1800} & \textbf{0.8601} & \textbf{0.6610} \\
-fCBT Prs. & 0.0165 & 0.0261 & 0.0031 & 0.0620 & 0.5772 & 0.5430 \\
-fCBT Cos. & 0.0128 & 0.0245 & 0.0034 & 0.0680 & 0.1130 & 0.0340 \\
-CBT Prs. & 0.0075 & 0.0157 & 0.0023 & 0.0460 & 0.3317 & 0.1580 \\
-CBT Cos. & 0.0113 & 0.0222 & 0.0031 & 0.0620 & 0.1095 & 0.0370 \\
+kNN P. & \textbf{0.0242} & \textbf{0.0390} & \textbf{0.0046} & \textbf{0.0920} & \textbf{0.8937} & \textbf{0.8250} \\
+kNN C. & \textbf{0.0491} & \textbf{0.0772} & \textbf{0.0090} & \textbf{0.1800} & \textbf{0.8601} & \textbf{0.6610} \\
+CBTf P. & 0.0165 & 0.0261 & 0.0031 & 0.0620 & 0.5772 & 0.5430 \\
+CBTf C. & 0.0128 & 0.0245 & 0.0034 & 0.0680 & 0.1130 & 0.0340 \\
+CBT P. & 0.0075 & 0.0157 & 0.0023 & 0.0460 & 0.3317 & 0.1580 \\
+CBT C. & 0.0113 & 0.0222 & 0.0031 & 0.0620 & 0.1095 & 0.0370 \\
 \hline
 \hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0177} & \textbf{0.0297} & \textbf{0.0037} & \textbf{0.0740} & 0.1662 & 0.0440 \\
 Random & 0.0051 & 0.0101 & 0.0014 & 0.0280 & \textbf{0.9800} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0189} & \textbf{0.0331} & \textbf{0.0043} & \textbf{0.0860} & \textbf{0.8944} & \textbf{0.8120} \\
-kNN Cos. & \textbf{0.0451} & \textbf{0.0697} & \textbf{0.0080} & \textbf{0.1600} & \textbf{0.8870} & \textbf{0.7030} \\
-fCBT Prs. & 0.0165 & 0.0253 & 0.0029 & 0.0580 & 0.4759 & 0.3690 \\
-fCBT Cos. & 0.0144 & 0.0203 & 0.0021 & 0.0420 & 0.0852 & 0.0350 \\
-CBT Prs. & 0.0028 & 0.0057 & 0.0008 & 0.0160 & 0.6735 & 0.2630 \\
-CBT Cos. & 0.0156 & 0.0218 & 0.0022 & 0.0440 & 0.0850 & 0.0340 \\
+kNN P. & \textbf{0.0189} & \textbf{0.0331} & \textbf{0.0043} & \textbf{0.0860} & \textbf{0.8944} & \textbf{0.8120} \\
+kNN C. & \textbf{0.0451} & \textbf{0.0697} & \textbf{0.0080} & \textbf{0.1600} & \textbf{0.8870} & \textbf{0.7030} \\
+CBTf P. & 0.0165 & 0.0253 & 0.0029 & 0.0580 & 0.4759 & 0.3690 \\
+CBTf C. & 0.0144 & 0.0203 & 0.0021 & 0.0420 & 0.0852 & 0.0350 \\
+CBT P. & 0.0028 & 0.0057 & 0.0008 & 0.0160 & 0.6735 & 0.2630 \\
+CBT C. & 0.0156 & 0.0218 & 0.0022 & 0.0440 & 0.0850 & 0.0340 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
 TopPop & \textbf{0.0217} & \textbf{0.0347} & \textbf{0.0041} & \textbf{0.0820} & 0.1604 & 0.0450 \\
 Random & 0.0026 & 0.0077 & 0.0014 & 0.0280 & \textbf{0.9800} & \textbf{1.0000} \\
-kNN Prs. & \textbf{0.0264} & \textbf{0.0444} & \textbf{0.0055} & \textbf{0.1100} & \textbf{0.9079} & \textbf{0.8420} \\
-kNN Cos. & \textbf{0.0468} & \textbf{0.0735} & \textbf{0.0085} & \textbf{0.1700} & \textbf{0.8596} & \textbf{0.6650} \\
-fCBT Prs. & 0.0153 & 0.0264 & 0.0034 & 0.0680 & 0.5627 & 0.5340 \\
-fCBT Cos. & 0.0136 & 0.0250 & 0.0034 & 0.0680 & 0.1110 & 0.0340 \\
-CBT Prs. & 0.0104 & 0.0172 & 0.0021 & 0.0420 & 0.3511 & 0.1450 \\
-CBT Cos. & 0.0103 & 0.0179 & 0.0023 & 0.0460 & 0.0844 & 0.0340 \\
+kNN P. & \textbf{0.0264} & \textbf{0.0444} & \textbf{0.0055} & \textbf{0.1100} & \textbf{0.9079} & \textbf{0.8420} \\
+kNN C. & \textbf{0.0468} & \textbf{0.0735} & \textbf{0.0085} & \textbf{0.1700} & \textbf{0.8596} & \textbf{0.6650} \\
+CBTf P. & 0.0153 & 0.0264 & 0.0034 & 0.0680 & 0.5627 & 0.5340 \\
+CBTf C. & 0.0136 & 0.0250 & 0.0034 & 0.0680 & 0.1110 & 0.0340 \\
+CBT P. & 0.0104 & 0.0172 & 0.0021 & 0.0420 & 0.3511 & 0.1450 \\
+CBT C. & 0.0103 & 0.0179 & 0.0023 & 0.0460 & 0.0844 & 0.0340 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. Higher values are better. Best results are in bold.}
+\caption{Results of CBT experiment on preprocessed target dataset for cutoff 20 on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. Higher values are better. "P." and "C." stand for Pearson and cosine similarity. Best results are in bold.}
 \end{table}
 
 \begin{table}[hbt]
@@ -812,40 +812,40 @@ CBT Cos. & 0.0103 & 0.0179 & 0.0023 & 0.0460 & 0.0844 & 0.0340 \\
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Cos. & 0.0124 $\pm$ 0.0023 & \\
+CBT C. & 0.0124 $\pm$ 0.0023 & \\
 \hline
 Random & 0.0039 $\pm$ 0.0010 & True \\
 TopPop & 0.0192 $\pm$ 0.0018 & False \\
-kNN Prs. & 0.0232 $\pm$ 0.0032 & False \\
-kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
-fCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
-fCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+kNN P. & 0.0232 $\pm$ 0.0032 & False \\
+kNN C. & 0.0470 $\pm$ 0.0016 & True \\
+CBTf P. & 0.0161 $\pm$ 0.0006 & False \\
+CBTf C. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \hline
 & mAP@20 & Difference is Significant \\
 \hline
-CBT Prs. & 0.0069 $\pm$ 0.0031 & \\
+CBT P. & 0.0069 $\pm$ 0.0031 & \\
 \hline
 Random & 0.0039 $\pm$ 0.0010 & False \\
 TopPop & 0.0192 $\pm$ 0.0018 & True \\
-kNN Prs. & 0.0232 $\pm$ 0.0032 & True \\
-kNN Cos. & 0.0470 $\pm$ 0.0016 & True \\
-fCBT Prs. & 0.0161 $\pm$ 0.0006 & False \\
-fCBT Cos. & 0.0136 $\pm$ 0.0007 & False \\
+kNN P. & 0.0232 $\pm$ 0.0032 & True \\
+kNN C. & 0.0470 $\pm$ 0.0016 & True \\
+CBTf P. & 0.0161 $\pm$ 0.0006 & False \\
+CBTf C. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain.}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. "P." and "C." stand for Pearson and cosine similarity.}
 \end{table}
 
 \clearpage
 
 
 
-\section{CBT: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
+\section{CBT and LKT-FM: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
-The following section covers CBT experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
+The following section covers CBT and LKT-FM experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
-The metrics of its results are reported with a cutoff of 20.\\
+The kNN phase is performed with cosine similarity. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
@@ -882,6 +882,16 @@ MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 \end{tabulary}
 \end{center}
 The target dataset is split in training and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the training set.
+
+
+\subsection{Ablation Study}
+
+The ablation study for this experiment is performed in three different ways:
+\begin{itemize}
+\item \textbf{Source domain mix (CBTmix)}: All the ratings of the source domain are shuffled without keeping rows and column relation.
+\item \textbf{Random source domain (CBTrnd)}: A $500 \times 500$ source domain matrix is randomly generated with rating from 1 to 5.
+\item \textbf{Source domain reduction (CBTrem)}: One-tenth of the ratings of the source domain are removed before the source matrix is filled with the average of ratings.
+\end{itemize}
 
 
 \subsection{Hyperparameters}
@@ -923,47 +933,43 @@ The following hyperparameters are set:
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 1 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0439} &  \textbf{0.0659} &  \textbf{0.0072} &  \textbf{0.1434} &                                  \textbf{0.7849} &                                            0.0376 \\
-Random & 0.0007 &           0.0009 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0662} &  \textbf{0.0924} &  \textbf{0.0092} &  \textbf{0.1846} &                                  \textbf{0.9448} &                                   \textbf{0.2198} \\
-CBT Cos. & 0.0077 &           0.0116 &           0.0013 &           0.0256 &                                           0.5841 &                                            0.0817 \\
-\hline
-\hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0465} &  \textbf{0.0687} &  \textbf{0.0074} &  \textbf{0.1486} &                                  \textbf{0.7850} &                                            0.0376 \\
-Random & 0.0002 &           0.0008 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9820} \\
-kNN Cos. & \textbf{0.0663} &  \textbf{0.0930} &  \textbf{0.0094} &  \textbf{0.1884} &                                  \textbf{0.9448} &                                   \textbf{0.2175} \\
-CBT Cos. & 0.0067 &           0.0109 &           0.0013 &           0.0260 &                                           0.5846 &                                            0.0816 \\
+TopPop & \textbf{0.0439} &\textbf{0.0659} &\textbf{0.0072} &\textbf{0.1434} &\textbf{0.7849} & 0.0376 \\
+Random & 0.0007 & 0.0009 & 0.0001 & 0.0019 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0662} &\textbf{0.0924} &\textbf{0.0092} &\textbf{0.1846} &\textbf{0.9448} & \textbf{0.2198} \\
+CBTmix & 0.0100 & 0.0142 & 0.0015 & 0.0293 & 0.5746 & 0.0828 \\
+CBTrnd & 0.0103 & 0.0149 & 0.0016 & 0.0317 & 0.5720 & 0.0928 \\
+CBTrem & 0.0089 & 0.0153 & 0.0019 & 0.0388 & 0.6000 & 0.0705 \\
+CBT & 0.0077 & 0.0116 & 0.0013 & 0.0256 & 0.5841 & 0.0817 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 2 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0586} &  \textbf{0.0811} &  \textbf{0.0081} &  \textbf{0.1619} &                                  \textbf{0.7849} &                                            0.0375 \\
-Random & 0.0002 &           0.0006 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0705} &  \textbf{0.0967} &  \textbf{0.0095} &  \textbf{0.1898} &                                  \textbf{0.9451} &                                   \textbf{0.2164} \\
-CBT Cos. & 0.0134 &           0.0191 &           0.0020 &           0.0393 &                                           0.5844 &                                            0.0806 \\
-\hline
-\hline
-Fold 4 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0447} &  \textbf{0.0671} &  \textbf{0.0074} &  \textbf{0.1477} &                                  \textbf{0.7852} &                                            0.0377 \\
-Random & 0.0009 &           0.0012 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0656} &  \textbf{0.0901} &  \textbf{0.0088} &  \textbf{0.1770} &                                  \textbf{0.9447} &                                   \textbf{0.2156} \\
-CBT Cos. & 0.0087 &           0.0133 &           0.0015 &           0.0303 &                                           0.5838 &                                            0.0785 \\
+TopPop & \textbf{0.0465} &\textbf{0.0687} &\textbf{0.0074} &\textbf{0.1486} &\textbf{0.7850} & 0.0376 \\
+Random & 0.0002 & 0.0008 & 0.0001 & 0.0028 &\textbf{0.9980} & \textbf{0.9820} \\
+kNN & \textbf{0.0663} &\textbf{0.0930} &\textbf{0.0094} &\textbf{0.1884} &\textbf{0.9448} & \textbf{0.2175} \\
+CBTmix & 0.0097 & 0.0145 & 0.0016 & 0.0317 & 0.5891 & 0.0866 \\
+CBTrnd & 0.0115 & 0.0162 & 0.0017 & 0.0331 & 0.5718 & 0.0919 \\
+CBTrem & 0.0081 & 0.0131 & 0.0016 & 0.0312 & 0.5887 & 0.0645 \\
+CBT & 0.0067 & 0.0109 & 0.0013 & 0.0260 & 0.5846 & 0.0816 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \hline
-Fold 5 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 3 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0461} &  \textbf{0.0679} &  \textbf{0.0073} &  \textbf{0.1453} &                                  \textbf{0.7851} &                                            0.0375 \\
-Random & 0.0003 &           0.0009 &           0.0002 &           0.0033 &                                  \textbf{0.9980} &                                   \textbf{0.9823} \\
-kNN Cos. & \textbf{0.0661} &  \textbf{0.0906} &  \textbf{0.0088} &  \textbf{0.1770} &                                  \textbf{0.9447} &                                   \textbf{0.2146} \\
-CBT Cos. & 0.0070 &           0.0119 &           0.0015 &           0.0298 &                                           0.5856 &                                            0.0849 \\
+TopPop & \textbf{0.0586} &\textbf{0.0811} &\textbf{0.0081} &\textbf{0.1619} &\textbf{0.7849} & 0.0375 \\
+Random & 0.0002 & 0.0006 & 0.0001 & 0.0024 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0705} &\textbf{0.0967} &\textbf{0.0095} &\textbf{0.1898} &\textbf{0.9451} & \textbf{0.2164} \\
+CBTmix & 0.0121 & 0.0176 & 0.0019 & 0.0374 & 0.5896 & 0.0874 \\
+CBTrnd & 0.0085 & 0.0139 & 0.0017 & 0.0341 & 0.5713 & 0.0925 \\
+CBTrem & 0.0130 & 0.0180 & 0.0018 & 0.0364 & 0.5874 & 0.0638 \\
+CBT & 0.0134 & 0.0191 & 0.0020 & 0.0393 & 0.5844 & 0.0806 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-3.}
 \end{table}
 
 \begin{table}[hbt]
@@ -973,47 +979,111 @@ CBT Cos. & 0.0070 &           0.0119 &           0.0015 &           0.0298 &    
 \multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
-Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 4 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0514} &  \textbf{0.0723} &  \textbf{0.0074} &  \textbf{0.1481} &                                  \textbf{0.7851} &                                            0.0376 \\
-Random & 0.0001 &           0.0003 &           0.0000 &           0.0009 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0670} &  \textbf{0.0925} &  \textbf{0.0093} &  \textbf{0.1850} &                                  \textbf{0.9446} &                                   \textbf{0.2149} \\
-CBT Cos. & 0.0097 &           0.0141 &           0.0015 &           0.0293 &                                           0.5873 &                                            0.0848 \\
-\hline
-\hline
-Fold 7 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0468} &  \textbf{0.0677} &  \textbf{0.0072} &  \textbf{0.1434} &                                  \textbf{0.7852} &                                            0.0378 \\
-Random & 0.0007 &           0.0015 &           0.0002 &           0.0043 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0615} &  \textbf{0.0869} &  \textbf{0.0089} &  \textbf{0.1784} &                                  \textbf{0.9446} &                                   \textbf{0.2190} \\
-CBT Cos. & 0.0106 &           0.0143 &           0.0014 &           0.0274 &                                           0.5876 &                                            0.0833 \\
+TopPop & \textbf{0.0447} &\textbf{0.0671} &\textbf{0.0074} &\textbf{0.1477} &\textbf{0.7852} & 0.0377 \\
+Random & 0.0009 & 0.0012 & 0.0001 & 0.0024 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0656} &\textbf{0.0901} &\textbf{0.0088} &\textbf{0.1770} &\textbf{0.9447} & \textbf{0.2156} \\
+CBTmix & 0.0083 & 0.0137 & 0.0017 & 0.0336 & 0.5891 & 0.0847 \\
+CBTrnd & 0.0126 & 0.0179 & 0.0019 & 0.0374 & 0.5724 & 0.0908 \\
+CBTrem & 0.0087 & 0.0129 & 0.0014 & 0.0284 & 0.5857 & 0.0597 \\
+CBT & 0.0087 & 0.0133 & 0.0015 & 0.0303 & 0.5838 & 0.0785 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \hline
-Fold 8 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 5 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0515} &  \textbf{0.0746} &  \textbf{0.0079} &  \textbf{0.1585} &                                  \textbf{0.7850} &                                            0.0378 \\
-Random & 0.0001 &           0.0003 &           0.0000 &           0.0009 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0678} &  \textbf{0.0912} &  \textbf{0.0088} &  \textbf{0.1765} &                                  \textbf{0.9447} &                                   \textbf{0.2144} \\
-CBT Cos. & 0.0088 &           0.0132 &           0.0014 &           0.0289 &                                           0.5835 &                                            0.0767 \\
-\hline
-\hline
-Fold 9 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0502} &  \textbf{0.0729} &  \textbf{0.0077} &  \textbf{0.1548} &                                  \textbf{0.7849} &                                            0.0378 \\
-Random & 0.0004 &           0.0008 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0716} &  \textbf{0.0964} &  \textbf{0.0093} &  \textbf{0.1850} &                                  \textbf{0.9451} &                                   \textbf{0.2203} \\
-CBT Cos. & 0.0099 &           0.0142 &           0.0015 &           0.0298 &                                           0.5833 &                                            0.0784 \\
+TopPop & \textbf{0.0461} &\textbf{0.0679} &\textbf{0.0073} &\textbf{0.1453} &\textbf{0.7851} & 0.0375 \\
+Random & 0.0003 & 0.0009 & 0.0002 & 0.0033 &\textbf{0.9980} & \textbf{0.9823} \\
+kNN & \textbf{0.0661} &\textbf{0.0906} &\textbf{0.0088} &\textbf{0.1770} &\textbf{0.9447} & \textbf{0.2146} \\
+CBTmix & 0.0097 & 0.0153 & 0.0018 & 0.0360 & 0.5884 & 0.0851 \\
+CBTrnd & 0.0100 & 0.0155 & 0.0018 & 0.0355 & 0.5725 & 0.0927 \\
+CBTrem & 0.0073 & 0.0123 & 0.0015 & 0.0303 & 0.5854 & 0.0544 \\
+CBT & 0.0070 & 0.0119 & 0.0015 & 0.0298 & 0.5856 & 0.0849 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \hline
-Fold 10 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+Fold 6 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
 \hline
-TopPop & \textbf{0.0494} &  \textbf{0.0736} &  \textbf{0.0080} &  \textbf{0.1609} &                                  \textbf{0.7848} &                                            0.0379 \\
-Random & 0.0002 &           0.0005 &           0.0001 &           0.0014 &                                  \textbf{0.9980} &                                   \textbf{0.9824} \\
-kNN Cos. & \textbf{0.0696} &  \textbf{0.0962} &  \textbf{0.0096} &  \textbf{0.1917} &                                  \textbf{0.9444} &                                   \textbf{0.2137} \\
-CBT Cos. & 0.0076 &           0.0114 &           0.0012 &           0.0246 &                                           0.5825 &                                            0.0767 \\
+TopPop & \textbf{0.0514} &\textbf{0.0723} &\textbf{0.0074} &\textbf{0.1481} &\textbf{0.7851} & 0.0376 \\
+Random & 0.0001 & 0.0003 & 0.0000 & 0.0009 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0670} &\textbf{0.0925} &\textbf{0.0093} &\textbf{0.1850} &\textbf{0.9446} & \textbf{0.2149} \\
+CBTmix & 0.0108 & 0.0165 & 0.0019 & 0.0374 & 0.5892 & 0.0877 \\
+CBTrnd & 0.0088 & 0.0136 & 0.0015 & 0.0308 & 0.5719 & 0.0919 \\
+CBTrem & 0.0095 & 0.0153 & 0.0018 & 0.0360 & 0.5872 & 0.0606 \\
+CBT & 0.0097 & 0.0141 & 0.0015 & 0.0293 & 0.5873 & 0.0848 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 4-6.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Fold 7 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & \textbf{0.0468} &\textbf{0.0677} &\textbf{0.0072} &\textbf{0.1434} &\textbf{0.7852} & 0.0378 \\
+Random & 0.0007 & 0.0015 & 0.0002 & 0.0043 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0615} &\textbf{0.0869} &\textbf{0.0089} &\textbf{0.1784} &\textbf{0.9446} & \textbf{0.2190} \\
+CBTmix & 0.0102 & 0.0146 & 0.0015 & 0.0308 & 0.5897 & 0.0906 \\
+CBTrnd & 0.0116 & 0.0173 & 0.0019 & 0.0379 & 0.5719 & 0.0911 \\
+CBTrem & 0.0082 & 0.0128 & 0.0015 & 0.0293 & 0.5888 & 0.0652 \\
+CBT & 0.0106 & 0.0143 & 0.0014 & 0.0274 & 0.5876 & 0.0833 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 8 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & \textbf{0.0515} &\textbf{0.0746} &\textbf{0.0079} &\textbf{0.1585} &\textbf{0.7850} & 0.0378 \\
+Random & 0.0001 & 0.0003 & 0.0000 & 0.0009 &\textbf{0.9980} & \textbf{0.9822} \\
+kNN & \textbf{0.0678} &\textbf{0.0912} &\textbf{0.0088} &\textbf{0.1765} &\textbf{0.9447} & \textbf{0.2144} \\
+CBTmix & 0.0104 & 0.0153 & 0.0017 & 0.0331 & 0.5889 & 0.0859 \\
+CBTrnd & 0.0123 & 0.0167 & 0.0016 & 0.0322 & 0.5712 & 0.0900 \\
+CBTrem & 0.0084 & 0.0128 & 0.0014 & 0.0284 & 0.5872 & 0.0607 \\
+CBT & 0.0088 & 0.0132 & 0.0014 & 0.0289 & 0.5835 & 0.0767 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\hline
+Fold 9 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & \textbf{0.0502} &\textbf{0.0729} &\textbf{0.0077} &\textbf{0.1548} &\textbf{0.7849} & 0.0378 \\
+Random & 0.0004 & 0.0008 & 0.0001 & 0.0024 &\textbf{0.9980} & \textbf{0.9821} \\
+kNN & \textbf{0.0716} &\textbf{0.0964} &\textbf{0.0093} &\textbf{0.1850} &\textbf{0.9451} & \textbf{0.2203} \\
+CBTmix & 0.0094 & 0.0159 & 0.0020 & 0.0398 & 0.5891 & 0.0866 \\
+CBTrnd & 0.0124 & 0.0182 & 0.0020 & 0.0393 & 0.5715 & 0.0891 \\
+CBTrem & 0.0082 & 0.0132 & 0.0016 & 0.0317 & 0.5841 & 0.0560 \\
+CBT & 0.0099 & 0.0142 & 0.0015 & 0.0298 & 0.5833 & 0.0784 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 7-9.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\hline
+\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Fold 10 & mAP & nDCG & Prec. & Recall & G. Div. & I. Cov. \\
+\hline
+TopPop & \textbf{0.0494} &\textbf{0.0736} &\textbf{0.0080} &\textbf{0.1609} &\textbf{0.7848} & 0.0379 \\
+Random & 0.0002 & 0.0005 & 0.0001 & 0.0014 &\textbf{0.9980} & \textbf{0.9824} \\
+kNN & \textbf{0.0696} &\textbf{0.0962} &\textbf{0.0096} &\textbf{0.1917} &\textbf{0.9444} & \textbf{0.2137} \\
+CBTmix & 0.0127 & 0.0168 & 0.0016 & 0.0312 & 0.5890 & 0.0865 \\
+CBTrnd & 0.0112 & 0.0161 & 0.0017 & 0.0336 & 0.5725 & 0.0923 \\
+CBTrem & 0.0117 & 0.0165 & 0.0017 & 0.0336 & 0.5869 & 0.0586 \\
+CBT & 0.0076 & 0.0114 & 0.0012 & 0.0246 & 0.5825 & 0.0767 \\
+LKT-FM & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 & 0.0000 \\
+\hline
+\end{tabulary}
+\caption{Results of CBT and LKT-FM experiments on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Fold 10.}
 \end{table}
 
 \begin{table}[hbt]
@@ -1025,126 +1095,41 @@ CBT Cos. & 0.0076 &           0.0114 &           0.0012 &           0.0246 &    
 \hline
 & mAP & Difference is Significant \\
 \hline
-CBT Cos. & 0.0090 $\pm$ 0.0019 & \\
+CBT & 0.0090 $\pm$ 0.0019 & \\
 \hline
 Random & 0.0004 $\pm$ 0.0003 & True \\
 TopPop & 0.0489 $\pm$ 0.0041 & True \\
-kNN Cos. & 0.0672 $\pm$ 0.0027 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+CBTmix & 0.0103 $\pm$ 0.0012 & False \\
+CBTrnd & 0.0109 $\pm$ 0.0014 & False \\
+CBTrem & 0.0092 $\pm$ 0.0017 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
-\end{table}
-
-\clearpage
-
-
-\subsection{Ablation Study}
-
-The ablation study for this experiment is performed in three different ways:
-\begin{itemize}
-\item \textbf{Source domain mix}: All the ratings of the source domain are shuffled without keeping rows and column relation.
-\item \textbf{Random source domain}: A $500 \times 500$ source domain matrix is randomly generated with rating from 1 to 5.
-\item \textbf{Source domain reduction}: One-tenth of the ratings of the source domain are removed before the source matrix is filled with the average of ratings.
-\end{itemize}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0535} &  \textbf{0.0766} &  \textbf{0.0080} &  \textbf{0.1604} &                                  \textbf{0.7848} &                                            0.0375 \\
-Random & 0.0008 &           0.0014 &           0.0002 &           0.0038 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0646} &  \textbf{0.0912} &  \textbf{0.0093} &  \textbf{0.1865} &                                  \textbf{0.9448} &                                   \textbf{0.2197} \\
-CBT Cos. & 0.0100 &           0.0142 &           0.0015 &           0.0293 &                                           0.5746 &                                            0.0828 \\
-\hline
-\hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0499} &  \textbf{0.0741} &  \textbf{0.0081} &  \textbf{0.1619} &                                  \textbf{0.7848} &                                            0.0377 \\
-Random & 0.0004 &           0.0007 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0679} &  \textbf{0.0938} &  \textbf{0.0093} &  \textbf{0.1865} &                                  \textbf{0.9449} &                                   \textbf{0.2209} \\
-CBT Cos. & 0.0097 &           0.0145 &           0.0016 &           0.0317 &                                           0.5891 &                                            0.0866 \\
-\hline
-\hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0525} &  \textbf{0.0752} &  \textbf{0.0079} &  \textbf{0.1571} &                                  \textbf{0.7849} &                                            0.0376 \\
-Random & 0.0009 &           0.0018 &           0.0002 &           0.0047 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0695} &  \textbf{0.0970} &  \textbf{0.0098} &  \textbf{0.1955} &                                  \textbf{0.9450} &                                   \textbf{0.2160} \\
-CBT Cos. & 0.0121 &           0.0176 &           0.0019 &           0.0374 &                                           0.5896 &                                            0.0874 \\
-\hline
-\hline
-Fold 4 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0443} &  \textbf{0.0660} &  \textbf{0.0072} &  \textbf{0.1443} &                                  \textbf{0.7852} &                                            0.0375 \\
-Random & 0.0002 &           0.0005 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0626} &  \textbf{0.0885} &  \textbf{0.0091} &  \textbf{0.1813} &                                  \textbf{0.9449} &                                   \textbf{0.2145} \\
-CBT Cos. & 0.0083 &           0.0137 &           0.0017 &           0.0336 &                                           0.5891 &                                            0.0847 \\
-\hline
-\hline
-Fold 5 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0511} &  \textbf{0.0743} &  \textbf{0.0079} &  \textbf{0.1571} &                                  \textbf{0.7849} &                                            0.0374 \\
-Random & 0.0005 &           0.0009 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0706} &  \textbf{0.0972} &  \textbf{0.0096} &  \textbf{0.1917} &                                  \textbf{0.9450} &                                   \textbf{0.2183} \\
-CBT Cos. & 0.0097 &           0.0153 &           0.0018 &           0.0360 &                                           0.5884 &                                            0.0851 \\
-\hline
-\end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
 \end{table}
 
 \begin{table}[hbt]
 \centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
+\begin{tabulary}{\textwidth}{|L|CC|}
 \hline
-\multicolumn{7}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0488} &  \textbf{0.0717} &  \textbf{0.0077} &  \textbf{0.1543} &                                  \textbf{0.7849} &                                            0.0378 \\
-Random & 0.0004 &           0.0009 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0734} &  \textbf{0.1000} &  \textbf{0.0097} &  \textbf{0.1950} &                                  \textbf{0.9450} &                                   \textbf{0.2163} \\
-CBT Cos. & 0.0108 &           0.0165 &           0.0019 &           0.0374 &                                           0.5892 &                                            0.0877 \\
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
 \hline
 \hline
-Fold 7 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
+& mAP & Difference is Significant \\
 \hline
-TopPop & \textbf{0.0494} &  \textbf{0.0711} &  \textbf{0.0075} &  \textbf{0.1496} &                                  \textbf{0.7850} &                                            0.0378 \\
-Random & 0.0002 &           0.0005 &           0.0001 &           0.0014 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0649} &  \textbf{0.0892} &  \textbf{0.0088} &  \textbf{0.1765} &                                  \textbf{0.9452} &                                   \textbf{0.2161} \\
-CBT Cos. & 0.0102 &           0.0146 &           0.0015 &           0.0308 &                                           0.5897 &                                            0.0906 \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & \\
 \hline
-\hline
-Fold 8 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0421} &  \textbf{0.0630} &  \textbf{0.0069} &  \textbf{0.1387} &                                  \textbf{0.7853} &                                            0.0375 \\
-Random & 0.0003 &           0.0007 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0658} &  \textbf{0.0877} &  \textbf{0.0083} &  \textbf{0.1652} &                                  \textbf{0.9451} &                                   \textbf{0.2165} \\
-CBT Cos. & 0.0104 &           0.0153 &           0.0017 &           0.0331 &                                           0.5889 &                                            0.0859 \\
-\hline
-\hline
-Fold 9 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0473} &  \textbf{0.0690} &  \textbf{0.0073} &  \textbf{0.1467} &                                  \textbf{0.7850} &                                            0.0378 \\
-Random & 0.0007 &           0.0010 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9823} \\
-kNN Cos. & \textbf{0.0671} &  \textbf{0.0930} &  \textbf{0.0093} &  \textbf{0.1869} &                                  \textbf{0.9452} &                                   \textbf{0.2160} \\
-CBT Cos. & 0.0094 &           0.0159 &           0.0020 &           0.0398 &                                           0.5891 &                                            0.0866 \\
-\hline
-\hline
-Fold 10 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0491} &  \textbf{0.0695} &  \textbf{0.0072} &  \textbf{0.1434} &                                  \textbf{0.7849} &                                            0.0377 \\
-Random & 0.0005 &           0.0012 &           0.0002 &           0.0038 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0730} &  \textbf{0.0962} &  \textbf{0.0089} &  \textbf{0.1789} &                                  \textbf{0.9450} &                                   \textbf{0.2159} \\
-CBT Cos. & 0.0127 &           0.0168 &           0.0016 &           0.0312 &                                           0.5890 &                                            0.0865 \\
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+CBTmix & 0.0103 $\pm$ 0.0012 & True \\
+CBTrnd & 0.0109 $\pm$ 0.0014 & True \\
+CBTrem & 0.0092 $\pm$ 0.0017 & True \\
+CBT & 0.0090 $\pm$ 0.0019 & True \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Significance tests of LKT-FM experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
 \end{table}
 
 \begin{table}[hbt]
@@ -1156,114 +1141,18 @@ CBT Cos. & 0.0127 &           0.0168 &           0.0016 &           0.0312 &    
 \hline
 & mAP & Difference is Significant \\
 \hline
-CBT Cos. & 0.0103 $\pm$ 0.0012 & \\
+CBTmix & 0.0103 $\pm$ 0.0012 & \\
 \hline
-Random & 0.0005 $\pm$ 0.0002 & True \\
-TopPop & 0.0488 $\pm$ 0.0033 & True \\
-kNN Cos. & 0.0679 $\pm$ 0.0035 & True \\
-\hline
-\end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
-\end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0431} &  \textbf{0.0628} &  \textbf{0.0067} &  \textbf{0.1349} &                                  \textbf{0.7853} &                                            0.0377 \\
-Random & 0.0002 &           0.0004 &           0.0001 &           0.0014 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0621} &  \textbf{0.0854} &  \textbf{0.0085} &  \textbf{0.1704} &                                  \textbf{0.9449} &                                   \textbf{0.2194} \\
-CBT Cos. & 0.0103 &           0.0149 &           0.0016 &           0.0317 &                                           0.5720 &                                            0.0928 \\
-\hline
-\hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0490} &  \textbf{0.0705} &  \textbf{0.0074} &  \textbf{0.1477} &                                  \textbf{0.7848} &                                            0.0375 \\
-Random & 0.0004 &           0.0009 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0727} &  \textbf{0.0970} &  \textbf{0.0092} &  \textbf{0.1836} &                                  \textbf{0.9450} &                                   \textbf{0.2156} \\
-CBT Cos. & 0.0115 &           0.0162 &           0.0017 &           0.0331 &                                           0.5718 &                                            0.0919 \\
-\hline
-\hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0382} &  \textbf{0.0594} &  \textbf{0.0069} &  \textbf{0.1377} &                                  \textbf{0.7853} &                                            0.0378 \\
-Random & 0.0004 &           0.0011 &           0.0002 &           0.0038 &                                  \textbf{0.9980} &                                   \textbf{0.9823} \\
-kNN Cos. & \textbf{0.0560} &  \textbf{0.0798} &  \textbf{0.0083} &  \textbf{0.1661} &                                  \textbf{0.9446} &                                   \textbf{0.2163} \\
-CBT Cos. & 0.0085 &           0.0139 &           0.0017 &           0.0341 &                                           0.5713 &                                            0.0925 \\
-\hline
-\hline
-Fold 4 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0469} &  \textbf{0.0680} &  \textbf{0.0072} &  \textbf{0.1434} &                                  \textbf{0.7851} &                                            0.0378 \\
-Random & 0.0002 &           0.0005 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0689} &  \textbf{0.0950} &  \textbf{0.0094} &  \textbf{0.1879} &                                  \textbf{0.9443} &                                   \textbf{0.2148} \\
-CBT Cos. & 0.0126 &           0.0179 &           0.0019 &           0.0374 &                                           0.5724 &                                            0.0908 \\
-\hline
-\hline
-Fold 5 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0498} &  \textbf{0.0739} &  \textbf{0.0080} &  \textbf{0.1604} &                                  \textbf{0.7848} &                                            0.0376 \\
-Random & 0.0002 &           0.0007 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0716} &  \textbf{0.0985} &  \textbf{0.0097} &  \textbf{0.1945} &                                  \textbf{0.9448} &                                   \textbf{0.2156} \\
-CBT Cos. & 0.0100 &           0.0155 &           0.0018 &           0.0355 &                                           0.5725 &                                            0.0927 \\
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+CBTrnd & 0.0109 $\pm$ 0.0014 & False \\
+CBTrem & 0.0092 $\pm$ 0.0017 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
-\end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0437} &  \textbf{0.0662} &  \textbf{0.0074} &  \textbf{0.1481} &                                  \textbf{0.7851} &                                            0.0378 \\
-Random & 0.0002 &           0.0005 &           0.0001 &           0.0014 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0652} &  \textbf{0.0918} &  \textbf{0.0093} &  \textbf{0.1865} &                                  \textbf{0.9452} &                                   \textbf{0.2192} \\
-CBT Cos. & 0.0088 &           0.0136 &           0.0015 &           0.0308 &                                           0.5719 &                                            0.0919 \\
-\hline
-\hline
-Fold 7 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0475} &  \textbf{0.0725} &  \textbf{0.0082} &  \textbf{0.1633} &                                  \textbf{0.7849} &                                            0.0375 \\
-Random & 0.0003 &           0.0005 &           0.0000 &           0.0009 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0683} &  \textbf{0.0968} &  \textbf{0.0099} &  \textbf{0.1988} &                                  \textbf{0.9451} &                                   \textbf{0.2174} \\
-CBT Cos. & 0.0116 &           0.0173 &           0.0019 &           0.0379 &                                           0.5719 &                                            0.0911 \\
-\hline
-\hline
-Fold 8 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0418} &  \textbf{0.0632} &  \textbf{0.0070} &  \textbf{0.1401} &                                  \textbf{0.7851} &                                            0.0377 \\
-Random & 0.0003 &           0.0007 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0631} &  \textbf{0.0887} &  \textbf{0.0090} &  \textbf{0.1794} &                                  \textbf{0.9451} &                                   \textbf{0.2183} \\
-CBT Cos. & 0.0123 &           0.0167 &           0.0016 &           0.0322 &                                           0.5712 &                                            0.0900 \\
-\hline
-\hline
-Fold 9 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0522} &  \textbf{0.0777} &  \textbf{0.0084} &  \textbf{0.1690} &                                  \textbf{0.7847} &                                            0.0375 \\
-Random & 0.0002 &           0.0006 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0667} &  \textbf{0.0920} &  \textbf{0.0091} &  \textbf{0.1817} &                                  \textbf{0.9446} &                                   \textbf{0.2159} \\
-CBT Cos. & 0.0124 &           0.0182 &           0.0020 &           0.0393 &                                           0.5715 &                                            0.0891 \\
-\hline
-\hline
-Fold 10 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0474} &  \textbf{0.0705} &  \textbf{0.0077} &  \textbf{0.1533} &                                  \textbf{0.7850} &                                            0.0375 \\
-Random & 0.0002 &           0.0007 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9823} \\
-kNN Cos. & \textbf{0.0683} &  \textbf{0.0953} &  \textbf{0.0096} &  \textbf{0.1912} &                                  \textbf{0.9449} &                                   \textbf{0.2183} \\
-CBT Cos. & 0.0112 &           0.0161 &           0.0017 &           0.0336 &                                           0.5725 &                                            0.0923 \\
-\hline
-\end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
 \end{table}
 
 \begin{table}[hbt]
@@ -1275,116 +1164,19 @@ CBT Cos. & 0.0112 &           0.0161 &           0.0017 &           0.0336 &    
 \hline
 & mAP & Difference is Significant \\
 \hline
-CBT Cos. & 0.0109 $\pm$ 0.0014 & \\
+CBTrnd & 0.0109 $\pm$ 0.0014 & \\
 \hline
-Random & 0.0003 $\pm$ 0.0001 & True \\
-TopPop & 0.0460 $\pm$ 0.0040 & True \\
-kNN Cos. & 0.0663 $\pm$ 0.0047 & True \\
-\hline
-\end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study.}
-\end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0436} &  \textbf{0.0660} &  \textbf{0.0074} &  \textbf{0.1481} &                                  \textbf{0.7852} &                                            0.0375 \\
-Random & 0.0006 &           0.0009 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0651} &  \textbf{0.0923} &  \textbf{0.0095} &  \textbf{0.1893} &                                  \textbf{0.9449} &                                   \textbf{0.2156} \\
-CBT Cos. & 0.0089 &           0.0153 &           0.0019 &           0.0388 &                                           0.6000 &                                            0.0705 \\
-\hline
-\hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0517} &  \textbf{0.0736} &  \textbf{0.0076} &  \textbf{0.1524} &                                  \textbf{0.7848} &                                            0.0376 \\
-Random & 0.0005 &           0.0007 &           0.0001 &           0.0014 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0700} &  \textbf{0.0952} &  \textbf{0.0092} &  \textbf{0.1841} &                                  \textbf{0.9453} &                                   \textbf{0.2179} \\
-CBT Cos. & 0.0081 &           0.0131 &           0.0016 &           0.0312 &                                           0.5887 &                                            0.0645 \\
-\hline
-\hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0458} &  \textbf{0.0694} &  \textbf{0.0078} &  \textbf{0.1552} &                                  \textbf{0.7850} &                                            0.0375 \\
-Random & 0.0003 &           0.0007 &           0.0001 &           0.0024 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0693} &  \textbf{0.0944} &  \textbf{0.0092} &  \textbf{0.1841} &                                  \textbf{0.9454} &                                   \textbf{0.2153} \\
-CBT Cos. & 0.0130 &           0.0180 &           0.0018 &           0.0364 &                                           0.5874 &                                            0.0638 \\
-\hline
-\hline
-Fold 4 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0457} &  \textbf{0.0667} &  \textbf{0.0072} &  \textbf{0.1434} &                                  \textbf{0.7851} &                                            0.0376 \\
-Random & 0.0003 &           0.0008 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0626} &  \textbf{0.0855} &  \textbf{0.0084} &  \textbf{0.1671} &                                  \textbf{0.9456} &                                   \textbf{0.2202} \\
-CBT Cos. & 0.0087 &           0.0129 &           0.0014 &           0.0284 &                                           0.5857 &                                            0.0597 \\
-\hline
-\hline
-Fold 5 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0444} &  \textbf{0.0673} &  \textbf{0.0075} &  \textbf{0.1491} &                                  \textbf{0.7849} &                                            0.0377 \\
-Random & 0.0006 &           0.0014 &           0.0002 &           0.0043 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0615} &  \textbf{0.0865} &  \textbf{0.0088} &  \textbf{0.1756} &                                  \textbf{0.9447} &                                   \textbf{0.2177} \\
-CBT Cos. & 0.0073 &           0.0123 &           0.0015 &           0.0303 &                                           0.5854 &                                            0.0544 \\
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+CBTmix & 0.0103 $\pm$ 0.0012 & False \\
+CBTrem & 0.0092 $\pm$ 0.0017 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \hline
 \end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 1-5.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study.}
 \end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0443} &  \textbf{0.0660} &  \textbf{0.0072} &  \textbf{0.1448} &                                  \textbf{0.7851} &                                            0.0378 \\
-Random & 0.0001 &           0.0005 &           0.0001 &           0.0019 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0671} &  \textbf{0.0930} &  \textbf{0.0093} &  \textbf{0.1860} &                                  \textbf{0.9449} &                                   \textbf{0.2191} \\
-CBT Cos. & 0.0095 &           0.0153 &           0.0018 &           0.0360 &                                           0.5872 &                                            0.0606 \\
-\hline
-\hline
-Fold 7 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0437} &  \textbf{0.0649} &  \textbf{0.0071} &  \textbf{0.1425} &                                  \textbf{0.7852} &                                            0.0376 \\
-Random & 0.0010 &           0.0016 &           0.0002 &           0.0038 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0620} &  \textbf{0.0882} &  \textbf{0.0091} &  \textbf{0.1827} &                                  \textbf{0.9446} &                                   \textbf{0.2144} \\
-CBT Cos. & 0.0082 &           0.0128 &           0.0015 &           0.0293 &                                           0.5888 &                                            0.0652 \\
-\hline
-\hline
-Fold 8 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0507} &  \textbf{0.0732} &  \textbf{0.0077} &  \textbf{0.1548} &                                  \textbf{0.7849} &                                            0.0378 \\
-Random & 0.0001 &           0.0002 &           0.0000 &           0.0009 &                                  \textbf{0.9980} &                                   \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0624} &  \textbf{0.0874} &  \textbf{0.0088} &  \textbf{0.1770} &                                  \textbf{0.9448} &                                   \textbf{0.2162} \\
-CBT Cos. & 0.0084 &           0.0128 &           0.0014 &           0.0284 &                                           0.5872 &                                            0.0607 \\
-\hline
-\hline
-Fold 9 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0525} &  \textbf{0.0747} &  \textbf{0.0077} &  \textbf{0.1538} &                                  \textbf{0.7848} &                                            0.0376 \\
-Random & 0.0006 &           0.0011 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0721} &  \textbf{0.0988} &  \textbf{0.0097} &  \textbf{0.1940} &                                  \textbf{0.9450} &                                   \textbf{0.2125} \\
-CBT Cos. & 0.0082 &           0.0132 &           0.0016 &           0.0317 &                                           0.5841 &                                            0.0560 \\
-\hline
-\hline
-Fold 10 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0550} &  \textbf{0.0788} &  \textbf{0.0083} &  \textbf{0.1652} &                                  \textbf{0.7849} &                                            0.0376 \\
-Random & 0.0004 &           0.0009 &           0.0001 &           0.0028 &                                  \textbf{0.9980} &                                   \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0811} &  \textbf{0.1067} &  \textbf{0.0100} &  \textbf{0.1992} &                                  \textbf{0.9445} &                                   \textbf{0.2201} \\
-CBT Cos. & 0.0117 &           0.0165 &           0.0017 &           0.0336 &                                           0.5869 &                                            0.0586 \\
-\hline
-\end{tabulary}
-\caption{Results of CBT experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Higher values are better. Best results are in bold. Folds 6-10.}
-\end{table}
-
 
 \begin{table}[hbt]
 \centering
@@ -1395,197 +1187,16 @@ CBT Cos. & 0.0117 &           0.0165 &           0.0017 &           0.0336 &    
 \hline
 & mAP & Difference is Significant \\
 \hline
-CBT Cos. & 0.0092 $\pm$ 0.0017 & \\
-\hline
-Random & 0.0004 $\pm$ 0.0003 & True \\
-TopPop & 0.0477 $\pm$ 0.0040 & True \\
-kNN Cos. & 0.0673 $\pm$ 0.0058 & True \\
-\hline
-\end{tabulary}
-\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
-\end{table}
-
-\clearpage
-
-
-
-\section{LKT-FM: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
-
-The following section covers LKT-FM experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
-Experiments are run over 10 folds for each combination of source and target domains.\\
-The metrics of its results are reported with a cutoff of 20.\\
-To compare the results, the following baseline recommender systems are used with the same datasets:
-\begin{itemize}
-\item \textbf{Random}: random items are chosen for recommendation.
-\item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
-\end{itemize}
-
-
-\subsection{Datasets}
-
-\begin{itemize}
-\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
-\item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
-\end{itemize}
-Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
-Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions. Then by removing items with a low amount of interactions. The missing ratings of the source domain are filled with the average of ratings.\\
-Finally, the preprocessed and full datasets used in the experiments have the following properties:\\
-\begin{center}
-\begin{tabulary}{1.0\textwidth}{|L|CCCC|}
-\hline
-\multicolumn{5}{|c|}{Source Domain} \\
-\hline
-& Density & Users & Items & Ratings \\
-\hline
-Netflix Prize & 56.77 & 500 & 500 & 141934 \\
-\hline
-\hline
-\multicolumn{5}{|c|}{Target Domain} \\
-\hline
-& Density & Users & Items & Ratings \\
-\hline
-MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
-\hline
-\end{tabulary}
-\end{center}
-The target dataset is split in training and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the training set.
-
-
-\subsection{Hyperparameters}
-
-The hyperparameters values are estimated based on the best results of the previous experiments.\\
-The following hyperparameters are set:
-\begin{itemize}
-\item $\texttt{construct\_validation\_every\_n} = 1$: The amount of iterations after which the codebook construction loss is evaluated by the early stopping training.
-\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: The amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
-\item $\texttt{maximum\_construct\_iterations} = 20000$: The maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: The amount of attempts to find a local minimum for codebook transfer.
-\item $\texttt{maximum\_fill\_iterations} = 100$: The maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
-\item $\texttt{user\_clusters} = 5$: The amount of user cluster used to build the codebook.
-\item $\texttt{item\_clusters} = 5$: The amount of item cluster used to build the codebook.
-\item $\texttt{knn\_topk} = 550$: The amount of similar user to consider when computing similarity for kNN.
-\item $\texttt{knn\_shrink} = 120$: Shrinkage to apply when computing the similarity for kNN.
-\item $\texttt{knn\_similarity} = cosine$: The similarity type to use for kNN.
-\item $\texttt{knn\_normalize} = false$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
-\end{itemize}
-
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 1 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0439} & \textbf{0.0659} & \textbf{0.0072} & \textbf{0.1434} & \textbf{0.7849} & 0.0376 \\
-Random & 0.0007 & 0.0009 & 0.0001 & 0.0019 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0662} & \textbf{0.0924} & \textbf{0.0092} & \textbf{0.1846} & \textbf{0.9448} & \textbf{0.2198} \\
-CBT Cos. & 0.0077 & 0.0116 & 0.0013 & 0.0256 & 0.5841 & 0.0817 \\
-\hline
-\hline
-Fold 2 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0465} & \textbf{0.0687} & \textbf{0.0074} & \textbf{0.1486} & \textbf{0.7850} & 0.0376 \\
-Random & 0.0002 & 0.0008 & 0.0001 & 0.0028 & \textbf{0.9980} & \textbf{0.9820} \\
-kNN Cos. & \textbf{0.0663} & \textbf{0.0930} & \textbf{0.0094} & \textbf{0.1884} & \textbf{0.9448} & \textbf{0.2175} \\
-CBT Cos. & 0.0067 & 0.0109 & 0.0013 & 0.0260 & 0.5846 & 0.0816 \\
-\hline
-\hline
-Fold 3 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0586} & \textbf{0.0811} & \textbf{0.0081} & \textbf{0.1619} & \textbf{0.7849} & 0.0375 \\
-Random & 0.0002 & 0.0006 & 0.0001 & 0.0024 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0705} & \textbf{0.0967} & \textbf{0.0095} & \textbf{0.1898} & \textbf{0.9451} & \textbf{0.2164} \\
-CBT Cos. & 0.0134 & 0.0191 & 0.0020 & 0.0393 & 0.5844 & 0.0806 \\
-\hline
-\hline
-Fold 4 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0447} & \textbf{0.0671} & \textbf{0.0074} & \textbf{0.1477} & \textbf{0.7852} & 0.0377 \\
-Random & 0.0009 & 0.0012 & 0.0001 & 0.0024 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0656} & \textbf{0.0901} & \textbf{0.0088} & \textbf{0.1770} & \textbf{0.9447} & \textbf{0.2156} \\
-CBT Cos. & 0.0087 & 0.0133 & 0.0015 & 0.0303 & 0.5838 & 0.0785 \\
-\hline
-\hline
-Fold 5 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0461} & \textbf{0.0679} & \textbf{0.0073} & \textbf{0.1453} & \textbf{0.7851} & 0.0375 \\
-Random & 0.0003 & 0.0009 & 0.0002 & 0.0033 & \textbf{0.9980} & \textbf{0.9823} \\
-kNN Cos. & \textbf{0.0661} & \textbf{0.0906} & \textbf{0.0088} & \textbf{0.1770} & \textbf{0.9447} & \textbf{0.2146} \\
-CBT Cos. & 0.0070 & 0.0119 & 0.0015 & 0.0298 & 0.5856 & 0.0849 \\
-\hline
-\end{tabulary}
-\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 1-5.}
-\end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CCCCCC|}
-\hline
-\multicolumn{7}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-Fold 6 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0514} & \textbf{0.0723} & \textbf{0.0074} & \textbf{0.1481} & \textbf{0.7851} & 0.0376 \\
-Random & 0.0001 & 0.0003 & 0.0000 & 0.0009 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0670} & \textbf{0.0925} & \textbf{0.0093} & \textbf{0.1850} & \textbf{0.9446} & \textbf{0.2149} \\
-CBT Cos. & 0.0097 & 0.0141 & 0.0015 & 0.0293 & 0.5873 & 0.0848 \\
-\hline
-\hline
-Fold 7 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0468} & \textbf{0.0677} & \textbf{0.0072} & \textbf{0.1434} & \textbf{0.7852} & 0.0378 \\
-Random & 0.0007 & 0.0015 & 0.0002 & 0.0043 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0615} & \textbf{0.0869} & \textbf{0.0089} & \textbf{0.1784} & \textbf{0.9446} & \textbf{0.2190} \\
-CBT Cos. & 0.0106 & 0.0143 & 0.0014 & 0.0274 & 0.5876 & 0.0833 \\
-\hline
-\hline
-Fold 8 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0515} & \textbf{0.0746} & \textbf{0.0079} & \textbf{0.1585} & \textbf{0.7850} & 0.0378 \\
-Random & 0.0001 & 0.0003 & 0.0000 & 0.0009 & \textbf{0.9980} & \textbf{0.9822} \\
-kNN Cos. & \textbf{0.0678} & \textbf{0.0912} & \textbf{0.0088} & \textbf{0.1765} & \textbf{0.9447} & \textbf{0.2144} \\
-CBT Cos. & 0.0088 & 0.0132 & 0.0014 & 0.0289 & 0.5835 & 0.0767 \\
-\hline
-\hline
-Fold 9 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0502} & \textbf{0.0729} & \textbf{0.0077} & \textbf{0.1548} & \textbf{0.7849} & 0.0378 \\
-Random & 0.0004 & 0.0008 & 0.0001 & 0.0024 & \textbf{0.9980} & \textbf{0.9821} \\
-kNN Cos. & \textbf{0.0716} & \textbf{0.0964} & \textbf{0.0093} & \textbf{0.1850} & \textbf{0.9451} & \textbf{0.2203} \\
-CBT Cos. & 0.0099 & 0.0142 & 0.0015 & 0.0298 & 0.5833 & 0.0784 \\
-\hline
-\hline
-Fold 10 & mAP & nDCG & Precision & Recall & G. Div. & I. Cov. \\
-\hline
-TopPop & \textbf{0.0494} & \textbf{0.0736} & \textbf{0.0080} & \textbf{0.1609} & \textbf{0.7848} & 0.0379 \\
-Random & 0.0002 & 0.0005 & 0.0001 & 0.0014 & \textbf{0.9980} & \textbf{0.9824} \\
-kNN Cos. & \textbf{0.0696} & \textbf{0.0962} & \textbf{0.0096} & \textbf{0.1917} & \textbf{0.9444} & \textbf{0.2137} \\
-CBT Cos. & 0.0076 & 0.0114 & 0.0012 & 0.0246 & 0.5825 & 0.0767 \\
-\hline
-\end{tabulary}
-\caption{Results of LKT-FM experiment on full target dataset for cutoff 20 on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Higher values are better. Best results are in bold. Folds 6-10.}
-\end{table}
-
-\begin{table}[hbt]
-\centering
-\begin{tabulary}{\textwidth}{|L|CC|}
-\hline
-\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
-\hline
-\hline
-& mAP & Difference is Significant \\
-\hline
-LKT-FM Cos. & 0.0015 $\pm$ 0.0009 & \\
+CBTrem & 0.0092 $\pm$ 0.0017 & \\
 \hline
 Random & 0.0004 $\pm$ 0.0003 & True \\
 TopPop & 0.0489 $\pm$ 0.0041 & True \\
-kNN Cos. & 0.0672 $\pm$ 0.0027 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+CBTmix & 0.0103 $\pm$ 0.0012 & False \\
+CBTrnd & 0.0109 $\pm$ 0.0014 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \hline
 \end{tabulary}
-\caption{Significance tests of LKT-FM experiment on full target dataset for mAP@20 differences between LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
 \end{table}
