@@ -1,23 +1,23 @@
 \chapter{Experiments}
 \label{ch:experiments}
 
-In this chapter we cover the experiments performed on CBT and LKT-FM. We describe the datasets and data split, the used hyperparamenters and the goals of the experiments.\\
-The first section summarizes the previous experiments performed on CBT.\\
-The second, third and fourth sections cover the new experiments performed on CBT and LKT-FM.
+In this chapter we cover the experiments performed on CBT and LKT-FM. We describe the datasets and data splits, the used hyperparamenters and the goals of the experiments.\\
+The first section summarizes the previous rating prediction experiments performed on CBT.\\
+The second, third and fourth sections cover the new ranking experiments performed on CBT and LKT-FM.
 
 
 
 \section{Previous Experiments}
 
-In 2014, Cremonesi and Quadrana \cite{10.1145/2645710.2645769} performed experiments on CBT to evaluate its performance in recommendations. According to them, CBT is not able to transfer knowledge between non-overlapping domains. In their experiments, they provided an alternative explaination based on three points to the apparent increase of accuracy obtained with CBT:
+In 2014, Cremonesi and Quadrana \cite{10.1145/2645710.2645769} performed experiments on CBT to evaluate its performance in rating predicton. According to them, CBT is not able to transfer knowledge between non-overlapping domains. In their experiments, they provide an alternative explaination based on three points to the apparent increase of accuracy obtained with CBT:
 \begin{itemize}
 \item Empirical proof that CBT can improve accuracy without transferring knowledge.
-\item The the injection of the codebook in the target domain is equivalent to a two-matrix factorization algorithm without transfer of knowledge from the source domain.
-\item The increase apparent increase accuracy is due to a pitfall in the evaluation procedure, as it compares a user-based nearest neighborhood algorithm (before the injection) with a matrix factorization algorithm (after the injection) and matrix factorization is known to outperform kNN.
+\item The injection of the codebook in the target domain is equivalent to a two-matrix factorization algorithm without transfer of knowledge from the source domain.
+\item The apparent increase of accuracy is due to a pitfall in the evaluation procedure, as it compares a user-based nearest neighborhood algorithm (before the injection) with a matrix factorization algorithm (after the injection) and matrix factorization is known to outperform kNN.
 \end{itemize}
 To reach these conclusions, Cremonesi and Quadrana implemented the CBT algorithm in MATLAB and performed five experiments on three different datasets. The experiments were the following:
 \begin{itemize}
-\item \textbf{kNN}: user-based $k$-nearest neighborhood with Pearson correlation. Recommendations are extracted from the target domain without codebook transfer, with $k = 20$. The missing ratings are filled with the average of the ratings.
+\item \textbf{kNN}: user-based $k$-nearest neighbors with Pearson correlation. Recommendations are extracted from the target domain without codebook transfer, with $k = 20$. Each missing rating is filled with the average of ratings of its user.
 \item \textbf{CBT}: the codebook transfer approach with 50 user and item clusters, followed by kNN.
 \item \textbf{RND}: a "false" codebook containing random ratings is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
 \item \textbf{AsySVD}: a "false" codebook containing ratings generated with the Asymmetric SVD matrix factorization algorithm \cite{10.1145/1401890.1401944} is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
@@ -27,10 +27,10 @@ To reach these conclusions, Cremonesi and Quadrana implemented the CBT algorithm
 
 \subsection{Datasets}
 
-Cremonesi and Quadrana performed experiments on MovieLens, Netflix and BookCrossing. Each dataset was used as a target domain, while MovieLens and Netflix were used as source domain.\\
+Cremonesi and Quadrana performed experiments on MovieLens 1M \cite{movielens-1m-dataset, 10.1145/1864708.1864721}, Netflix Prize \cite{netflix-prize-dataset, 10.1145/1864708.1864721} and BookCrossing \cite{10.1145/1060745.1060754}. Each dataset is used as target domain, while MovieLens 1M and Netflix Prize were used as source domain.\\
 The datasets were preprocessed in the following way:
 \begin{itemize}
-\item The ratings of BookCrossing are normalized to 1-5 to be in the same range of MovieLens and Netflix.
+\item The ratings of BookCrossing are normalized to be in range 1 to 5 like in MovieLens 1M and Netflix Prize.
 \item For each dataset, 500 users with at least 40 ratings and 1000 items are selected.
 \item For each target dataset, 200 users are randomly removed to form the test set.
 \item For each user in the test set, 15 ratings are randomly removed to form the validation set.
@@ -39,7 +39,7 @@ The datasets were preprocessed in the following way:
 
 \subsection{Results}
 
-According to the MAE and RMSE metrics, CBT outperfors the kNN baseline in all the dataset combinations. Surprisingly their results underlined a similar accuracy by transferring a randomly filled codebook.
+According to the MAE and RMSE metrics, CBT outperfors the kNN baseline in all the dataset combinations. Their results also underline a similar accuracy by transferring a randomly filled codebook.
 \begin{table}[hbtp]
 \centering
 \begin{tabulary}{1.0\textwidth}{|L|CCCCC|}
@@ -76,9 +76,10 @@ MAE & 0.7640 & \textbf{0.7446} & \textbf{0.7425} & \textbf{0.7397} & \textbf{0.7
 RMSE & 0.9388 & \textbf{0.8988} & \textbf{0.8932} & \textbf{0.8915} & \textbf{0.8935} \\
 \hline
 \end{tabulary}
-\caption{Accuracy of different methods. Bold numbers are significantly different from the baseline method kNN. https://doi.org/10.1145/2645710.2645769}
+\caption{Accuracy of different methods. Bold numbers are significantly different from the baseline method kNN.\\
+Source \url{https://doi.org/10.1145/2645710.2645769}}
 \end{table}
-For this reason, Cremonesi and Quadrana concluded that the obtained accuracy does not depend on the transferred knowledge but on the codebook transfer methodology described in \autoref{ss:codebook-transfer}. The structure of the optimization problem closely resembles regularized SVD matrix factorization, as the minimization is performed only on the non-zero elements of the user-rating matrix \cite{10.1145/1401890.1401944}:
+For this reason, Cremonesi and Quadrana conclude that the obtained accuracy does not depend on the transferred knowledge but on the codebook transfer methodology described in \autoref{ss:codebook-transfer}. The structure of the optimization problem closely resembles regularized SVD matrix factorization, as the minimization is performed only on the non-zero elements of the user-rating matrix \cite{10.1145/1401890.1401944}:
 \begin{equation*}
 \min_{U_T \geq 0, V_T \geq 0} \norm{X_T - U_T V_T^T}^2
 \end{equation*}
@@ -89,14 +90,14 @@ According to Cremonesi and Quadrana, this step of codebook transfer is equivalen
 
 \section{CBT: Preprocessed Datasets}
 
-The following section covers CBT experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}.\\
+The following section covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
-A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
+A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \item \textbf{CBTf}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \end{itemize}
 
@@ -105,12 +106,12 @@ To compare the results, the following baseline recommender systems are used with
 
 \begin{itemize}
 \item \textbf{MovieLens 1M} \cite{movielens-1m-dataset, 10.1145/1864708.1864721}: 1,000,000 ratings by 6,040 users on 3,883 movies, with range 1 to 5.
-\item \textbf{Netflix Prize} \cite{netflix-prize-dataset, 10.1145/1864708.1864721}: 100,480,507 ratings by 480,189 users on 17,770 movies and TV series, with range 1 to 5.
-\item \textbf{BookCrossing} \cite{10.1145/1060745.1060754}: 1,157,112 ratings by  278,858 users on 271,379 books, with range 1 to 10, normalized to be 1 to 10.
+\item \textbf{Netflix Prize} \cite{netflix-prize-dataset, 10.1145/1864708.1864721}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
+\item \textbf{BookCrossing} \cite{10.1145/1060745.1060754}: 1,157,112 ratings by  278,858 users on 271,379 books, with range 1 to 10, normalized to be in range 1 to 5.
 \end{itemize}
 All datasets are preprocessed by Cremonesi and Quadrana to extract sparse and dense versions.\\
 MovieLens 1M and Netflix Prize are used as source domain, while each dataset is used as target domain.\\
-The missing ratings of the source domain are filled with the average of ratings.\\
+Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed datasets used in the experiments have the following properties:\\
 \begin{center}
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
@@ -137,27 +138,27 @@ BookCrossing & 3.03 & 500 & 1000 & 15148 \\
 \hline
 \end{tabulary}
 \end{center}
-Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the training set.
+Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
 
 
 \subsection{Hyperparameters}
 
 The following hyperparameters are set:
 \begin{itemize}
-\item $\texttt{construct\_validation\_every\_n} = 1$: The amount of iterations after which the codebook construction loss is evaluated by the early stopping training.
-\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: The amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
-\item $\texttt{maximum\_construct\_iterations} = 20000$: The maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 3$: The amount of attempts to find a local minimum for codebook transfer.
-\item $\texttt{maximum\_fill\_iterations} = 100$: The maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
+\item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
+\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
+\item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
+\item $\texttt{transfer\_attempts} = 3$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \end{itemize}
 The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
 \begin{itemize}
-\item $\texttt{user\_clusters} = [5,100]$: The amount of user cluster used to build the codebook.
-\item $\texttt{item\_clusters} = [5,100]$: The amount of item cluster used to build the codebook.
-\item $\texttt{knn\_topk} = [5,1000]$: The amount of similar user to consider when computing similarity for kNN.
-\item $\texttt{knn\_shrink} = [0,1000]$: Shrinkage to apply when computing the similarity for kNN.
-\item $\texttt{knn\_similarity} = \{pearson,cosine\}$: The similarity type to use for kNN.
-\item $\texttt{knn\_normalize} = \{true,false\}$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
+\item $\texttt{user\_clusters} = [5,100]$: the amount of user clusters used to build the codebook.
+\item $\texttt{item\_clusters} = [5,100]$: the amount of item clusters used to build the codebook.
+\item $\texttt{knn\_topk} = [5,1000]$: the amount of similar users to consider when computing similarity for kNN.
+\item $\texttt{knn\_shrink} = [0,1000]$: the shrinkage to apply when computing the similarity for kNN.
+\item $\texttt{knn\_similarity} = \{pearson,cosine\}$: the similarity type to use for kNN.
+\item $\texttt{knn\_normalize} = \{true,false\}$: whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
 \end{itemize}
 
 
@@ -807,14 +808,14 @@ CBTf C. & 0.0306 $\pm$ 0.0052 & True \\
 
 \section{CBT: Public Datasets}
 
-The following section covers CBT experiments performed on well known datasets in the field of recommender systems.\\
+The following section covers CBT ranking experiments performed on well known datasets in the field of recommender systems.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
-A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final run is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
+A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \item \textbf{CBTf}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \end{itemize}
 
@@ -829,7 +830,7 @@ To compare the results, the following baseline recommender systems are used with
 \end{itemize}
 MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
 MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
-Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions. Then by removing items with a low amount of interactions. The missing ratings of the source domain are filled with the average of ratings.\\
+Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed datasets used in the experiments have the following properties:\\
 \begin{center}
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
@@ -855,53 +856,45 @@ Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
 \hline
 \end{tabulary}
 \end{center}
-Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the training set.
+Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
 
 
 \subsection{Hyperparameters}
 
 The following hyperparameters are set:
 \begin{itemize}
-\item $\texttt{construct\_validation\_every\_n} = 1$: The amount of iterations after which the codebook construction loss is evaluated by the early stopping training.
-\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: The amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
-\item $\texttt{maximum\_construct\_iterations} = 20000$: The maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: The amount of attempts to find a local minimum for codebook transfer.
-\item $\texttt{maximum\_fill\_iterations} = 100$: The maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
+\item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
+\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
+\item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
+\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. the maximum amount is the same for each of the transfer attempts.
 \end{itemize}
 The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
 \begin{itemize}
-\item $\texttt{user\_clusters} = [5,100]$: The amount of user cluster used to build the codebook.
-\item $\texttt{item\_clusters} = [5,100]$: The amount of item cluster used to build the codebook.
-\item $\texttt{knn\_topk} = [5,1000]$: The amount of similar user to consider when computing similarity for kNN.
-\item $\texttt{knn\_shrink} = [0,1000]$: Shrinkage to apply when computing the similarity for kNN.
-\item $\texttt{knn\_similarity} = \{pearson,cosine\}$: The similarity type to use for kNN.
-\item $\texttt{knn\_normalize} = \{true,false\}$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
+\item $\texttt{user\_clusters} = [5,100]$: the amount of user clusters used to build the codebook.
+\item $\texttt{item\_clusters} = [5,100]$: the amount of item clusters used to build the codebook.
+\item $\texttt{knn\_topk} = [5,1000]$: the amount of similar users to consider when computing similarity for kNN.
+\item $\texttt{knn\_shrink} = [0,1000]$: the shrinkage to apply when computing the similarity for kNN.
+\item $\texttt{knn\_similarity} = \{pearson,cosine\}$: the similarity type to use for kNN.
+\item $\texttt{knn\_normalize} = \{true,false\}$: whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
 \end{itemize}
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{pictures/movielens-dense-target}
-\caption
-[Representation of the preprocessed MovieLens Hetrec 2011 Dense training set.]
-{\protect\raggedright Representation of the preprocessed MovieLens Hetrec 2011 Dense training set.}
+\caption{Representation of the preprocessed MovieLens Hetrec 2011 Dense train set.}
 \includegraphics[width=\textwidth]{pictures/movielens-sparse-target}
-\caption
-[Representation of the preprocessed MovieLens Hetrec 2011 Sparse training set.]
-{\protect\raggedright Representation of the preprocessed MovieLens Hetrec 2011 Sparse training set.}
+\caption{Representation of the preprocessed MovieLens Hetrec 2011 Sparse train set.}
 \end{figure}
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{pictures/movielens-target}
-\caption
-[Heatmap of the preprocessed MovieLens Hetrec 2011 Dense training set.]
-{\protect\raggedright Heatmap of the preprocessed MovieLens Hetrec 2011 Dense training set.}
+\caption{Heatmap of the preprocessed MovieLens Hetrec 2011 Dense train set.}
 \includegraphics[width=\textwidth]{pictures/movielens-target-filled}
-\caption
-[Heatmap of the preprocessed MovieLens Hetrec 2011 Dense training set filled with a codebook extracted from the Netflix Prize domain.]
-{\protect\raggedright Heatmap of the preprocessed MovieLens Hetrec 2011 Dense training set filled with a codebook extracted from the Netflix Prize domain.}
+\caption{Heatmap of the preprocessed MovieLens Hetrec 2011 Dense train set filled with a codebook extracted from the Netflix Prize domain.}
 \end{figure}
 
 
@@ -1551,14 +1544,14 @@ CBTf C. & 0.0136 $\pm$ 0.0007 & False \\
 
 \section{CBT and LKT-FM: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
-The following section covers CBT and LKT-FM experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
+The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The kNN phase is performed with cosine similarity. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
 \end{itemize}
 
 
@@ -1569,7 +1562,7 @@ To compare the results, the following baseline recommender systems are used with
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
 \end{itemize}
 Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
-Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions. Then by removing items with a low amount of interactions. The missing ratings of the source domain are filled with the average of ratings.\\
+Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed and full datasets used in the experiments have the following properties:\\
 \begin{center}
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
@@ -1589,48 +1582,44 @@ MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 \hline
 \end{tabulary}
 \end{center}
-The target dataset is split in training and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the training set.
+The target dataset is split in train and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the train set.
 
 
 \subsection{Ablation Study}
 
 The ablation study for this experiment is performed in three different ways:
 \begin{itemize}
-\item \textbf{Source domain mix (CBTmix)}: All the ratings of the source domain are shuffled without keeping rows and column relation.
-\item \textbf{Random source domain (CBTrnd)}: A $500 \times 500$ source domain matrix is randomly generated with rating from 1 to 5.
-\item \textbf{Source domain reduction (CBTrem)}: One-tenth of the ratings of the source domain are removed before the source matrix is filled with the average of ratings.
+\item \textbf{Source domain mix (CBTmix)}: all the ratings of the source domain are shuffled without keeping rows and column relation.
+\item \textbf{Random source domain (CBTrnd)}: a $500 \times 500$ source domain matrix is randomly generated with ratings from 1 to 5.
+\item \textbf{Source domain reduction (CBTrem)}: 10\% of the ratings of the source domain are removed before each missing rating is filled with the average of ratings of its user.
 \end{itemize}
 
 
 \subsection{Hyperparameters}
 
-The hyperparameters values are estimated based on the best results of the previous experiments.\\
+The hyperparameter values are estimated based on the best results of the previous experiments.\\
 The following hyperparameters are set:
 \begin{itemize}
-\item $\texttt{construct\_validation\_every\_n} = 1$: The amount of iterations after which the codebook construction loss is evaluated by the early stopping training.
-\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: The amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
-\item $\texttt{maximum\_construct\_iterations} = 20000$: The maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: The amount of attempts to find a local minimum for codebook transfer.
-\item $\texttt{maximum\_fill\_iterations} = 100$: The maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
-\item $\texttt{user\_clusters} = 5$: The amount of user cluster used to build the codebook.
-\item $\texttt{item\_clusters} = 5$: The amount of item cluster used to build the codebook.
-\item $\texttt{knn\_topk} = 550$: The amount of similar user to consider when computing similarity for kNN.
-\item $\texttt{knn\_shrink} = 120$: Shrinkage to apply when computing the similarity for kNN.
-\item $\texttt{knn\_similarity} = cosine$: The similarity type to use for kNN.
-\item $\texttt{knn\_normalize} = false$: Whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
+\item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
+\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
+\item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
+\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
+\item $\texttt{user\_clusters} = 5$: the amount of user clusters used to build the codebook.
+\item $\texttt{item\_clusters} = 5$: the amount of item clusters used to build the codebook.
+\item $\texttt{knn\_topk} = 550$: the amount of similar users to consider when computing similarity for kNN.
+\item $\texttt{knn\_shrink} = 120$: the shrinkage to apply when computing the similarity for kNN.
+\item $\texttt{knn\_similarity} = cosine$: the similarity type to use for kNN.
+\item $\texttt{knn\_normalize} = false$: whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
 \end{itemize}
 
 
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{pictures/movielens-full-target}
-\caption
-[Heatmap of the full MovieLens Hetrec 2011 training set.]
-{\protect\raggedright Heatmap of the full MovieLens Hetrec 2011 training set.}
+\caption{Heatmap of the full MovieLens Hetrec 2011 train set.}
 \includegraphics[width=\textwidth]{pictures/movielens-full-target-filled}
-\caption
-[Heatmap of the full MovieLens Hetrec 2011 training set filled with a codebook extracted from the Netflix Prize domain.]
-{\protect\raggedright Heatmap of the full MovieLens Hetrec 2011 training set filled with a codebook extracted from the Netflix Prize domain.}
+\caption{Heatmap of the full MovieLens Hetrec 2011 train set filled with a codebook extracted from the Netflix Prize domain.}
 \end{figure}
 
 

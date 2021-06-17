@@ -1,7 +1,7 @@
 \chapter{Applied Model}
 \label{ch:applied-model}
 
-In this chapter we cover the model implementations of CBT and LKT-FM. Both models are implemented using the Python programming language version 3.6 and multiple libraries, such as Numpy \cite{10.1109/MCSE.2011.37} and Scipy \cite{scipy} for matrix computation and Scikit-learn \cite{10.5555/1953048.2078195} to compute KMeans. The experiments are built upon the RecSys@Polimi framework by Maurizio Ferrari Dacrema \cite{recsys-polimi-framework}, which offers dataset readers, baseline recommender systems, similarity computation and evaluation metrics.\\
+In this chapter we cover the model implementations of CBT and LKT-FM. Both models are implemented using the Python programming language version 3.6 and multiple libraries, such as \textit{Numpy} \cite{10.1109/MCSE.2011.37} and \textit{Scipy} \cite{scipy} for matrix computation and \textit{Scikit-learn} \cite{10.5555/1953048.2078195} to compute K-Means. The experiments are built upon the \textit{RecSys@Polimi framework} by Maurizio Ferrari Dacrema \cite{recsys-polimi-framework}, which offers dataset readers, baseline recommender systems, similarity computation and evaluation metrics.\\
 The first section describes the implementation of hyperparameter tuning for the experiments.\\
 The second section covers the implementations of CBT codebook construction and transfer algorithms.\\
 The third section covers the LKT-FM variant of codebook transfer and describes the implementation of matrix factorization for codebook construction and of factorization machines for codebook transfer.
@@ -11,9 +11,9 @@ The third section covers the LKT-FM variant of codebook transfer and describes t
 \section{Hyperparameter Tuning}
 
 To perform experiments, hyperparameters for each model are optimized using a wrapper of Scikit-optimize \cite{10.5281/zenodo.1170575} for bayesian optimization.\\
-Bayesian optimization \cite{bayesian-optimization} is a method to optimize black-box functions that take long time to evaluate by building a surrogate for the objective and quantifying the uncertainty in that surrogate using a bayesian machine learning technique called \textit{Gaussian process regression}. It then uses an acquisition function defined from this surrogate to decide where to sample in the provided hyperparameter ranges.\\
-The wrapper accepts as input a set of hyperparameter ranges, an amount of cases, which is the number of runs of training and evaluation to perform, an amount of random starts, which is the numbers of times the optimization process initializes the hyperparameters randomly within the provided range, and a target evaluation metric, used to perform comparison between runs.\\
-Each training and evaluation run during hyperparameter tuning is performed using a training dataset and a validation dataset, which has the same properties as the final test dataset while they are disjoint.\\
+Bayesian optimization \cite{bayesian-optimization} is a method to optimize black-box functions that take long time to evaluate by building a surrogate for the objective and quantifying the uncertainty in that surrogate using a bayesian machine learning technique called \textit{Gaussian process regression}. It then uses an acquisition function defined from the surrogate to decide where to sample in the provided hyperparameter ranges.\\
+The wrapper accepts as input a set of hyperparameter ranges, an amount of cases, which is the number of iterations of training and evaluation to perform, an amount of random starts, which is the numbers of times the optimization process initializes the hyperparameters randomly within the provided range, and a target evaluation metric, used to perform comparison between iterations.\\
+Each training and evaluation iteration during hyperparameter tuning is performed using a train set and a validation set, which has the same properties as the final test set, while they are disjoint.\\
 Further details about the hyperparameters and other tuning variables are covered in the single experiments in \autoref{ch:experiments}.
 
 
@@ -24,7 +24,7 @@ Further details about the hyperparameters and other tuning variables are covered
 \subsection{Codebook Construction}
 \label{ss:cbt-codebook-construction}
 
-Since ONMTF does not monotically decrease the function, we opted for and early stopping approach to ensure a suitable amount of iterations.\\
+Since ONMTF does not monotically decrease the function, we opt for an early stopping approach to ensure a suitable amount of iterations.\\
 The code for ONMFT is as follows:
 \begin{minted}[breaklines]{python}
 import numpy as np
@@ -125,8 +125,8 @@ def _binarize_matrix(X):
 
 \subsection{Codebook Transfer}
 
-The codebook transfer technique provided in \autoref{ss:codebook-transfer} monotically decreases the loss function. Thus it is enough to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
-Since the algorithm always converges to a local minimum, it is possible to run it several times to further minimize the loss function in alternative local minima.\\
+The codebook transfer technique provided in \autoref{ss:codebook-transfer} monotically decreases the loss function. Thus ensures that it is possible to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
+Since the algorithm always converges to a local minimum, it is possible to execute it several times to further minimize the loss function in alternative local minima.\\
 The code for codebook transfer is as follows:
 \begin{minted}[breaklines]{python}
 import numpy as np
@@ -229,7 +229,7 @@ def _update_V():
 
 \subsection{Codebook Construction}
 
-As covered in /autoref{ch:theoretical-model}, LKT-FM uses basic matrix factorization for source domain clustering, instead of ONMTF.\\
+As covered in \autoref{ch:theoretical-model}, LKT-FM uses basic matrix factorization for source domain clustering, instead of ONMTF.\\
 The code for matrix factorization is as follows:
 \begin{minted}[breaklines]{python}
 import numpy as np
@@ -277,10 +277,10 @@ def _sgd():
         self.P_s[i, :] += self.alpha * (e * self.Q_s[j, :] - self.beta * self.P_s[i, :])
         self.Q_s[j, :] += self.alpha * (e * self.P_s[i, :] - self.beta * self.Q_s[j, :])
 \end{minted}
-The matrices are then binarized and used to build the codebook like in \autoref{ss:cbt-codebook-construction}.
+The matrices are then binarized and used to build the codebook like described in \autoref{ss:cbt-codebook-construction}.
 
 
 \subsection{Codebook Transfer}
 
 While LKT-FM uses the same technique of CBT for target domain clustering, it uses factorization machines to expand the codebook into the target user-rating matrix, instead of direct expansion.\\
-The implementation of LKT-FM codebook transfer uses pylibFM \cite{pylibfm}, a Python wrapper for libFM \cite{10.1145/2168752.2168771, libfm}.
+The implementation of LKT-FM codebook transfer uses \textit{pylibFM} \cite{pylibfm}, a Python wrapper for \textit{libFM} \cite{10.1145/2168752.2168771, libfm}.

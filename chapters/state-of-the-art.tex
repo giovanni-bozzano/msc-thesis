@@ -24,8 +24,8 @@ The most accurate definition of modern recommender systems can be found in Burke
 \subsection{Recommender Systems Tasks}
 
 While recommender systems in general are aiming at learning and anticipate user preferences to provide helpful suggestions, they are faced with two distinct tasks: items ranking and items ratings prediction.\\
-Ranking is the task of selecting from the whole catalog a small number of items to be recommended for each user. We can distinguish two slightly different scenarios for the ranking task. If an item of the catalog can be interacted with multiple times, every item should be eligible for recommendation. For example, in a music streaming service, users usually listen to the same song several times. On the contrary, if users are not expected to choose the same item twice, already rated or seen items are excluded from the items the recommender systems suggests.\\
-Rating prediction consists in providing a computed rating for each user unrated item. Since items with predicted ratings can then be ordered and selected for ranking, most of the times the two tasks share some characteristics, while the main differences between them are identified in the evaluation test set and metrics.
+Ranking is the task of selecting from the whole catalog a small number of items to be recommended for each user. We can distinguish two slightly different scenarios for the ranking task. If an item of the catalog can be interacted with multiple times, every item should be eligible for recommendation. For example, in a music streaming service, users usually listen to the same song several times. On the contrary, if users are not expected to choose the same item twice, already rated or seen items are excluded from the items the recommender system suggests.\\
+Rating prediction consists in providing a computed rating for each user unrated item. Since items with predicted ratings can then be ordered and selected for ranking, most of the times the two tasks share some characteristics, while the main differences between them are identified in the evaluation test set, evaluation procedure and metrics.
 
 
 \subsection{Types of Feedback}
@@ -38,7 +38,7 @@ Implicit feedback cannot differentiate between positive and negative feedback an
 
 \subsection{Data Structures}
 
-Recommender systems often make use of common data structures, which can identified in the following matrices:
+Recommender systems often make use of common data structures, which can be identified in the following matrices:
 \begin{itemize}
 \item \textbf{User-Content Matrix (UCM)}: Given a set of users $U$ and a set of user labels $L$, the UCM is a matrix with shape $|U| \times |L|$ where each row represents a user $u \in U$ and each column represents a label $l \in L$. Each cell $(u,l)$ represents the value of label $l$ of the user $u$. It can be a real, integer or binary value depending on the nature of the label. For example, to describe the user age, we could either have a single integer label, where each cell value would represent the age of the user, or multiple binary labels representing different age brackets, where each cell value would be:
 \begin{equation*}
@@ -52,7 +52,7 @@ The approach of splitting a numerical label into multiple categorical labels is 
 The UCM is generally built in content based recommendation approaches.
 \item \textbf{Item-Content Matrix (ICM)}: Given a set of items $I$ and a set of item labels $L$, the ICM is a matrix with shape $|I| \times |L|$ where each row represents an item $i \in I$ and each column represents a label $l \in L$. Each cell $(i,l)$ represents the value of label $l$ of the item $i$. It can be a real, integer or binary value depending on the nature of the label.\\
 Similarly to the UCM, the ICM is generally built in content based recommendation approaches.
-\item \textbf{Similarity Matrix}: Given a set of items $I$, the similarity matrix is a matrix with shape $|I| \times |I|$ where each row $i_r$ and column $i_c$ represent an item $i \in I$ and each cell represent the similarity between $i_r$ and $i_c$. The same structure is used for user similarity.
+\item \textbf{Similarity Matrix}: Given a set of items $I$, the similarity matrix is a matrix with shape $|I| \times |I|$ where each row $i_r$ and column $i_c$ represents an item $i \in I$ and each cell represents the similarity between $i_r$ and $i_c$. The same structure is used for user similarity.
 \item \textbf{User-Rating Matrix (URM)}: Given a set of users $U$ and a set of items $I$, the URM is a matrix with shape $|U| \times |I|$ where each row represents a user $i \in I$ and each column represents an item $i \in I$. Each cell $(u,i)$ represents the value of the rating of the item $i$ by user $u$. It can be a real, integer or binary value depending on the nature of the feedback. For example, in the scenario of explicit feedback, each cell would have a real or integer value, usually with upper and lower bounds, while in the scenario of an implicit feedback, each cell value would be:\\
 \begin{equation*}
 (u,l)=
@@ -67,7 +67,7 @@ The URM is generally built in collaborative filtering recommendation approaches.
 
 \subsection{Similarities}
 
-A similarity function is mathematical tool to compute the similarity between two entities represented in a space, as a numerical value. In the field of recommender systems similarity functions are often used to extract similar entities from a dataset, given a target user or item. It is then important to mention and describe the commonly used ones.
+A similarity function is mathematical tool to compute the similarity between two entities represented in a space, as a numerical value. In the field of recommender systems similarity functions are often used to extract similar entities from a dataset, given a target user or item. It is thus important to mention and describe the commonly used ones.
 \begin{itemize}
 \item \textbf{Cosine similarity}: given two vectors $x$ and $y$, the cosine similarity is computed as follows:
 \begin{equation*}
@@ -75,7 +75,7 @@ S_{xy} = \frac{x \times y}{\norm{x} \norm{y} + h}
 \end{equation*}
 where $h$ is the shrink term for normalization.
 This similarity measures the angle between n-dimensional vectors. Since the angle can vary between 1 and -1, $S_{xy} \in [-1, 1]$. If $S_{xy} = 1$ we have complete similarity (parallel vectors); if $S_{xy} = 0$, we have no similarity (orthogonal vectors) and if $S_{xy} = -1$ we have inverse similarity (parallel vectors with inverse direction).\\
-The cosine similarity is between the two most popular similarities used in recommender systems.
+The cosine similarity is between the two most popular similarities used in recommender systems, along with Pearson correlation.
 \item \textbf{Pearson correlation}: given two random variables $X$ and $Y$, the Pearson correlation can be computed as follows:
 \begin{equation*}
 \rho_{X,Y} = \frac{cov(X,Y)}{\sigma_x \sigma_y}
@@ -140,9 +140,9 @@ The main advantage of CBF is that it makes possible to solve the cold start prob
 
 \subsection{Memory-based Collaborative Filtering}
 
-Memory-based collaborative filtering recommender systems \cite{10.1007/978-0-387-85820-3_1} exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is then to compute a neighborhood composed by $k$ neighbors for target users or items. Thus the name of the algorithm: $k$-nearest neighbors (kNN). In order to describe the methodology, we must distinguish between user-based and item-based.
+Memory-based collaborative filtering recommender systems \cite{10.1007/978-0-387-85820-3_1} exploit the assumption that similar users will likely prefer the same items. They use interactions as a bridge to identify similar users or items, called neighbors. The goal of this approach is thus to compute a neighborhood composed by $k$ neighbors for target users or items. Thus, the name of the algorithm: $k$-nearest neighbors (kNN). In order to describe the methodology, we must distinguish between user-based and item-based.
 \begin{itemize}
-\item \textbf{User-based}: in the user-based approach, the goal of the system is to compute a neighborhood for the user $u$ needing recommendations. This is defined as the set of users similar to $u$ based on their preferences. Their own preferences are then used to extract recommendation for the user $u$.\\
+\item \textbf{User-based}: in the user-based approach, the goal of the system is to compute a neighborhood for the user $u$ needing recommendations. This is defined as the set of users similar to $u$ based on their preferences. Their own preferences are then used to extract recommendations for the user $u$.\\
 Given the set of users $U$ and the set of items $I$, the system exploits the URM to build a user similarity matrix with shape $|U| \times |U|$.\\
 We define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
 The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
@@ -150,12 +150,12 @@ The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
 \hat{r}_{ui} = \frac{\sum_{v \in U \wedge v \neq u} URM_{v,i} * USIM_{u,v}}{\sum_{v \in U} USIM_{u,v}}
 \end{equation*}
 Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
-\item \textbf{Item-based}: the item-based approach is slightly different. In this scenario, the system computes the neighborhood of the item $i$ and then recommends it to users belonging to the neighborhood that are yet to interact with it.\\
+\item \textbf{Item-based}: the item-based approach is slightly different. In this scenario, the system computes the neighborhood of the item $i$ and then recommends it to users that rated items in its neighborhood and that are yet to interact with it.\\
 Given the set of users $U$ and the set of items $I$, the system exploits the URM to build an item similarity matrix with shape $|I| \times |I|$.\\
 Like in the user-based approach, we define $URM_u$ as the set of items rated by user $u$ and $URM_{u,i}$ as the rating of item $i$ by user $u$.\\
 The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
 \begin{equation*}
-\hat{r}_{ui} = \frac{\sum_{j \in I \wedge j \neq i} URM_{u,j} * USIM_{i,j}}{\sum_{j \in I} USIM_{i,j}}
+\hat{r}_{ui} = \frac{\sum_{j \in I \wedge j \neq i} URM_{u,j} * ISIM_{i,j}}{\sum_{j \in I} ISIM_{i,j}}
 \end{equation*}
 Items with the highest ratings, excluding items in $URM_u$, are recommended to user $u$.
 \end{itemize}
@@ -168,7 +168,7 @@ Model-based collaborative filtering recommender systems exploit the URM with a m
 
 \subsection{Hybrid}
 
-Different recommender systems have different strengths and weaknesses. Many different types of hybrid systems have been developed to overcome the weaknesses of the single approaches. There are multiple techniques that can be used to combine the results. The most common technique is to combine the items scores into a single recommendations by assigning weights. Alternatives are switching recommender system based on the scenario or to use different systems in cascade to refine previous recommendations.
+Different recommender systems have different strengths and weaknesses. Many different types of hybrid systems have been developed to overcome the weaknesses of the single approaches. There are multiple techniques that can be used to combine the results. The most common technique is to combine the item scores into a single recommendation by assigning weights. Alternatives are switching recommender system based on the scenario or to use different systems in cascade to refine previous recommendations.
 
 
 
@@ -207,7 +207,7 @@ where the costant $\lambda$ determines the extent of regularization.
 \label{sc:factorization-machines}
 
 Factorization machines \cite{10.1109/ICDM.2010.127} are a relatively new technique of collaborative filtering with side information proposed by Steffen Rendle in 2010. Since they are a general-purpose supervised learning algorithm, they can be adapted to work with recommender systems.\\
-Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in \mathbb{R}^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM models all possible interactions between variables in $\bar{x}$.\\
+Given $S$ the set of tuples $(\bar{x}, y)$ where $\bar{x} = (x_1, ..., x_k) \in \mathbb{R}^k$ is a k-dimensional feature vector and $y$ is the corresponding class label, using factorized interactions, FM model all possible interactions between variables in $\bar{x}$.\\
 The FM model equation is defined as follows:
 \begin{equation*}
 \hat{y}(\bar{x}) = w_0 + \sum_{i = 1}^{n} w_i x_i + \sum_{i = 1}^{n} \sum_{j = i + 1}^{n} \langle v_i, v_j \rangle x_i x_j
@@ -224,7 +224,7 @@ where $w_0 \in \mathbb{R}$ is the global bias, $w_i \in \mathbb{R}$ is the bias 
 
 \subsection{Metrics}
 
-The main characteristic of a dataset is sparsity. Given a user rating matrix, sparsity is the ratio of observed to total ratings \cite{sparsity}.
+The main characteristic of a dataset is sparsity. Given a user rating matrix, sparsity is the ratio of observed to total ratings \cite{sparsity}. Density is defined as the inverse of sparsity.
 
 
 \subsection{Data Partitioning}
@@ -238,16 +238,16 @@ There can be three types of evaluation:
 \end{itemize}\par
 Data partitioning for offline evaluation is generally performed for cross-validation. Cross-validation is the approach of splitting the original dataset into three subsets:
 \begin{itemize}
-\item \textbf{Training set}: this set is used to train the model. Normally, to maximize the training efficiency, it is the biggest of the three sets.
+\item \textbf{Train set}: this set is used to train the model. Normally, to maximize the training efficiency, it is the biggest of the three sets.
 \item \textbf{Validation set}: this set is used to evaluate the model during training and optimize the model hyperparameters.
 \item \textbf{Test set}: this set is used to perform the final evaluation, after the training is finished, to test the recommender system performance with data it has never seen before.
 \end{itemize}
-While the validation and test sets could technically overlap, this would lead to overfitting. Overfitting is an error that occurs when a model is very efficient in providing recommendations for a restricted set of data but is unable to generalize to new scenarios.\par
+While the validation and test sets could technically overlap, this would lead to overfitting. Overfitting is an issue that occurs when a model is very efficient in providing recommendations for a restricted set of data but is unable to generalize to new scenarios.\par
 There exist many different techniques to build the three subsets. We cover the most widely used:
 \begin{itemize}
 \item \textbf{Holdout}: it is the simplest approach to data partitioning. After specifying a size to each subset, each user-item interaction is assigned to one of the three subsets randomly or following \textit{leave-k-out} logic.\\
 With leave-k-out, for each user, $k$ interactions are assigned to the validation set and $k$ interactions are assigned to the test set.
-\item \textbf{K-Fold}: it splits the original in $k$ \textit{folds}. Each fold is then used in turn as train, validation or test set. For this reason, the amount of iterations to evaluate the model is equal to the amount of folds.\\
+\item \textbf{K-Fold}: it splits the original dataset in $k$ folds. Each fold is then used in turn as train, validation or test set. For this reason, the amount of iterations to evaluate the model is equal to the amount of folds.\\
 With K-Fold the recommender system is evaluated with multiple data partition samples, thus allowing a better estimation of the model performance.
 \end{itemize}
 
@@ -255,44 +255,44 @@ With K-Fold the recommender system is evaluated with multiple data partition sam
 
 \section{Evaluation Metrics}
 
-When designing or evaluating a recommender system, metrics a fundamental point to understand and use correctly. Depending on the characteristics that need to be evaluated, different sets of metrics have different meanings.
+When designing or evaluating a recommender system, metrics are a fundamental point to understand and use correctly. Depending on the characteristics that need to be evaluated, different sets of metrics have different meanings.
 
 
 \subsection{Accuracy metrics}
 
 Accuracy metrics are meant to evaluate ranking. They measure the predictiveness of the recommender system; how good its decisions are. The most popular accuracy metrics are Mean Average Precision (mAP) and Normalized Discounted Cumulative Gain (nDCG). Both of them evaluate how good the recommender is to put the most relevant items first in the recommendation list.\par
-mAP is outfitted with a top-n threshold which defines how many recommended items are considered for the metric computation. mAP@n is then used to indicate mAP computed on the first n items recommended to each user.\\
-We define Precision of the query for user $i$ as
+mAP is outfitted with a top-n threshold which defines how many recommended items are considered for the metric computation. mAP@n is thus used to indicate mAP computed on the first n items recommended to each user.\\
+We define Precision of the query for user $i$ as:
 \begin{equation*}
 P@k_i = \frac{relevant\_items@k_i}{k}
 \end{equation*}
-Where $relevant\_items@k$ is the amount of relevant items included in the recommendations list up to rank $k$.\\
-We then define Average Precision of the query for user $i$ as
+Where $relevant\_items@k$ is the amount of relevant items included in the recommendation list up to rank $k$.\\
+We then define Average Precision of the query for user $i$ as:
 \begin{equation*}
 AP@n_i = \frac{1}{TP} \sum_{k=1}^{n} (P@k_i * rel@k)
 \end{equation*}
-where $TP$ is the total amount of ground truth items and $rel@k$ equals 1 if the item at rank k is relevant and equals to 0 otherwise.\\
-Finally, mAP is defined as
+where $TP$ is the total amount of ground truth items and $rel@k$ equals to 1 if the item at rank k is relevant and equals to 0 otherwise.\\
+Finally, mAP is defined as:
 \begin{equation*}
 mAP@n = \frac{1}{U} \sum_{i=1}^{U} AP@n_i
 \end{equation*}
 where $U$ is the amount of users.\par
 Like mAP, nDCG is computed with a top-n threshold.\\
-We define Cumulative Gain as
+We define Cumulative Gain as:
 \begin{equation*}
 CG@n = \sum_{k=1}^{n} rating@k
 \end{equation*}
 where $rating@k$ is the predicted rating of the item at rank $k$.\\
-Discounted Cumulative Gain is then computed to penalize ratings based on their position
+Discounted Cumulative Gain is then computed to penalize ratings based on their position:
 \begin{equation*}
 DCG@n = \sum_{k=1}^{n} \frac{rating@k}{\log(i+1)}
 \end{equation*}
-Then the result is normalized to make it irrelevant of the query. To do so, we compute the Ideal DCG
+Then the result is normalized to make it irrelevant of the query. To do so, we compute the Ideal DCG:
 \begin{equation*}
 IDCG@n = \sum_{k=1}^{|REL_n|} \frac{rating@k}{\log(i+1)}
 \end{equation*}
 where $REL_p$ is the list of relevant items up to position $n$.\\
-Finally, nDCG is defined as
+Finally, nDCG is defined as:
 \begin{equation*}
 nDCG@n = \frac{DCG@n}{IDCG@n}
 \end{equation*}
@@ -301,13 +301,13 @@ nDCG@n = \frac{DCG@n}{IDCG@n}
 \subsection{Error metrics}
 
 Error metrics are used to compare actual and predicted ratings, thus are generally used for rating prediction. The most commonly used error metrics are Mean Absolute Error (MAE) and Root Mean Squared Error (RMSE).
-MAE is defined as
+MAE is defined as:
 \begin{equation*}
 MAE = \frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} \abs{r_{u,i} - \hat{r}_{u,i}}
 \end{equation*}
 where $U$ is the amount of users, $I$ is the amount of items, $r_{u,i}$ is the predicted rating of item $i$ by user $u$ and $r_{u,i}$ is the true rating of item $i$ by user $u$.\\
 As the formula suggests, MAE does not apply a different weight to outliers, large error values.\\
-To compute a weighted error, we define RMSE as
+To compute a weighted error, we define RMSE as:
 \begin{equation*}
 RMSE = \sqrt{\frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} (r_{u,i} - \hat{r}_{u,i})^2}
 \end{equation*}
@@ -315,7 +315,7 @@ RMSE = \sqrt{\frac{1}{U*I} \sum_{u=1}^{U} \sum_{i=1}^{I} (r_{u,i} - \hat{r}_{u,i
 
 \subsection{Diversity}
 
-Gini index, or Gini coefficient, is a well known statistical metric used to measure income inequality. It can be slightly changed in and used in the field of recommender systems to evaluate a system diversity. We call the variation, where higher values mean higher diversity, Gini diversity \cite{Diversity}.\\
+Gini index, or Gini coefficient, is a well known statistical metric used to measure income inequality. It can be slightly changed and used in the field of recommender systems to evaluate recommendation diversity. We call the variation, where higher values mean higher diversity, Gini diversity \cite{Diversity}.\\
 It is computed as follows:
 \begin{equation*}
 gini\_diversity = 2 \sum_{i=1}^{n} \frac{(n + 1 - i) * x_i}{(n + 1) * \sum_{i=1}^{n} x_i}
@@ -327,7 +327,7 @@ where $n$ is the amount of items and $x_i$ is the numbers of times item $i$ has 
 \section{Clustering Techniques}
 
 Clustering is the operation of grouping similar unclassified elements together according to some properties or features. It is used in many fields of machine learning with different applications and implementations.\\
-In this section we cover the main clustering algorithms used in recommender systems, paying particular attention to the one used in this thesis.
+In this section we cover the main clustering algorithms used in recommender systems, paying particular attention to the one used in codebook transfer.
 
 
 \subsection{K-Means Clustering}
@@ -335,25 +335,24 @@ In this section we cover the main clustering algorithms used in recommender syst
 K-Means clustering is the most used and well-known iterative clustering algorithm.\\
 To apply K-Means clustering it is necessary to define the number of target clusters. For each cluster, a centroid with random coordinates is initialized.
 \begin{itemize}
-\item Each element is classified by computing the euclidean distance between its position in space and each centroid. The element is assigned to closest centroid.
+\item Each element is classified by computing the euclidean distance between its position in space and each centroid. The element is assigned to the closest centroid.
 \item The centroid is moved by computing the mean of the distances between it and all the elements assigned to it.
-\item The process is repeated until the the centroid are only slightly moved or until a maximum amount of iterations is reached.
+\item The process is repeated until the centroids are only slightly moved or until a maximum amount of iterations is reached.
 \end{itemize}
 \begin{figure}[htb]
 \centering
 \includegraphics[width=\textwidth]{pictures/k-means-clustering}
-\caption
-[Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png]
-{\protect\raggedright Results of the K-Means clustering algorithm. Source: https://i.stack.imgur.com/cIDB3.png}
+\caption{Example of K-Means clustering algorithm results.\\
+Source: \url{https://i.stack.imgur.com/cIDB3.png}}
 \end{figure}
 K-Means clustering has linear complexity $O(n)$, thus it is considered a fast clustering algorithm.
 
 
 \subsection{Non-Negative Matrix Factorization (NMF)}
 
-Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extracts features from a set of non-negative vectors. It was first introduced by an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
+Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extract features from a set of non-negative vectors. It was first introduced by an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
 It has been proved empirically by different experiments \cite{10.5555/1005332.1044709, 10.1109/CVPR.2001.990477} that NMF has clustering effects.
-Given a metrix $X$ with shape $m \times n$, the goal of NMF is to compute matrices $F$, with shape $m \times p$, and $G$, with shape $p \times n$, such that:
+Given a matrix $X$ with shape $m \times n$, the goal of NMF is to compute matrices $F$, with shape $m \times p$, and $G$, with shape $p \times n$, such that:
 \begin{equation*}
 X = FG
 \end{equation*}
@@ -393,7 +392,7 @@ by solving the optimization problem:
 \begin{equation*}
 \min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}_F^2, \quad \text{s.t.} \quad F^TF = I
 \end{equation*}
-Alternatively, for the $G$-orthogonal problem is:
+Alternatively, the $G$-orthogonal optimization problem is:
 \begin{equation*}
 \min_{F \in \mathbb{R}^{m \times p}_+, G \in \mathbb{R}^{p \times n}_+} \norm{X - FG^T}_F^2, \quad \text{s.t.} \quad G^TG = I
 \end{equation*}
@@ -454,9 +453,9 @@ Generate initial matrices $F^{(0)} \geq 0$, $G^{(0)} \geq 0$, $S^{(0)} \geq 0$\;
 
 \section{Cross-Domain Recommender Systems}
 
-While the majority of recommender systems provide recommendation targeted only to a single topic, in recent years large digital service companies like Amazon or Google started providing recommendation across a very eterogeneous set of services. Amazon, for example, provides recommendations both for its e-commerce website, for items of all categories, and for music, movies and so on. In this scenario it may be useful to provide recommendation across different domains.\par
-Cross-domain recommender systems aim to generate higher quality recommendations in a target domain by leveraging data coming from one more different source domains. In particular, knowledge acquired in a source domain can be transferred with some knowledge-transfer technique to the target domain.\\
-The use cases for such approach are mainly two. First, building a user profile across domains allows to generate bundle recommendation \cite{10.1007/s11257-012-9131-2, 10.1007/s11257-007-9042-9, 10.1007/s11257-012-9128-x}. For example it may be possible to recommend the movie transposition of a book the user bought and then to recommend the movie soundtrack. A recommendation like that can only be inferred by exploiting data from multiple domains. The second scenario is the one of the cold start problem \cite{10.1145/2645710.2645777, 10.1007/978-3-642-22362-4_26, 10.1145/2507157.2507206}. Auxiliary source domain may be able information which is missing in the target domain. Both of these scenarios assume that there are correspondences between user and item profiles across domains.\par
+While the majority of recommender systems provide recommendation targeted only to a single topic, in recent years large digital service companies like Amazon or Google started providing recommendation across a very eterogeneous set of services. Amazon, for example, provides recommendations both for its e-commerce website, for items of all categories, and for music, movies and so on. In this scenario it may be useful to provide recommendations across different domains.\par
+Cross-domain recommender systems aim to generate higher quality recommendations in a target domain by leveraging data coming from one or more different source domains. In particular, knowledge acquired in a source domain can be transferred with some knowledge-transfer technique to the target domain.\\
+The use cases for such approach are mainly two. First, building a user profile across domains allows to generate bundle recommendation \cite{10.1007/s11257-012-9131-2, 10.1007/s11257-007-9042-9, 10.1007/s11257-012-9128-x}. For example, it may be possible to recommend the movie transposition of a book the user bought and then to recommend the movie soundtrack. A recommendation like that can only be inferred by exploiting data from multiple domains. The second scenario is the one of the cold start problem \cite{10.1145/2645710.2645777, 10.1007/978-3-642-22362-4_26, 10.1145/2507157.2507206}. Auxiliary source domains may be able to provide information which is missing in the target domain. Both of these scenarios assume that there are correspondences between user and item profiles across domains.\par
 A complete review of recommender systems was given by Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}. To introduce their properties and categories we mainly follow their formalization of the problem.
 
 
@@ -464,41 +463,41 @@ A complete review of recommender systems was given by Cremonesi \textit{et al} \
 
 The first step in introducting cross-domain recommender systems, is defining the concept of domain. We can distinguish four different levels of domain definition:
 \begin{itemize}
-\item \textbf{Attribute level}: Two items are considered to belong to different domains if they differ in some attribute. For example two books could be considered of different domains if the differ by genre. The attribute level definition is too weak to be considered for cross-domain recommender systems.
-\item \textbf{Type level}: Two items are considered to belong to different domains if they share some attributes but differ by others. For example, TV series and movies belong to different domains, according to this definition.
-\item \textbf{Item level}: Two items are considered to belong to different domains if they don't share any attribute, or at least very few. For example, movies and books belong to different domains, according to this definition.
-\item \textbf{System level}: Two items are considered to belong to different domains if they belong to different systems, even if they share the same attributes. For example, movies from the Netflix system and movies from the Amazon system belong to different domains, according to this definition.
+\item \textbf{Attribute level}: two items are considered to belong to different domains if they differ in some attribute. For example two books could be considered of different domains if they differ by genre. The attribute level definition is too weak to be considered for cross-domain recommender systems.
+\item \textbf{Type level}: two items are considered to belong to different domains if they share some attributes but differ by others. For example, TV series and movies belong to different domains, according to this definition.
+\item \textbf{Item level}: two items are considered to belong to different domains if they do not share any attribute, or at least very few. For example, movies and books belong to different domains, according to this definition.
+\item \textbf{System level}: two items are considered to belong to different domains if they belong to different systems, even if they share the same attributes. For example, movies from the Netflix system and movies from the Amazon system belong to different domains, according to this definition.
 \end{itemize}
 
 
 \subsection{Types of recommendation}
 
 The goal of cross-domain recommender systems can also vary depending on which domain is the target for recommendations.\\
-According to Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}, we can distinguish three types of recommendations. Given the target domain $D_T$ with its users and items sets, respectively $U_T$ and $I_T$, and one or more source domains $D_S$ with their users and items sets, respectively $U_S$ and $I_S$, we distinguish the following types or recommendation types:
+According to Cremonesi \textit{et al} \cite{10.1007/978-1-4899-7637-6_27}, we can distinguish three types of recommendations. Given the target domain $D_T$ with its user and item sets, respectively $U_T$ and $I_T$, and one or more source domains $D_S$ with their user and item sets, respectively $U_S$ and $I_S$, we distinguish the following recommendation types:
 \begin{itemize}
-\item \textbf{Multi-domain recommendation}: recommend items in $I_S \cup I_T$ to users in $U_S$ or to users in $U_T$. This approach requires a significant amount of users overlap between domains, but it is becoming feasible due to the amount of profiles maintained by users on different social media, connected by mechanisms of cross-authentication and identification \cite{10.1016/j.ins.2008.08.022} or interoperability \cite{10.1007/s11257-011-9097-5}.
-\item \textbf{Linked-domain recommendation}: recommend items in $I_T$ to users in $U_S$ or $U_T$ by exploiting knowledge about $U_S \cup U_T$ and $I_S \cup I_T$. This approach is used to enrich data in a target domain with a cold start or data sparsity problem. Generally, it requires at least a partial amount of users or items overlap between the source and target domains.
+\item \textbf{Multi-domain recommendation}: recommend items in $I_S \cup I_T$ to users in $U_S$ or to users in $U_T$. This approach requires a significant amount of user overlap between domains, but it is becoming feasible due to the amount of profiles maintained by users on different social media, connected by mechanisms of cross-authentication and identification \cite{10.1016/j.ins.2008.08.022} or interoperability \cite{10.1007/s11257-011-9097-5}.
+\item \textbf{Linked-domain recommendation}: recommend items in $I_T$ to users in $U_S$ or $U_T$ by exploiting knowledge about $U_S \cup U_T$ and $I_S \cup I_T$. This approach is used to enrich data in a target domain with a cold start or data sparsity problem. Generally, it requires at least a partial amount of user or item overlap between the source and target domains.
 \item \textbf{Cross-domain recommendation}: recommend items in $I_T$ to users in $U_S$ or $U_T$ by exploiting knowledge about $U_S$ and $I_S$. This approach is used when the target domain has no information about the users. In this scenario there is no assumption of data overlap between domains and the approaches aim at transferring knowledge from one domain to the other.
 \end{itemize}
 
 
 \subsection{Types of Overlap}
 
-We can then make distinction between four types of overlap:
+We can make distinction between four types of overlap:
 \begin{itemize}
-\item \textbf{No overlap}: Neither the user nor the item sets share common data, such that:
+\item \textbf{No overlap}: neither the user nor the item sets share common data, such that:
 \begin{equation*}
 U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S = \emptyset
 \end{equation*}
-\item \textbf{User overlap}: Only the user sets share common data, such that:
+\item \textbf{User overlap}: only the user sets share common data, such that:
 \begin{equation*}
 U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S = \emptyset
 \end{equation*}
-\item \textbf{Item overlap}: Only the item sets share common data, such that:
+\item \textbf{Item overlap}: only the item sets share common data, such that:
 \begin{equation*}
 U_T \cap U_S = \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \end{equation*}
-\item \textbf{User and item overlap}: Both user and item sets share common data, such that:
+\item \textbf{User and item overlap}: both user and item sets share common data, such that:
 \begin{equation*}
 U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \end{equation*}
@@ -506,9 +505,8 @@ U_T \cap U_S \neq \emptyset \quad \text{and} \quad I_T \cap I_S \neq \emptyset
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=\textwidth]{pictures/domains-overlap}
-\caption
-[Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Types of overlap of user and item sets between two domains. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Types of overlap of user and item sets between two domains.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 
 
@@ -525,69 +523,63 @@ Furthermore, it is possible to make another type of distinction based on the app
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=\textwidth]{pictures/knowledge-exploitation}
-\caption
-[Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Types of knowledge exploitation in cross-domain recommender systems. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Types of knowledge exploitation in cross-domain recommender systems.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \begin{itemize}
 \item \textbf{Aggregating knowledge}
 \begin{itemize}
 \item \textbf{\textit{Merging user preferences}}: the aggregated knowledge consists of user preferences. Combining user profiles from multiple domains requires a single type of representation of user preferences.\\
-This is the most used approach for cross domain recommendations. According to multiple sources \cite{10.1007/s11257-012-9131-2, 10.1007/978-3-540-88564-1_40, 10.1007/978-3-540-73078-1_44, 10.1145/1297231.1297238, 10.1007/s00354-008-0041-0}, by having user overlap between multiple domains and significant information about user preference in each domain, it is possible to extract a more complete user profile, to provide better recommendations with higher accuracy, by combining the user preferences in a single multi-domain profile. The aggregation of user preferences is able to provide knowledge about user tastes that cannot be extracted from a single domain.\\
+This is the most used approach for cross domain recommendation. According to multiple sources \cite{10.1007/s11257-012-9131-2, 10.1007/978-3-540-88564-1_40, 10.1007/978-3-540-73078-1_44, 10.1145/1297231.1297238, 10.1007/s00354-008-0041-0}, by having user overlap between multiple domains and significant information about user preference in each domain, it is possible to extract a more complete user profile, to provide better recommendations with higher accuracy, by combining the user preferences in a single multi-domain profile. The aggregation of user preferences is able to provide knowledge about user tastes that cannot be extracted from a single domain.\\
 According to others, aggregating user preferences is also beneficial to address the problem of cold-start \cite{10.1007/978-3-642-38844-6_25} and data sparsity \cite{10.1007/s11257-012-9128-x}.\\
-While merging user preferences as ratings has proved the be the most efficient approach of building a multi-domain user profile, in real scenarios it is rarely possible to achieve a common represantion for ratings and to provide a sufficient user overlap, thus, more recent methods have focused on aggregating user tags. According to Szomszor \textit{et al.} \cite{10.1145/1379092.1379103, 10.1007/978-3-540-88564-1_40} it is possible to obtain higher quality recommendations by aggregating and correlating user social tags between domains. Such approach does not require user overlap.
+While merging user preferences as ratings has proved the be the most efficient approach of building a multi-domain user profile, in real scenarios it is rarely possible to achieve a common represantion for ratings and to provide a sufficient user overlap. Thus, more recent methods have focused on aggregating user tags. According to Szomszor \textit{et al.} \cite{10.1145/1379092.1379103, 10.1007/978-3-540-88564-1_40} it is possible to obtain higher quality recommendations by aggregating and correlating user social tags between domains. Such approach does not require user overlap.
 \item \textbf{\textit{Mediating user modeling data}}: the aggregated knowledge consists of user models, such as similarities or neighbors.\\
 This approach extends the previous one by aggregating information related to models of users and items. According to Berkovsky et al. \cite{10.1007/s11257-007-9042-9, 10.1007/11590323_22} this approach enriches the user model and allows to provide higher quality recommendations in each aggregated domain.\\
-For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach could be applied to item models.
+For example, with the assumption of user overlap between domains, it is possible to merge the lists of user neighbors \cite{10.1145/1297231.1297238}. The same approach can be applied to item models.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
-\caption
-[Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Representation of the \textit{mediating-user-modeling-data} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Representation of the \textit{mediating user modeling data} approach.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \item \textbf{\textit{Combining recommendations}}: the aggregated knowledge is composed of single-domain recommendations.\\
 In this approach, recommendations made in the source domains are used to enrich the recommendations in the target domain. Aggregating user recommendations requires both user and item overlap. While the recommendations in the single domains can be computed with different approaches, the challenge of this scenario is to compute weights for aggregation.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
-\caption
-[Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Representation of the \textit{combining-single-domain-recommendations} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Representation of the \textit{combining single domain recommendations} approach.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \end{itemize}
 \item \textbf{Linking and transferring knowledge}:
 \begin{itemize}
 \item \textbf{\textit{Linking domains}}: source and target domains are linked by common knowledge, such as item attributes.\\
-This correspondences can either be directly identified between the single domains, or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
+This correspondences can either be directly identified between the single domains or with the aid of an external domain. Despite no user or item overlap being needed for this approach, at least a partial feature overlap is required.\\
 Chung \textit{et al.} \cite{10.1145/1282100.1282113} initially proposed an approach using item attributes directly to identify a bridge between domains, but since items are generally very heterogeneus, it may be difficult to find directly corresponding features. To address this problem, Loizou \cite{crossdomain-recsys-categorization} proposed to use Wikipedia as a universal vocabulary to express and relate user preferences across multiple domains.\\
 The known problem of both approaches is building said knowledge repositories. Cremonesi \textit{et al.} \cite{10.1007/978-1-4899-7637-6_27} observed that the majority of approaches with the goal of linking domains does not require user or item overlap, but only feature overlap between domains. It was also observed that no particular approach outperforms the others in a general scenario.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/linking-domains}
-\caption
-[Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Representation of the \textit{linking domains} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Representation of the \textit{linking domains} approach.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \item \textbf{\textit{Sharing latent features}}: source and target domains are linked by common latent features, such as extracted item features.\\
 This approach is similar to the previous one, although it assumes that using denser representations of user preferences or item attributes, which are usually both very sparse sets, leads to more accurate matches \cite{10.5555/2283696.2283784, 10.5555/2898607.2898644}. These new representations are obtained with various factorization algorithms. Like for the previous approach, at least a feature overlap is strictly needed.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
-\caption
-[Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Representation of the \textit{sharing latent features} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Representation of the \textit{sharing latent features} approach.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \item \textbf{\textit{Transferring rating patterns}}: the rating pattern extracted from one or more source domains is transferred and applied in the target domain.\\
 The base assumption of this approach is that similar domains share the population used to sample user preferences, even if there is no user or item overlap between them. For this reason it may be possible to find a correlation between domains of the preferences of groups of users for groups of items. This correlation is called \textit{rating pattern}. Thus, the rating pattern is the only information transferred from source domains to the target domain.\\
-The first approach to transfer the rating pattern between domains was proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773} and named \textit{codebook transfer}. Since then, several variants of codebook transfer have surfaced, all based on the same assumptions.\\
+The first approach that aims to transfer the rating pattern between domains was proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773} and named \textit{codebook transfer}. Since then, several variants of codebook transfer have surfaced, all based on the same assumptions.\\
 Being the focus of this thesis for evaluation purposes, the details of the codebook transfer theoretical model and its extensions are addressed in \autoref{ch:theoretical-model}.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
-\caption
-[Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27]
-{\protect\raggedright Representation of the \textit{transferring rating patterns} approach. Source: https://doi.org/10.1007/978-1-4899-7637-6\_27}
+\caption{Representation of the \textit{transferring rating patterns} approach.\\
+Source: \url{https://doi.org/10.1007/978-1-4899-7637-6\_27}}
 \end{figure}
 \end{itemize}
 \end{itemize}

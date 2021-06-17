@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
 
-\usepackage{graphicx}
+\usepackage{graphicx,caption}
 \usepackage{tabulary}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -23,6 +23,8 @@
   \def\subsectionautorefname{Subsection}
   \def\algorithmautorefname{Algorithm}
 }
+
+\captionsetup{singlelinecheck=false,justification=justified}
 
 % Equal margins when setting "twoside,openright"
 \setlength\oddsidemargin{\dimexpr(\paperwidth-\textwidth)/2 - 1in\relax}

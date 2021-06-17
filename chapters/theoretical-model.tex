@@ -13,18 +13,18 @@ Due to the nature of the model, we can distinguish three phases: codebook constr
 \subsection{Input Data}
 
 Input data provided to the CBT model consists in two user-rating matrices. We call $URM_S$ the user-rating matrix of the source domain and $URM_T$ the user-rating matrix of the target domain.\\
-While no user or item overlap is not required, CBT has only requirement for input data: the sparsity of the source dataset should be low enough to allow a meaningful amount of knowledge to be transferred. In \cite{10.5555/1661445.1661773} Li \textit{et al.} did not provide a functional sparsity percentage. In their experiment, the source dataset had a sparsity lower than 50\%.
+While no user or item overlap is required, CBT has one requirement for input data: the sparsity of the source dataset should be low enough to allow a meaningful amount of knowledge to be transferred. In \cite{10.5555/1661445.1661773} Li \textit{et al.} do not provide a functional sparsity percentage. In their experiment, the source dataset had a sparsity lower than 50\%.
 
 
 \subsection{Codebook Construction}
 
 Codebook construction exploits the assumption that, in CF, users with similar tastes or items with similar attributes behave similarly. For this reason, it is possible to compute user and item clusters to obtain a much more compact user-rating matrix of the source domain, which represents the groups behavior. The obtained compact user-rating matrix is called \textit{codebook}.\\
-Li \textit{et al.} provided the following definition for \textit{codebook}:
-\begin{displayquote}
+Li \textit{et al.} provide the following definition for \textit{codebook}:
+\begin{displayquote}[Li \textit{et al.}, 2009 \cite{10.5555/1661445.1661773}]
 \enquote{Codebook is a $k \times l$ matrix which compresses the cluster-level user-item rating patterns of $k$ user clusters and $l$ item clusters in the original rating matrix.}
 \end{displayquote}
 Once the codebook has been computed, an approximation of the original user-rating matrix can be retrieved.\par
-The codebook construction has to be performed by clustering users and items simultaneously. The authors adopted ONMTF \cite{10.1145/1150402.1150420} as the clustering algorithm. Thus, given a source user-rating matrix $X_S$ with shape $n \times m$ and a target codebook size $k \times l$, the optimization problem is the following:
+The codebook construction has to be performed by clustering users and items simultaneously. The authors adopt ONMTF \cite{10.1145/1150402.1150420} as the clustering algorithm. Thus, given a source user-rating matrix $X_S$ with shape $n \times m$ and a target codebook size $k \times l$, the optimization problem is the following:
 \begin{equation}
 \min_{U_S \in \mathbb{R}^{n \times k}_+, V_S \in \mathbb{R}^{m \times l}_+, S \in \mathbb{R}^{k \times l}_+} \norm{X_S - U_S S V_S^T}_F^2, \quad \text{s.t.} \quad U_S^T U_S = I, V_S^T V_S = I
 \end{equation}
@@ -76,13 +76,12 @@ $B = \frac{U_S^T X_S V_S}{U_S^T 11^T V_S}$;
 \caption{The algorithm for codebook construction}
 \end{algorithm}
 \vskip 0.7cm
-According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few cluster could be insufficient to encode the users and items information, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.
+According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few clusters could be insufficient to encode the information about users and item, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/codebook-construction}
-\caption
-[Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
-{\protect\raggedright Example of codebook construction. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
+\caption{Example of codebook construction.\\
+Source: \url{https://dl.acm.org/doi/10.5555/1661445.1661773}}
 \end{figure}
 
 
@@ -92,9 +91,8 @@ According to Li \textit{et al.}, too many clusters can comprise redundant inform
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/codebook-transfer}
-\caption
-[Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773]
-{\protect\raggedright Example of codebook transfer. Source: https://dl.acm.org/doi/10.5555/1661445.1661773}
+\caption{Example of codebook transfer.\\
+Source: \url{https://dl.acm.org/doi/10.5555/1661445.1661773}}
 \end{figure}
 Having constructed the codebook $B$, the model applies it to the target domain. To do this, it assumes that there is correspondence of user and item clusters between the two domains. Transferring the rating pattern consists in the inverse operation to codebook construction. The codebook is expanded to reconstruct an approximation of the target user-rating matrix $X_T$.\\
 The duplication of a row or column of the codebook implies that there is a set of users or items in the target domain that behaves like the cluster represented by the row or column.\\
@@ -180,7 +178,7 @@ $\bar{X_T} = W \odot X_T + [1 - W] \odot [U_T B V_T^T]$\;
 \label{al:codebook-transfer}
 \end{algorithm}
 \vskip 0.7cm
-The following passages prove that the codebook transfer algorithm monotically reduces the loss function. In particular it needs to be proved that the following inequalities always hold:
+The following passages prove that the codebook transfer algorithm monotically reduces the loss function. In particular, it needs to be proved that the following inequalities always hold:
 \begin{equation}
 \label{eq:codebook-transfer-monotone-1}
 \begin{split}
@@ -204,7 +202,7 @@ First, the authors prove \autoref{eq:codebook-transfer-monotone-1}, where $U_T$ 
 = & \sum_{i = 1}^{n} \norm{[X_T]_{i*} - [B [V_T^{(t - 1)}]^T]_{\delta([U_T^{(t - 1)}]_{i*})}}_{W_{i*}}^2
 \end{split}
 \end{equation}
-and, with the similar passages, that:
+and, with similar passages, that:
 \begin{equation}
 \begin{split}
 & \norm{[X_T - U_T^{(t)} B [V_T^{(t - 1)}]^T] \odot W}_F^2 \\
@@ -225,13 +223,13 @@ where $[\cdot]_{i*}$ and $[\cdot]_{*i}$ denote the $i$-th row and column in a ma
 \end{equation*}
 is the $l_2$-norm.\\
 The function $\delta(\cdot)$ returns the index of the largest value of a vector.\\
-\autoref{eq:codebook-transfer-monotone-3} is obtained based on the fact that each user belongs to only one cluster. Thus it is possible to assume that $\exists! 1 \in [U_T^{(t - 1)}]_{i*}$ and the sum of $[U_T^{(t - 1)}]_{i*}$ weighted quadratic losses can be replaced by only one quadratic loss, indexed by the indicator function $\delta([U_T^{(t - 1)}]_{i*})$, which tells that the cluster to which the $i$-th user (i.e., $[X_T]_{i*}$) belongs at the $(t-1)$-th iterative round.\\
+\autoref{eq:codebook-transfer-monotone-3} is obtained based on the fact that each user belongs to only one cluster. Thus, it is possible to assume that $\exists! 1 \in [U_T^{(t - 1)}]_{i*}$ and the sum of $[U_T^{(t - 1)}]_{i*}$ weighted quadratic losses can be replaced by only one quadratic loss, indexed by the indicator function $\delta([U_T^{(t - 1)}]_{i*})$, which represents the cluster to which the $i$-th user (i.e., $[X_T]_{i*}$) belongs at the $(t-1)$-th iterative round.\\
 \autoref{eq:codebook-transfer-monotone-2} can be proved in the same way.
 
 
 \subsection{kNN Recommendations}
 
-The third step of the codebook transfer model consists in using the filled target user-rating matrix to extract recommendations with a memory based collaborative filtering approach, such as $k$-nearest neighborhood.
+The third step of the codebook transfer model consists in using the filled target user-rating matrix to extract recommendations with a memory based collaborative filtering approach, such as $k$-nearest neighbors.
 
 
 \section{Low-Rank Knowledge Transfer via Factorization Machines (LKT-FM)}
@@ -243,8 +241,8 @@ Similarly to the original codebook transfer model, it is comprised of three step
 \subsection{Codebook Construction}
 
 According to Zang \textit{et al.}, constructing rating patterns through user-item co-clustering has potential issues when the source matrix is sparse. For this reason they propose a new construction method to alleviate this problem.\par
-Given a source user-rating matrix $X_S$ with shape $m \times n$, a target codebook size $k \times l$, $X_S$ is processed with basic matrix factorization and factorized into two latent factor matrices: $U_S$, with shape $m \times d$, for users and $V_S$, with shape $n \times h$ for items, where $d$ and $h$ are the latent factors dimensions.\\
-Then KMeans is applied to $U_S$ and $V_S$ to obtain cluster membership matrices $P_S$, with shape $m \times k$, for users and $Q_S$, with shape $n \times l$, for items.\\
+Given a source user-rating matrix $X_S$ with shape $m \times n$, a target codebook shape $k \times l$, $X_S$ is processed with basic matrix factorization and factorized into two latent factor matrices: $U_S$, with shape $m \times d$, for users and $V_S$, with shape $n \times h$ for items, where $d$ and $h$ are the latent factor sizes.\\
+Then K-Means is applied to $U_S$ and $V_S$ to obtain cluster membership matrices $P_S$, with shape $m \times k$, for users and $Q_S$, with shape $n \times l$, for items.\\
 Like in CBT, the codebook $B$ is computed with the following equation:
 \begin{equation}
 B = \frac{P_S^T X_S Q_S}{P_S^T 11^T Q_S}
@@ -254,8 +252,8 @@ Further details about the codebook construction implementation are provided in \
 
 \subsection{Codebook Transfer}
 
-Given the target user-rating matrix $X_T$, with shape $p \times q$, to map the user and item clusters, LKT-FM uses the same approach proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773}. Thus \autoref{al:codebook-transfer} is used to obtain the cluster membership matrices $U_T$, with shape $p \times k$, for users and $V_T$, with shape $q \times l$ for items.\par
-According to the authors, previous rating pattern transfer models do not work well in some conditions due to the integration method, which is usually that of expanding the codebook by duplicating its rows or columns. They named this method \textit{direct expansion}. Zang \textit{et al.} state that direct expansion may miss useful knowledge contained in the target user-rating matrix itself, thus the transferred knowledge could hurt the memory based collaborative filtering recommender performance. As a result, they propose a new integration method based on factorization machines.\par
+Given the target user-rating matrix $X_T$, with shape $p \times q$, to map the user and item clusters, LKT-FM uses the same approach proposed by Li \textit{et al.} \cite{10.5555/1661445.1661773}. Thus, \autoref{al:codebook-transfer} is used to obtain the cluster membership matrices $U_T$, with shape $p \times k$, for users and $V_T$, with shape $q \times l$, for items.\par
+According to the authors, previous rating pattern transfer models do not work well in some conditions due to the integration method, which is usually that of expanding the codebook by duplicating its rows or columns. They named this method \textit{direct expansion}. Zang \textit{et al.} state that direct expansion may miss useful knowledge contained in the target user-rating matrix itself. Thus, the transferred knowledge could hurt the memory based collaborative filtering recommender performance. As a result, they propose a new integration method based on factorization machines.\par
 In LKT-FM, instead of expanding $B$ by duplicating its rows and columns, like in the original codebook transfer model, the target user-rating matrix is filled by using factorization machines.\\
 Given the target domain $D_T$ and the user and item sets $U_T$ and $I_T$, the rating prediction problem for $D_T$ is modeled by a target function $f: U_T \times I_T \rightarrow \mathbb{R}$. Using factorization machines, each user-item interaction $(u,i) \in U_T \times I_T$ in $X_T$ is represented by a feature vector $x_{ui} \in \mathbb{R}^k$, where $k = \abs{U_T} + \abs{I_T}$, containing binary values that represent which user rated which item. For each entry $(u,i) \in X_T$, the corresponding feature vector $x$ can be represented as:
 \begin{equation}
@@ -265,12 +263,11 @@ It is then possible to expand $x_{ui}$ with other features, such as cluster memb
 \begin{equation}
 x_{ui} = (\underbrace{0,...,1,...,0}_{\abs{U_T}},\underbrace{0,...,1,...,0}_{\abs{I_T}},\underbrace{0,...,1,...,0}_{k},\underbrace{0,...,1,...,0}_{l},B_{C_uC_i})
 \end{equation}
-where $k$ and $l$ are the amount of user and item clusters and $B_{C_uC_i}$ is the codebook rating of users of cluster $C_u$ to items of cluster $C_i$. In the added part, the $k$ binary indicator represent which cluster the user belongs to and the $l$ binary indicator represents which cluster the item belongs to.\\
-The feature vector $x_{ui}$ is then used as input for a factorization machine. The output $y$ represents the predicted rating of user $u$ to item $i$.
+where $k$ and $l$ are the amount of user and item clusters and $B_{C_uC_i}$ is the codebook rating of items of cluster $C_i$ by users of cluster $C_u$. In the added part, the $k$ binary indicator represents which cluster the user belongs to and the $l$ binary indicator represents which cluster the item belongs to.\\
+The feature vector $x_{ui}$ is then used as input for a factorization machine. The output $y$ represents the predicted rating of item $i$ by user $u$.
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=\textwidth]{pictures/lkt-fm}
-\caption
-[Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39]
-{\protect\raggedright Representation of the LKT-FM model. Source: https://doi.org/10.1007/978-3-319-71246-8\_39}
+\caption{Representation of the LKT-FM model.\\
+Source: \url{https://doi.org/10.1007/978-3-319-71246-8\_39}}
 \end{figure}
