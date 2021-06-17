@@ -2,93 +2,11 @@
 \label{ch:experiments}
 
 In this chapter we cover the experiments performed on CBT and LKT-FM. We describe the datasets and data splits, the used hyperparamenters and the goals of the experiments.\\
-The first section summarizes the previous rating prediction experiments performed on CBT.\\
-The second, third and fourth sections cover the new ranking experiments performed on CBT and LKT-FM.
+The \cite{10.1145/2645710.2645769}, second and third sections cover the new ranking experiments performed on CBT and LKT-FM.
 
 
 
-\section{Previous Experiments}
-
-In 2014, Cremonesi and Quadrana \cite{10.1145/2645710.2645769} performed experiments on CBT to evaluate its performance in rating predicton. According to them, CBT is not able to transfer knowledge between non-overlapping domains. In their experiments, they provide an alternative explaination based on three points to the apparent increase of accuracy obtained with CBT:
-\begin{itemize}
-\item Empirical proof that CBT can improve accuracy without transferring knowledge.
-\item The injection of the codebook in the target domain is equivalent to a two-matrix factorization algorithm without transfer of knowledge from the source domain.
-\item The apparent increase of accuracy is due to a pitfall in the evaluation procedure, as it compares a user-based nearest neighborhood algorithm (before the injection) with a matrix factorization algorithm (after the injection) and matrix factorization is known to outperform kNN.
-\end{itemize}
-To reach these conclusions, Cremonesi and Quadrana implemented the CBT algorithm in MATLAB and performed five experiments on three different datasets. The experiments were the following:
-\begin{itemize}
-\item \textbf{kNN}: user-based $k$-nearest neighbors with Pearson correlation. Recommendations are extracted from the target domain without codebook transfer, with $k = 20$. Each missing rating is filled with the average of ratings of its user.
-\item \textbf{CBT}: the codebook transfer approach with 50 user and item clusters, followed by kNN.
-\item \textbf{RND}: a "false" codebook containing random ratings is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
-\item \textbf{AsySVD}: a "false" codebook containing ratings generated with the Asymmetric SVD matrix factorization algorithm \cite{10.1145/1401890.1401944} is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
-\item \textbf{GE}: a "false" codebook containing ratings generated with the global effects method \cite{10.1145/1401890.1401944} is transferred using the codebook transfer approach with 50 user and item clusters, followed by kNN.
-\end{itemize}
-
-
-\subsection{Datasets}
-
-Cremonesi and Quadrana performed experiments on MovieLens 1M \cite{movielens-1m-dataset, 10.1145/1864708.1864721}, Netflix Prize \cite{netflix-prize-dataset, 10.1145/1864708.1864721} and BookCrossing \cite{10.1145/1060745.1060754}. Each dataset is used as target domain, while MovieLens 1M and Netflix Prize were used as source domain.\\
-The datasets were preprocessed in the following way:
-\begin{itemize}
-\item The ratings of BookCrossing are normalized to be in range 1 to 5 like in MovieLens 1M and Netflix Prize.
-\item For each dataset, 500 users with at least 40 ratings and 1000 items are selected.
-\item For each target dataset, 200 users are randomly removed to form the test set.
-\item For each user in the test set, 15 ratings are randomly removed to form the validation set.
-\end{itemize}
-
-
-\subsection{Results}
-
-According to the MAE and RMSE metrics, CBT outperfors the kNN baseline in all the dataset combinations. Their results also underline a similar accuracy by transferring a randomly filled codebook.
-\begin{table}[hbtp]
-\centering
-\begin{tabulary}{1.0\textwidth}{|L|CCCCC|}
-\hline
-\multicolumn{6}{|c|}{MovieLens $\rightarrow$ BookCrossing} \\
-\hline
-& kNN & CBT & RND & AsySVD & GE \\
-\hline
-MAE & 0.5216 & \textbf{0.5064} & \textbf{0.4963} & \textbf{0.5089} & \textbf{0.5109} \\
-RMSE & 0.4736 & 0.4492 & \textbf{0.4380} & 0.4556 & 0.4578 \\
-\hline
-\hline
-\multicolumn{6}{|c|}{MovieLens $\rightarrow$ Netflix} \\
-\hline
-& kNN & CBT & RND & AsySVD & GE \\
-\hline
-MAE & 0.7285 & \textbf{0.7090} & \textbf{0.7047} & \textbf{0.7085} & \textbf{0.7124} \\
-RMSE & 0.8630 & \textbf{0.8208} & \textbf{0.8149} & \textbf{0.8245} & \textbf{0.8313} \\
-\hline
-\hline
-\multicolumn{6}{|c|}{Netflix $\rightarrow$ BookCrossing} \\
-\hline
-& kNN & CBT & RND & AsySVD & GE \\
-\hline
-MAE & 0.5580 & \textbf{0.5456} & \textbf{0.5388} & \textbf{0.5474} & \textbf{0.5486} \\
-RMSE & 0.5437 & \textbf{0.5231} & \textbf{0.5113} & \textbf{0.5269} & \textbf{0.5290} \\
-\hline
-\hline
-\multicolumn{6}{|c|}{Netflix $\rightarrow$ MovieLens} \\
-\hline
-& kNN & CBT & RND & AsySVD & GE \\
-\hline
-MAE & 0.7640 & \textbf{0.7446} & \textbf{0.7425} & \textbf{0.7397} & \textbf{0.7417} \\
-RMSE & 0.9388 & \textbf{0.8988} & \textbf{0.8932} & \textbf{0.8915} & \textbf{0.8935} \\
-\hline
-\end{tabulary}
-\caption{Accuracy of different methods. Bold numbers are significantly different from the baseline method kNN.\\
-Source \url{https://doi.org/10.1145/2645710.2645769}}
-\end{table}
-For this reason, Cremonesi and Quadrana conclude that the obtained accuracy does not depend on the transferred knowledge but on the codebook transfer methodology described in \autoref{ss:codebook-transfer}. The structure of the optimization problem closely resembles regularized SVD matrix factorization, as the minimization is performed only on the non-zero elements of the user-rating matrix \cite{10.1145/1401890.1401944}:
-\begin{equation*}
-\min_{U_T \geq 0, V_T \geq 0} \norm{X_T - U_T V_T^T}^2
-\end{equation*}
-The difference is in the presence of the codebook $B$ and constraints on $U_T$ and $V_T$.\\
-According to Cremonesi and Quadrana, this step of codebook transfer is equivalent to the training of a matrix factorization algorithm, provided that $B$ has a wide enough range of ratings to account for the constraints imposed on $U_T$ and $V_T$.
-
-
-
-\section{CBT: Preprocessed Datasets}
+\section{CBT: Experiments on Preprocessed Datasets}
 
 The following section covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
@@ -806,7 +724,7 @@ CBTf C. & 0.0306 $\pm$ 0.0052 & True \\
 
 
 
-\section{CBT: Public Datasets}
+\section{CBT: Experiments on Public Datasets}
 
 The following section covers CBT ranking experiments performed on well known datasets in the field of recommender systems.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
@@ -1542,7 +1460,7 @@ CBTf C. & 0.0136 $\pm$ 0.0007 & False \\
 
 
 
-\section{CBT and LKT-FM: Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
+\section{CBT and LKT-FM: Experiments on Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
 The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\

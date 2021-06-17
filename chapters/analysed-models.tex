@@ -1,5 +1,5 @@
-\chapter{Theoretical Model}
-\label{ch:theoretical-model}
+\chapter{Analysed Models}
+\label{ch:analysed-models}
 
 In this chapter we cover the structure of the codebook transfer model, as provided by Li \textit{et al.} \cite{10.5555/1661445.1661773}, and explore the variant proposed by Zang \textit{et al.}, called LKT-FM \cite{10.1007/978-3-319-71246-8_39}.
 
@@ -18,7 +18,7 @@ While no user or item overlap is required, CBT has one requirement for input dat
 
 \subsection{Codebook Construction}
 
-Codebook construction exploits the assumption that, in CF, users with similar tastes or items with similar attributes behave similarly. For this reason, it is possible to compute user and item clusters to obtain a much more compact user-rating matrix of the source domain, which represents the groups behavior. The obtained compact user-rating matrix is called \textit{codebook}.\\
+Codebook construction (\autoref{fg:codebook-construction}) exploits the assumption that, in CF, users with similar tastes or items with similar attributes behave similarly. For this reason, it is possible to compute user and item clusters to obtain a much more compact user-rating matrix of the source domain, which represents the groups behavior. The obtained compact user-rating matrix is called \textit{codebook}.\\
 Li \textit{et al.} provide the following definition for \textit{codebook}:
 \begin{displayquote}[Li \textit{et al.}, 2009 \cite{10.5555/1661445.1661773}]
 \enquote{Codebook is a $k \times l$ matrix which compresses the cluster-level user-item rating patterns of $k$ user clusters and $l$ item clusters in the original rating matrix.}
@@ -34,8 +34,9 @@ Since it is sufficient to obtain a cluster hard membership indicator for each us
 Once $U_S$ and $V_S$ are computed, the codebook $B$ is computed as follows:
 \begin{equation}
 \label{eq:codebook-construction}
-B = \frac{U_S^T X_S V_S}{U_S^T 11^T V_S}
+B = \frac{U_S^T X_S V_S}{U_S^T 1 1^T V_S}
 \end{equation}
+where $1$ is a vector of ones.
 The complete algorithm for codebook construction is the following:
 \vskip 0.7cm
 \begin{algorithm}[H]
@@ -72,7 +73,7 @@ Allocate spaces for $U_S$ and $V_S$\;
   }
 }
 Compute $B$ using \autoref{eq:codebook-construction}:\\
-$B = \frac{U_S^T X_S V_S}{U_S^T 11^T V_S}$;
+$B = \frac{U_S^T X_S V_S}{U_S^T 1 1^T V_S}$;
 \caption{The algorithm for codebook construction}
 \end{algorithm}
 \vskip 0.7cm
@@ -80,8 +81,8 @@ According to Li \textit{et al.}, too many clusters can comprise redundant inform
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/codebook-construction}
-\caption{Example of codebook construction.\\
-Source: \url{https://dl.acm.org/doi/10.5555/1661445.1661773}}
+\caption{Example of codebook construction. \cite{10.5555/1661445.1661773}}
+\label{fg:codebook-construction}
 \end{figure}
 
 
@@ -91,11 +92,11 @@ Source: \url{https://dl.acm.org/doi/10.5555/1661445.1661773}}
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=0.8\textwidth]{pictures/codebook-transfer}
-\caption{Example of codebook transfer.\\
-Source: \url{https://dl.acm.org/doi/10.5555/1661445.1661773}}
+\caption{Example of codebook transfer. \cite{10.5555/1661445.1661773}}
+\label{fg:codebook-transfer}
 \end{figure}
-Having constructed the codebook $B$, the model applies it to the target domain. To do this, it assumes that there is correspondence of user and item clusters between the two domains. Transferring the rating pattern consists in the inverse operation to codebook construction. The codebook is expanded to reconstruct an approximation of the target user-rating matrix $X_T$.\\
-The duplication of a row or column of the codebook implies that there is a set of users or items in the target domain that behaves like the cluster represented by the row or column.\\
+Having constructed the codebook $B$, the model applies it to the target domain. To do this, it assumes that there is correspondence of user and item clusters between the two domains. Transferring the rating pattern consists in the inverse operation to codebook construction. The codebook is expanded to reconstruct an approximation of the target user-rating matrix $X_T$ (\autoref{fg:codebook-transfer}).\\
+The expansion of a row or column of the codebook implies that there is a set of users or items in the target domain that behaves like the cluster represented by the row or column.\\
 Once an approximation of $X_T$ has been obtained, it is suitable to exclude the already observed ratings in order to predict only the missing entries.\\
 The minimization problem for codebook transfer is defined as follows:
 \begin{equation}
@@ -224,7 +225,13 @@ where $[\cdot]_{i*}$ and $[\cdot]_{*i}$ denote the $i$-th row and column in a ma
 is the $l_2$-norm.\\
 The function $\delta(\cdot)$ returns the index of the largest value of a vector.\\
 \autoref{eq:codebook-transfer-monotone-3} is obtained based on the fact that each user belongs to only one cluster. Thus, it is possible to assume that $\exists! 1 \in [U_T^{(t - 1)}]_{i*}$ and the sum of $[U_T^{(t - 1)}]_{i*}$ weighted quadratic losses can be replaced by only one quadratic loss, indexed by the indicator function $\delta([U_T^{(t - 1)}]_{i*})$, which represents the cluster to which the $i$-th user (i.e., $[X_T]_{i*}$) belongs at the $(t-1)$-th iterative round.\\
-\autoref{eq:codebook-transfer-monotone-2} can be proved in the same way.
+\autoref{eq:codebook-transfer-monotone-2} can be proved in the same way.\par
+According Cremonesi and Quadrana \cite{10.1145/2645710.2645769}, the obtained accuracy of CBT does not depend on the transferred knowledge but on the codebook transfer methodology. The structure of the optimization problem closely resembles regularized SVD matrix factorization, as the minimization is performed only on the non-zero elements of the user-rating matrix \cite{10.1145/1401890.1401944}:
+\begin{equation*}
+\min_{U_T \geq 0, V_T \geq 0} \norm{X_T - U_T V_T^T}^2
+\end{equation*}
+The difference is in the presence of the codebook $B$ and constraints on $U_T$ and $V_T$.\\
+This step of codebook transfer is equivalent to the training of a matrix factorization algorithm, provided that $B$ has a wide enough range of ratings to account for the constraints imposed on $U_T$ and $V_T$.
 
 
 \subsection{kNN Recommendations}
@@ -235,7 +242,7 @@ The third step of the codebook transfer model consists in using the filled targe
 \section{Low-Rank Knowledge Transfer via Factorization Machines (LKT-FM)}
 
 LKT-FM is a codebook transfer variation proposed by Zang \textit{et al.} \cite{10.1007/978-3-319-71246-8_39} in 2017.\\
-Similarly to the original codebook transfer model, it is comprised of three steps: codebook construction, codebook transfer, and recommendations extraction.
+Similarly to the original codebook transfer model, it is comprised of three steps: codebook construction, codebook transfer, and recommendations extraction (\autoref{fg:lkt-fm}).
 
 
 \subsection{Codebook Construction}
@@ -245,8 +252,9 @@ Given a source user-rating matrix $X_S$ with shape $m \times n$, a target codebo
 Then K-Means is applied to $U_S$ and $V_S$ to obtain cluster membership matrices $P_S$, with shape $m \times k$, for users and $Q_S$, with shape $n \times l$, for items.\\
 Like in CBT, the codebook $B$ is computed with the following equation:
 \begin{equation}
-B = \frac{P_S^T X_S Q_S}{P_S^T 11^T Q_S}
+B = \frac{P_S^T X_S Q_S}{P_S^T 1 1^T Q_S}
 \end{equation}
+where $1$ is a vector of ones.
 Further details about the codebook construction implementation are provided in \autoref{ch:applied-model}.
 
 
@@ -268,6 +276,6 @@ The feature vector $x_{ui}$ is then used as input for a factorization machine. T
 \begin{figure}[hbt]
 \centering
 \includegraphics[width=\textwidth]{pictures/lkt-fm}
-\caption{Representation of the LKT-FM model.\\
-Source: \url{https://doi.org/10.1007/978-3-319-71246-8\_39}}
+\caption{Representation of the LKT-FM model. \cite{10.1007/978-3-319-71246-8_39}}
+\label{fg:lkt-fm}
 \end{figure}
