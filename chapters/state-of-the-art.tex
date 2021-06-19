@@ -136,7 +136,7 @@ The estimated rating of each item $i \in I$ by user $u$ is computed as follows:
 \end{equation*}
 Items with the highest ratings, excluding items in $I_u$, are recommended to user $u$.
 \end{itemize}\par
-The main advantage of CBF is that it makes possible to solve the cold start problem, both for users and items, when their features are available. By leveraging the item and user features to build the similarity matrix, CBF only requires previous interactions of the target user or of the target item respectively to provide recommendations.
+The main advantage of CBF is that it makes possible to solve the cold start problem, both for users and items, when their features are available. Cold start is a problem that arises when a user or item has no recorded interaction with other entities in the dataset. For this reason, in some types of recommender systems, it is impossible to provide recommendations to a user with no previous interactions or to recommend an item that no user has interacted with before. By leveraging the item and user features to build the similarity matrix, CBF only requires previous interactions of the target user or of the target item respectively to provide recommendations.
 
 
 \subsection{Collaborative Filtering (CF)}
@@ -169,30 +169,45 @@ Model-based collaborative filtering recommender systems exploit the URM with a m
 
 Matrix factorization \cite{10.1109/MC.2009.263} is a way of computing matrix decomposition: reducing a matrix into the product of two other matrices. After winning the Netflix Prize competition in 2009 \cite{netflix-prize}, it became a very popular approach in recommender systems, frequently but not exclusively used for model-based collaborative filtering.\par
 The assumption of matrix factorization is that it is possible to extract latent factors, to characterize users and items, from the rating pattern. For items, these factors represent an alternative to the human generated features. For users, the factors represent how much a user prefers items with a high score in the corresponding factor. For this reason, we say that matrix factorization is an approach for latent factors models.\par
-Given a set of users $U$ and a set of items $I$, matrix factorization models decompose the URM so that users and items are mapped to a latent factor space of dimensionality $f$ and their interactions are modeled as inner products in that space. Each user $u \in U$ is associated with a vector $p_u \in \mathbb{R}^f$ and each item $i \in I$ is associated with a vector $q_i \in \mathbb{R}^f$.\\
-For each user $u$, the values of $p_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $q_i$ measure how much the item is characterized by that factor.\\
+Given a set of users and a set of items, matrix factorization models decompose the URM, with shape $m \times n$, so that users are mapped to a latent factor space $U$, with shape $m \times k$ and items are mapped to a latent factor space $V$, with shape $n \times k$, and their interactions are modeled as inner products in that space. Each user $u$ is associated with a vector $p_u \in \mathbb{R}^k$ and each item $i$ is associated with a vector $q_i \in \mathbb{R}^k$.\\
+For each user $u$, the values of $U_u$ measure how much the user likes items characterized by the corresponding factor. For each item $i$, the values of $V_i$ measure how much the item is characterized by that factor.\\
 The estimated rating of item $i$ by user $u$ is then computed as follows:
 \begin{equation*}
-\hat{r}_{ui} = q_i^T p_u
+\hat{R}_{ui} = V_i^T U_u
 \end{equation*}
-The challenge of matrix factorization is building the mappings for users and items.
+The challenge of matrix factorization is building the mappings for users and items. Some popular approaches include FunkSVD, Alternate Least Square \cite{10.1109/MC.2009.263} and PureSVD \cite{10.1145/1864708.1864721}.
 
 
-\subsection{Stochastic Gradient Descent (SGD)}
+\subsection{FunkSVD}
 
-SGD is a popular approach \cite{ImprovingSVD, 10.1145/1401890.1401944, 10.1145/1345448.1345466} to compute the latent factors mappings. It involves cycling all the training ratings and computing the error:
+FunkSVD by Simon Funk is the initial approach for matrix factorization that won the Netflix Prize competition in 2009. FunkSVD only uses observed data to fit the model, by initializing $U$ and $V$ randomly and then optimizing the error by using Stochastic Gradient Descent.
+SGD is a popular algorithm \cite{ImprovingSVD, 10.1145/1401890.1401944, 10.1145/1345448.1345466} used to compute the latent factor mappings. In SVD, it involves cycling all the training ratings and computing the error:
 \begin{equation*}
-e_{ui} = r_{ui} - q_i^T p_u
+e_{ui} = R_{ui} - V_i^T U_u
 \end{equation*}
 Then, the values are modified by a magnitude proportional to $\gamma$ in the opposite direction of the gradient, as follows:
 \begin{equation*}
 \begin{split}
-& p_u \gets p_u + \gamma (e_{ui} q_i - \lambda p_u) \\
-& q_i \gets q_i + \gamma (e_{ui} p_u - \lambda q_i)
+& U_u \gets U_u + \gamma (e_{ui} V_i - \lambda U_u) \\
+& V_i \gets V_i + \gamma (e_{ui} U_u - \lambda V_i)
 \end{split}
 \end{equation*}
 where the costant $\lambda$ determines the extent of regularization.
 
+
+\subsection{Alternate Least Square (ALS)}
+
+ALS is an alternative optimization algorithm to SGD. Both matrices $U$ and $V$ are alternatively fixed an learned.\\
+When $U$ is fixed, the optimal value of $V_i$ is learned by optimizing the following optimization problem:
+\begin{equation*}
+\min \sum_{u \in R_i} (R_{ui} - sum_{l = 1}^k U_{ul} \cdot V_{il})^2
+\end{equation*}
+with $U_{ul}$ fixed.\\
+When $V$ is fixed, the optimal value of $U_u$ is learned by optimizing the following optimization problem:
+\begin{equation*}
+\min \sum_{i \in R_u} (R_{ui} - sum_{l = 1}^k U_{ul} \cdot V_{il})^2
+\end{equation*}
+with $V_{il}$ fixed.
 
 
 \section{Factorization Machines (FM)}

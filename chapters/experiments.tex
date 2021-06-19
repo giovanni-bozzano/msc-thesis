@@ -66,7 +66,7 @@ The following hyperparameters are set:
 \item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
 \item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
 \item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 3$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{transfer\_attempts} = 3$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 \item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \end{itemize}
 The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
@@ -741,11 +741,35 @@ To compare the results, the following baseline recommender systems are used with
 \subsection{Datasets}
 
 \begin{itemize}
-\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20,000,263 ratings by 138,493 users on 27,278 movies, with range 1 to 5.
-\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
-\item \textbf{Netflix Prize} \cite{netflix-prize-dataset, 10.1145/1864708.1864721}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
-\item \textbf{Amazon Movies TV Series} \cite{amazon-movies-tv-series-dataset}: 4,607,047 ratings by 2,088,620 users on 200,941 movies and TV series, with range 1 to 5.
+\item \textbf{MovieLens 20M} \cite{movielens-20m-dataset}: 20,000,263 ratings by 138,493 users on 27,278 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:movielens-20m-ratings-frequency}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/movielens-20m-ratings-frequency}
+\caption{Ratings frequency for MovieLens 20M}
+\label{fg:movielens-20m-ratings-frequency}
+\end{figure}
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:movielens-hetrec-2011-ratings-frequency}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/movielens-hetrec-2011-ratings-frequency}
+\caption{Ratings frequency for MovieLens Hetrec 2011}
+\label{fg:movielens-hetrec-2011-ratings-frequency}
+\end{figure}
+\item \textbf{Netflix Prize} \cite{netflix-prize-dataset, 10.1145/1864708.1864721}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:netflix-prize-ratings-frequency}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/netflix-prize-ratings-frequency}
+\caption{Ratings frequency for Netflix Prize}
+\label{fg:netflix-prize-ratings-frequency}
+\end{figure}
+\item \textbf{Amazon Movies TV Series} \cite{amazon-movies-tv-series-dataset}: 4,607,047 ratings by 2,088,620 users on 200,941 movies and TV series, with range 1 to 5. The ratings frequency is represented in \autoref{fg:amazon-movies-tv-series-ratings-frequency}
 \end{itemize}
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{pictures/amazon-movies-tv-series-ratings-frequency}
+\caption{Ratings frequency for Amazon Movies TV Series}
+\label{fg:amazon-movies-tv-series-ratings-frequency}
+\end{figure}
 MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
 MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
 Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
@@ -775,6 +799,7 @@ Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
 \end{tabulary}
 \end{center}
 Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
+\clearpage
 
 
 \subsection{Hyperparameters}
@@ -784,7 +809,7 @@ The following hyperparameters are set:
 \item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
 \item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
 \item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 \item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. the maximum amount is the same for each of the transfer attempts.
 \end{itemize}
 The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
@@ -796,15 +821,6 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 \item $\texttt{knn\_similarity} = \{pearson,cosine\}$: the similarity type to use for kNN.
 \item $\texttt{knn\_normalize} = \{true,false\}$: whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
 \end{itemize}
-
-
-\begin{figure}[htb]
-\centering
-\includegraphics[width=\textwidth]{pictures/movielens-dense-target}
-\caption{Representation of the preprocessed MovieLens Hetrec 2011 Dense train set.}
-\includegraphics[width=\textwidth]{pictures/movielens-sparse-target}
-\caption{Representation of the preprocessed MovieLens Hetrec 2011 Sparse train set.}
-\end{figure}
 
 
 \begin{figure}[htb]
@@ -1476,8 +1492,8 @@ To compare the results, the following baseline recommender systems are used with
 \subsection{Datasets}
 
 \begin{itemize}
-\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5.
-\item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
+\item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:movielens-hetrec-2011-ratings-frequency}
+\item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:netflix-prize-ratings-frequency}
 \end{itemize}
 Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
 Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
@@ -1521,7 +1537,7 @@ The following hyperparameters are set:
 \item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
 \item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
 \item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer.
+\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 \item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \item $\texttt{user\_clusters} = 5$: the amount of user clusters used to build the codebook.
 \item $\texttt{item\_clusters} = 5$: the amount of item clusters used to build the codebook.
@@ -1815,3 +1831,8 @@ LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \end{tabulary}
 \caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
 \end{table}
+
+
+
+\section{Experiments Summary}
+

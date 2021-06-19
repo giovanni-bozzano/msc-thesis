@@ -1,7 +1,8 @@
+\appendix
 \chapter{Applied Model}
 \label{ch:applied-model}
 
-In this chapter we cover the model implementations of CBT and LKT-FM. Both models are implemented using the Python programming language version 3.6 and multiple libraries, such as \textit{Numpy} \cite{10.1109/MCSE.2011.37} and \textit{Scipy} \cite{scipy} for matrix computation and \textit{Scikit-learn} \cite{10.5555/1953048.2078195} to compute K-Means. The experiments are built upon the \textit{RecSys@Polimi framework} by Maurizio Ferrari Dacrema \cite{recsys-polimi-framework}, which offers dataset readers, baseline recommender systems, similarity computation and evaluation metrics.\\
+In this appendix we cover the model implementations of CBT and LKT-FM. Both models are implemented using the Python programming language version 3.6 and multiple libraries, such as \textit{Numpy} \cite{10.1109/MCSE.2011.37} and \textit{Scipy} \cite{scipy} for matrix computation and \textit{Scikit-learn} \cite{10.5555/1953048.2078195} to compute K-Means. The experiments are built upon the \textit{RecSys@Polimi framework} by Maurizio Ferrari Dacrema \cite{recsys-polimi-framework}, which offers dataset readers, baseline recommender systems, similarity computation and evaluation metrics.\\
 The first section describes the implementation of hyperparameter tuning for the experiments.\\
 The second section covers the implementations of CBT codebook construction and transfer algorithms.\\
 The third section covers the LKT-FM variant of codebook transfer and describes the implementation of matrix factorization for codebook construction and of factorization machines for codebook transfer.
@@ -124,6 +125,7 @@ def _binarize_matrix(X):
 
 
 \subsection{Codebook Transfer}
+\label{ss:applied-codebook-transfer}
 
 The codebook transfer technique provided in \autoref{ss:codebook-transfer} monotically decreases the loss function. Thus ensures that it is possible to stop the algorithm on the iteration in which the loss function returns a value equal to the one of the previous iteration.\\
 Since the algorithm always converges to a local minimum, it is possible to execute it several times to further minimize the loss function in alternative local minima.\\

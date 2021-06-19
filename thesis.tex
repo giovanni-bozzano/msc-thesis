@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[nottoc]{tocbibind}
 
-\usepackage{graphicx,caption}
+\usepackage{graphicx}
 \usepackage{tabulary}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -23,8 +23,6 @@
   \def\subsectionautorefname{Subsection}
   \def\algorithmautorefname{Algorithm}
 }
-
-\captionsetup{singlelinecheck=false,justification=justified}
 
 % Equal margins when setting "twoside,openright"
 \setlength\oddsidemargin{\dimexpr(\paperwidth-\textwidth)/2 - 1in\relax}
@@ -53,8 +51,6 @@
 \clearpage
 \include{chapters/analysed-models}
 \clearpage
-\include{chapters/applied-model}
-\clearpage
 \include{chapters/experiments}
 \clearpage
 \include{chapters/conclusion}
@@ -62,5 +58,8 @@
 
 \bibliographystyle{unsrt}
 \bibliography{bibliography}
+\clearpage
+
+\include{chapters/appendix}
 
 \end{document}

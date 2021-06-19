@@ -78,23 +78,11 @@ $B = \frac{U_S^T X_S V_S}{U_S^T 1 1^T V_S}$;
 \end{algorithm}
 \vskip 0.7cm
 According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few clusters could be insufficient to encode the information about users and item, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.
-\begin{figure}[hbt]
-\centering
-\includegraphics[width=0.8\textwidth]{pictures/codebook-construction}
-\caption{Example of codebook construction. \cite{10.5555/1661445.1661773}}
-\label{fg:codebook-construction}
-\end{figure}
 
 
 \subsection{Codebook Transfer}
 \label{ss:codebook-transfer}
 
-\begin{figure}[hbt]
-\centering
-\includegraphics[width=0.8\textwidth]{pictures/codebook-transfer}
-\caption{Example of codebook transfer. \cite{10.5555/1661445.1661773}}
-\label{fg:codebook-transfer}
-\end{figure}
 Having constructed the codebook $B$, the model applies it to the target domain. To do this, it assumes that there is correspondence of user and item clusters between the two domains. Transferring the rating pattern consists in the inverse operation to codebook construction. The codebook is expanded to reconstruct an approximation of the target user-rating matrix $X_T$ (\autoref{fg:codebook-transfer}).\\
 The expansion of a row or column of the codebook implies that there is a set of users or items in the target domain that behaves like the cluster represented by the row or column.\\
 Once an approximation of $X_T$ has been obtained, it is suitable to exclude the already observed ratings in order to predict only the missing entries.\\
@@ -232,6 +220,18 @@ According Cremonesi and Quadrana \cite{10.1145/2645710.2645769}, the obtained ac
 \end{equation*}
 The difference is in the presence of the codebook $B$ and constraints on $U_T$ and $V_T$.\\
 This step of codebook transfer is equivalent to the training of a matrix factorization algorithm, provided that $B$ has a wide enough range of ratings to account for the constraints imposed on $U_T$ and $V_T$.
+\begin{figure}[hbt]
+\centering
+\includegraphics[width=\textwidth]{pictures/codebook-construction}
+\caption{Representation of codebook construction and clusters mapping. The source user-rating matrix $X_s$ is shown as permutated to match the cluster membership matrices $U_s$ and $V_s$. The target user-rating matrix $X_t$ is shown as permutated to match the cluster membership matrices $U_t$ and $V_t$.}
+\label{fg:codebook-construction}
+\end{figure}
+\begin{figure}[hbt]
+\centering
+\includegraphics[width=\textwidth]{pictures/codebook-transfer}
+\caption{Representation of codebook transfer. The target user-rating matrix $X_t$ is filled by expanding the codebook with cluster membership matrices $U_t$ and $V_t$.}
+\label{fg:codebook-transfer}
+\end{figure}
 
 
 \subsection{kNN Recommendations}
@@ -274,8 +274,7 @@ x_{ui} = (\underbrace{0,...,1,...,0}_{\abs{U_T}},\underbrace{0,...,1,...,0}_{\ab
 where $k$ and $l$ are the amount of user and item clusters and $B_{C_uC_i}$ is the codebook rating of items of cluster $C_i$ by users of cluster $C_u$. In the added part, the $k$ binary indicator represents which cluster the user belongs to and the $l$ binary indicator represents which cluster the item belongs to.\\
 The feature vector $x_{ui}$ is then used as input for a factorization machine. The output $y$ represents the predicted rating of item $i$ by user $u$.
 \begin{figure}[hbt]
-\centering
-\includegraphics[width=\textwidth]{pictures/lkt-fm}
-\caption{Representation of the LKT-FM model. \cite{10.1007/978-3-319-71246-8_39}}
+\makebox[\textwidth][c]{\includegraphics[width=1.3\textwidth]{pictures/lkt-fm}}
+\caption{Representation of the LKT-FM model. In part \textbf{1} the source user-rating matrix is processed with matrix factorization to obtain latent factors $U_s$ and $V_s$, then K-Means is applied to them to obtain cluster membership matrices $P_s$ and $Q_s$, which are used to compute the codebook $B$. Part \textbf{2} represents a permutated user-rating target matrix $X_t$ that matches the cluster membership matrices $U_t$ and $V_t$, obtained with \autoref{al:codebook-transfer}. Part \textbf{3} represents the input and output of the factorization machine, that leads to the filling of matrix $X_t$. \cite{10.1007/978-3-319-71246-8_39}}
 \label{fg:lkt-fm}
 \end{figure}
