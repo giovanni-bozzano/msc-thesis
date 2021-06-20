@@ -338,7 +338,7 @@ To apply K-Means clustering it is necessary to define the number of target clust
 \item The centroid is moved by computing the mean of the distances between it and all the elements assigned to it.
 \item The process is repeated until the centroids are only slightly moved or until a maximum amount of iterations is reached.
 \end{itemize}
-\begin{figure}[htb]
+\begin{figure}[hbt]
 \centering
 \includegraphics[width=\textwidth]{pictures/k-means-clustering}
 \caption{Example of K-Means clustering algorithm results.\\
@@ -350,7 +350,7 @@ K-Means clustering has linear complexity $O(n)$, thus it is considered a fast cl
 
 \subsection{Non-Negative Matrix Factorization (NMF)}
 
-Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extract features from a set of non-negative vectors. It was first introduced by an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
+Non-Negative matrix factorization is a set of algorithms for high dimensional data analysis that extract features from a set of non-negative vectors. It was first introduced in an article by Paatero and Tapper in 1994 \cite{10.1002/env.3170050203} and has been widely used ever since it was made popular by Lee and Seung in 1999 \cite{10.1038/44565}, with the first simple algorithm.\\
 It has been proved empirically by different experiments \cite{10.5555/1005332.1044709, 10.1109/CVPR.2001.990477} that NMF has clustering effects.
 Given a matrix $X$ with shape $m \times n$, the goal of NMF is to compute matrices $F$, with shape $m \times p$, and $G$, with shape $p \times n$, such that:
 \begin{equation*}
@@ -562,33 +562,33 @@ Being the focus of this thesis for evaluation purposes, the details of the codeb
 \end{itemize}
 Since in this thesis we evaluate the codebook transfer technique, we focus on transferring knowledge and, in particular, on transferring rating patterns.
 
-\begin{figure}[H]
+\begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/mediating-user-modeling-data}
+\includegraphics[width=0.7\textwidth]{pictures/mediating-user-modeling-data}
 \caption{Representation of the \textit{mediating user modeling data} approach. \cite{10.1007/978-1-4899-7637-6_27}}
 \label{fg:mediating-user-modeling-data}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/combining-single-domain-recommendations}
+\includegraphics[width=0.7\textwidth]{pictures/combining-single-domain-recommendations}
 \caption{Representation of the \textit{combining single domain recommendations} approach. \cite{10.1007/978-1-4899-7637-6_27}}
 \label{fg:combining-single-domain-recommendations}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/linking-domains}
+\includegraphics[width=0.7\textwidth]{pictures/linking-domains}
 \caption{Representation of the \textit{linking domains} approach. \cite{10.1007/978-1-4899-7637-6_27}}
 \label{fg:linking-domains}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/sharing-latent-features}
+\includegraphics[width=0.7\textwidth]{pictures/sharing-latent-features}
 \caption{Representation of the \textit{sharing latent features} approach. \cite{10.1007/978-1-4899-7637-6_27}}
 \label{fg:sharing-latent-features}
 \end{figure}
-\begin{figure}[H]
+\begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/transferring-rating-patterns}
+\includegraphics[width=0.7\textwidth]{pictures/transferring-rating-patterns}
 \caption{Representation of the \textit{transferring rating patterns} approach. \cite{10.1007/978-1-4899-7637-6_27}}
 \label{fg:transferring-rating-patterns}
 \end{figure}
