@@ -27,11 +27,8 @@ To compare the results, the following baseline recommender systems are used with
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset, 10.1145/1864708.1864721}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5.
 \item \textbf{BookCrossing} \cite{10.1145/1060745.1060754}: 1,157,112 ratings by  278,858 users on 271,379 books, with range 1 to 10, normalized to be in range 1 to 5.
 \end{itemize}
-All datasets are preprocessed by Cremonesi and Quadrana to extract sparse and dense versions.\\
-MovieLens 1M and Netflix Prize are used as source domain, while each dataset is used as target domain.\\
-Each missing rating of the source domain is filled with the average of ratings of its user.\\
-Finally, the preprocessed datasets used in the experiments have the following properties:\\
-\begin{center}
+\begin{table}[hbt]
+\centering
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
 \hline
 \multicolumn{5}{|c|}{Source Domains} \\
@@ -55,7 +52,13 @@ Netflix Prize Sparse & 10.54 & 500 & 1000 & 52720 \\
 BookCrossing & 3.03 & 500 & 1000 & 15148 \\
 \hline
 \end{tabulary}
-\end{center}
+\caption{Properties of the datasets preprocessed by Cremonesi and Quadrana.}
+\end{table}
+\label{tb:preprocessed-datasets-properties}
+All datasets are preprocessed by Cremonesi and Quadrana to extract sparse and dense versions.\\
+MovieLens 1M and Netflix Prize are used as source domain, while each dataset is used as target domain.\\
+Each missing rating of the source domain is filled with the average of ratings of its user.\\
+Finally, the preprocessed datasets used in the experiments have the properties listed in \autoref{tb:preprocessed-datasets-properties}.\\
 Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
 
 
@@ -69,7 +72,7 @@ The following hyperparameters are set:
 \item $\texttt{transfer\_attempts} = 3$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 \item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \end{itemize}
-The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
+The following hyperparameters are optimized with bayesian optimization based on the mAP metric, with 50 iterations and 15 random starts:
 \begin{itemize}
 \item $\texttt{user\_clusters} \in [5,100]$: the amount of user clusters used to build the codebook.
 \item $\texttt{item\_clusters} \in [5,100]$: the amount of item clusters used to build the codebook.
@@ -82,7 +85,6 @@ The following hyperparameters are optimized with bayesian optimization, with 50 
 
 \begin{table}[hbt]
 \centering
-\small
 \begin{tabulary}{\textwidth}{|L|CCC|}
 \hline
 \multicolumn{4}{|c|}{MovieLens 1M (Dense) $\rightarrow$ BookCrossing} \\
@@ -117,7 +119,6 @@ CBT C. & 0.0567 $\pm$ 0.0038 & 0.1580 $\pm$ 0.0954 & 0.5693 $\pm$ 0.3767 \\
 
 \begin{table}[hbt]
 \centering
-\small
 \begin{tabulary}{\textwidth}{|L|CC|}
 \hline
 \multicolumn{3}{|c|}{MovieLens 1M (Dense) $\rightarrow$ BookCrossing} \\
@@ -629,6 +630,15 @@ falseCBT C. & 0.0306 $\pm$ 0.0052 & True \\
 \clearpage
 
 
+\subsection{Experiments Summary}
+
+While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
+These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
+It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
+
+\clearpage
+
+
 
 \section{CBT: Experiments on Public Datasets}
 
@@ -660,7 +670,7 @@ To compare the results, the following baseline recommender systems are used with
 \end{figure}
 \begin{figure}[hbt!]
 \centering
-\includegraphics[width=0.8\textwidth]{pictures/movielens-hetrec-2011-ratings-frequency}
+\includegraphics[width=0.9\textwidth]{pictures/movielens-hetrec-2011-ratings-frequency}
 \caption{Ratings frequency for MovieLens Hetrec 2011}
 \label{fg:movielens-hetrec-2011-ratings-frequency}
 \end{figure}
@@ -676,11 +686,8 @@ To compare the results, the following baseline recommender systems are used with
 \caption{Ratings frequency for Amazon Movies TV Series}
 \label{fg:amazon-movies-tv-series-ratings-frequency}
 \end{figure}
-MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
-MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
-Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
-Finally, the preprocessed datasets used in the experiments have the following properties:\\
-\begin{center}
+\begin{table}[hbt]
+\centering
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
 \hline
 \multicolumn{5}{|c|}{Source Domains} \\
@@ -703,9 +710,14 @@ Amazon Movies TV Series D. & 10.21 & 500 & 1000 & 51048 \\
 Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
 \hline
 \end{tabulary}
-\end{center}
+\caption{Properties of the preprocessed datasets used in the experiments on public datasets.}
+\end{table}
+\label{tb:public-datasets-properties}
+MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
+MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
+Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
+Finally, the preprocessed datasets used in the experiments have the properties listed in \autoref{tb:public-datasets-properties}.\\
 Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
-\clearpage
 
 
 \subsection{Hyperparameters}
@@ -716,9 +728,9 @@ The following hyperparameters are set:
 \item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
 \item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
 \item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
-\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. the maximum amount is the same for each of the transfer attempts.
+\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \end{itemize}
-The following hyperparameters are optimized with bayesian optimization, with 50 iterations and 15 random starts:
+The following hyperparameters are optimized with bayesian optimization based on the mAP metric, with 50 iterations and 15 random starts:
 \begin{itemize}
 \item $\texttt{user\_clusters} \in [5,100]$: the amount of user clusters used to build the codebook.
 \item $\texttt{item\_clusters} \in [5,100]$: the amount of item clusters used to build the codebook.
@@ -1285,6 +1297,15 @@ falseCBT C. & 0.0136 $\pm$ 0.0007 & False \\
 \clearpage
 
 
+\subsection{Experiments Summary}
+
+While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
+These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
+It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
+
+\clearpage
+
+
 
 \section{CBT and LKT-FM: Experiments on Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
@@ -1305,10 +1326,8 @@ To compare the results, the following baseline recommender systems are used with
 \item \textbf{MovieLens Hetrec 2011} \cite{grouplens, hetrec-2011}: 855,598 ratings by 2,113 users on 10,109 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:movielens-hetrec-2011-ratings-frequency}
 \item \textbf{Netflix Prize} \cite{netflix-prize-dataset}: 100,480,507 ratings by 480,189 users on 17,770 movies, with range 1 to 5. The ratings frequency is represented in \autoref{fg:netflix-prize-ratings-frequency}
 \end{itemize}
-Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
-Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
-Finally, the preprocessed and full datasets used in the experiments have the following properties:\\
-\begin{center}
+\begin{table}[hbt]
+\centering
 \begin{tabulary}{1.0\textwidth}{|L|CCCC|}
 \hline
 \multicolumn{5}{|c|}{Source Domain} \\
@@ -1325,7 +1344,12 @@ Netflix Prize & 56.77 & 500 & 500 & 141934 \\
 MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 \hline
 \end{tabulary}
-\end{center}
+\caption{Properties of the preprocessed datasets used in the experiments on full target dataset.}
+\end{table}
+\label{tb:full-datasets-properties}
+Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
+Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
+Finally, the preprocessed and full datasets used in the experiments have the properties listed in \autoref{tb:full-datasets-properties}.\\
 The target dataset is split in train and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the train set.
 
 
@@ -1515,3 +1539,12 @@ LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 \end{tabulary}
 \caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank.}
 \end{table}
+
+\clearpage
+
+
+\subsection{Experiments Summary}
+
+While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
+These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
+It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
