@@ -8,7 +8,7 @@ The \cite{10.1145/2645710.2645769}, second and third sections cover the new rank
 
 \section{CBT: Experiments on Preprocessed Datasets}
 
-The following section covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}. The goal of these experiments is to expand on the ones that Cremonesi and Quadrana performed on rating prediction by evaluating CBT ranking capabilities with the same datasets. Additionally, a false source matrix is provided as input to determine whether CBT is capable of knowledge transfer or its behavior is similar with irrelevant input data.\\
+The following section covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}. The goal of these experiments is to expand on the ones that Cremonesi and Quadrana performed on rating prediction by evaluating CBT ranking capabilities with the same datasets. Additionally, a fake source matrix is provided as input to determine whether CBT is capable of knowledge transfer or its behaviour remains consistent when provided with irrelevant input data.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
 A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
@@ -16,7 +16,7 @@ To compare the results, the following baseline recommender systems are used with
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
 \item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
-\item \textbf{falseCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{fakeCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \end{itemize}
 
 
@@ -63,6 +63,7 @@ Each target dataset is split in train, validation and test sets. To do so, a ran
 
 
 \subsection{Hyperparameters}
+\label{ss:preprocessed-datasets-hyperparameters}
 
 The following hyperparameters are set:
 \begin{itemize}
@@ -96,8 +97,8 @@ TopPop & 0.0174 $\pm$ 0.0023 & 0.0310 $\pm$ 0.0039 & 0.0041 $\pm$ 0.0005 \\
 Random & 0.0049 $\pm$ 0.0004 & 0.0083 $\pm$ 0.0004 & 0.0010 $\pm$ 0.0001 \\
 kNN P. & 0.0359 $\pm$ 0.0026 & 0.0543 $\pm$ 0.0065 & 0.0060 $\pm$ 0.0010 \\
 kNN C. & 0.0504 $\pm$ 0.0036 & 0.0756 $\pm$ 0.0045 & 0.0084 $\pm$ 0.0005 \\
-falseCBT P. & 0.0124 $\pm$ 0.0023 & 0.0207 $\pm$ 0.0030 & 0.0026 $\pm$ 0.0003 \\
-falseCBT C. & 0.0109 $\pm$ 0.0006 & 0.0192 $\pm$ 0.0020 & 0.0025 $\pm$ 0.0004 \\
+fakeCBT P. & 0.0124 $\pm$ 0.0023 & 0.0207 $\pm$ 0.0030 & 0.0026 $\pm$ 0.0003 \\
+fakeCBT C. & 0.0109 $\pm$ 0.0006 & 0.0192 $\pm$ 0.0020 & 0.0025 $\pm$ 0.0004 \\
 CBT P. & 0.0234 $\pm$ 0.0116 & 0.0358 $\pm$ 0.0156 & 0.0041 $\pm$ 0.0016 \\
 CBT C. & 0.0158 $\pm$ 0.0012 & 0.0246 $\pm$ 0.0006 & 0.0028 $\pm$ 0.0002 \\
 \hline
@@ -108,8 +109,8 @@ TopPop & 0.0827 $\pm$ 0.0098 & 0.0236 $\pm$ 0.0000 & 0.0397 $\pm$ 0.0005 \\
 Random & 0.0207 $\pm$ 0.0025 & 0.8196 $\pm$ 0.0002 & 1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1207 $\pm$ 0.0203 & 0.1159 $\pm$ 0.0020 & 0.4640 $\pm$ 0.0079 \\
 kNN C. & 0.1673 $\pm$ 0.0106 & 0.2307 $\pm$ 0.1940 & 0.5570 $\pm$ 0.2751 \\
-falseCBT P. & 0.0513 $\pm$ 0.0068 & 0.1688 $\pm$ 0.0376 & 0.5843 $\pm$ 0.0670 \\
-falseCBT C. & 0.0500 $\pm$ 0.0071 & 0.0223 $\pm$ 0.0003 & 0.0367 $\pm$ 0.0017 \\
+fakeCBT P. & 0.0513 $\pm$ 0.0068 & 0.1688 $\pm$ 0.0376 & 0.5843 $\pm$ 0.0670 \\
+fakeCBT C. & 0.0500 $\pm$ 0.0071 & 0.0223 $\pm$ 0.0003 & 0.0367 $\pm$ 0.0017 \\
 CBT P. & 0.0813 $\pm$ 0.0313 & 0.1527 $\pm$ 0.1016 & 0.5153 $\pm$ 0.3505 \\
 CBT C. & 0.0567 $\pm$ 0.0038 & 0.1580 $\pm$ 0.0954 & 0.5693 $\pm$ 0.3767 \\
 \hline
@@ -132,8 +133,8 @@ Random & 0.0049 $\pm$ 0.0004 & True \\
 TopPop & 0.0174 $\pm$ 0.0023 & False \\
 kNN P. & 0.0359 $\pm$ 0.0026 & True \\
 kNN C. & 0.0504 $\pm$ 0.0036 & True \\
-falseCBT P. & 0.0124 $\pm$ 0.0023 & False \\
-falseCBT C. & 0.0109 $\pm$ 0.0006 & True \\
+fakeCBT P. & 0.0124 $\pm$ 0.0023 & False \\
+fakeCBT C. & 0.0109 $\pm$ 0.0006 & True \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -144,8 +145,8 @@ Random & 0.0049 $\pm$ 0.0004 & False \\
 TopPop & 0.0174 $\pm$ 0.0023 & False \\
 kNN P. & 0.0359 $\pm$ 0.0026 & False \\
 kNN C. & 0.0504 $\pm$ 0.0036 & False \\
-falseCBT P. & 0.0124 $\pm$ 0.0023 & False \\
-falseCBT C. & 0.0109 $\pm$ 0.0006 & False \\
+fakeCBT P. & 0.0124 $\pm$ 0.0023 & False \\
+fakeCBT C. & 0.0109 $\pm$ 0.0006 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens 1M (Dense) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -164,8 +165,8 @@ TopPop & 0.0433 $\pm$ 0.0052 & 0.0698 $\pm$ 0.0072 & 0.0083 $\pm$ 0.0008 \\
 Random & 0.0078 $\pm$ 0.0018 & 0.0155 $\pm$ 0.0018 & 0.0022 $\pm$ 0.0003 \\
 kNN P. & 0.0556 $\pm$ 0.0070 & 0.0869 $\pm$ 0.0101 & 0.0101 $\pm$ 0.0014 \\
 kNN C. & 0.0740 $\pm$ 0.0101 & 0.1112 $\pm$ 0.0126 & 0.0124 $\pm$ 0.0016 \\
-falseCBT P. & 0.0273 $\pm$ 0.0103 & 0.0443 $\pm$ 0.0133 & 0.0053 $\pm$ 0.0013 \\
-falseCBT C. & 0.0296 $\pm$ 0.0057 & 0.0443 $\pm$ 0.0071 & 0.0049 $\pm$ 0.0006 \\
+fakeCBT P. & 0.0273 $\pm$ 0.0103 & 0.0443 $\pm$ 0.0133 & 0.0053 $\pm$ 0.0013 \\
+fakeCBT C. & 0.0296 $\pm$ 0.0057 & 0.0443 $\pm$ 0.0071 & 0.0049 $\pm$ 0.0006 \\
 CBT P. & 0.0430 $\pm$ 0.0100 & 0.0668 $\pm$ 0.0104 & 0.0077 $\pm$ 0.0006 \\
 CBT C. & 0.0335 $\pm$ 0.0062 & 0.0522 $\pm$ 0.0067 & 0.0060 $\pm$ 0.0004 \\
 \hline
@@ -176,8 +177,8 @@ TopPop & 0.1667 $\pm$ 0.0151 & 0.1343 $\pm$ 0.0001 & 0.2923 $\pm$ 0.0005 \\
 Random & 0.0447 $\pm$ 0.0052 & 0.7324 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.2020 $\pm$ 0.0273 & 0.2287 $\pm$ 0.0520 & 0.5563 $\pm$ 0.1131 \\
 kNN C. & 0.2473 $\pm$ 0.0320 & 0.4129 $\pm$ 0.0457 & 0.8773 $\pm$ 0.0338 \\
-falseCBT P. & 0.1060 $\pm$ 0.0254 & 0.2786 $\pm$ 0.1635 & 0.6923 $\pm$ 0.1995 \\
-falseCBT C. & 0.0973 $\pm$ 0.0118 & 0.0731 $\pm$ 0.0012 & 0.1683 $\pm$ 0.0059 \\
+fakeCBT P. & 0.1060 $\pm$ 0.0254 & 0.2786 $\pm$ 0.1635 & 0.6923 $\pm$ 0.1995 \\
+fakeCBT C. & 0.0973 $\pm$ 0.0118 & 0.0731 $\pm$ 0.0012 & 0.1683 $\pm$ 0.0059 \\
 CBT P. & 0.1533 $\pm$ 0.0125 & 0.1880 $\pm$ 0.0416 & 0.5467 $\pm$ 0.1066 \\
 CBT C. & 0.1207 $\pm$ 0.0074 & 0.0905 $\pm$ 0.0042 & 0.2113 $\pm$ 0.0105 \\
 \hline
@@ -200,8 +201,8 @@ Random & 0.0078 $\pm$ 0.0018 & True \\
 TopPop & 0.0433 $\pm$ 0.0052 & True \\
 kNN P. & 0.0556 $\pm$ 0.0070 & True \\
 kNN C. & 0.0740 $\pm$ 0.0101 & True \\
-falseCBT P. & 0.0273 $\pm$ 0.0103 & False \\
-falseCBT C. & 0.0296 $\pm$ 0.0057 & False \\
+fakeCBT P. & 0.0273 $\pm$ 0.0103 & False \\
+fakeCBT C. & 0.0296 $\pm$ 0.0057 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -212,8 +213,8 @@ Random & 0.0078 $\pm$ 0.0018 & True \\
 TopPop & 0.0433 $\pm$ 0.0052 & False \\
 kNN P. & 0.0556 $\pm$ 0.0070 & False \\
 kNN C. & 0.0740 $\pm$ 0.0101 & False \\
-falseCBT P. & 0.0273 $\pm$ 0.0103 & False \\
-falseCBT C. & 0.0296 $\pm$ 0.0057 & False \\
+fakeCBT P. & 0.0273 $\pm$ 0.0103 & False \\
+fakeCBT C. & 0.0296 $\pm$ 0.0057 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 1M (Dense) as source domain. Significance is computed using Wilcoxon signed-rank or paired t-test. "P." and "C." stand for Pearson and cosine similarity.}
@@ -232,8 +233,8 @@ TopPop & 0.0242 $\pm$ 0.0013 & 0.0386 $\pm$ 0.0030 & 0.0046 $\pm$ 0.0005 \\
 Random & 0.0046 $\pm$ 0.0013 & 0.0081 $\pm$ 0.0007 & 0.0010 $\pm$ 0.0001 \\
 kNN P. & 0.0410 $\pm$ 0.0026 & 0.0603 $\pm$ 0.0019 & 0.0065 $\pm$ 0.0000 \\
 kNN C. & 0.0534 $\pm$ 0.0100 & 0.0790 $\pm$ 0.0128 & 0.0086 $\pm$ 0.0011 \\
-falseCBT P. & 0.0189 $\pm$ 0.0020 & 0.0312 $\pm$ 0.0021 & 0.0038 $\pm$ 0.0002 \\
-falseCBT C. & 0.0140 $\pm$ 0.0002 & 0.0217 $\pm$ 0.0001 & 0.0025 $\pm$ 0.0000 \\
+fakeCBT P. & 0.0189 $\pm$ 0.0020 & 0.0312 $\pm$ 0.0021 & 0.0038 $\pm$ 0.0002 \\
+fakeCBT C. & 0.0140 $\pm$ 0.0002 & 0.0217 $\pm$ 0.0001 & 0.0025 $\pm$ 0.0000 \\
 CBT P. & 0.0499 $\pm$ 0.0076 & 0.0742 $\pm$ 0.0090 & 0.0080 $\pm$ 0.0007 \\
 CBT C. & 0.0276 $\pm$ 0.0079 & 0.0429 $\pm$ 0.0097 & 0.0049 $\pm$ 0.0008 \\
 \hline
@@ -244,8 +245,8 @@ TopPop & 0.0920 $\pm$ 0.0099 & 0.0236 $\pm$ 0.0000 & 0.0397 $\pm$ 0.0005 \\
 Random & 0.0207 $\pm$ 0.0019 & 0.8196 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1293 $\pm$ 0.0009 & 0.1118 $\pm$ 0.0025 & 0.4520 $\pm$ 0.0024 \\
 kNN C. & 0.1713 $\pm$ 0.0225 & 0.2041 $\pm$ 0.0740 & 0.6163 $\pm$ 0.1523 \\
-falseCBT P. & 0.0753 $\pm$ 0.0034 & 0.1501 $\pm$ 0.1170 & 0.4607 $\pm$ 0.2829 \\
-falseCBT C. & 0.0507 $\pm$ 0.0009 & 0.0220 $\pm$ 0.0001 & 0.0340 $\pm$ 0.0022 \\
+fakeCBT P. & 0.0753 $\pm$ 0.0034 & 0.1501 $\pm$ 0.1170 & 0.4607 $\pm$ 0.2829 \\
+fakeCBT C. & 0.0507 $\pm$ 0.0009 & 0.0220 $\pm$ 0.0001 & 0.0340 $\pm$ 0.0022 \\
 CBT P. & 0.1607 $\pm$ 0.0131 & 0.1937 $\pm$ 0.0426 & 0.6277 $\pm$ 0.0830 \\
 CBT C. & 0.0980 $\pm$ 0.0157 & 0.2257 $\pm$ 0.0763 & 0.7723 $\pm$ 0.1049 \\
 \hline
@@ -268,8 +269,8 @@ Random & 0.0046 $\pm$ 0.0013 & False \\
 TopPop & 0.0242 $\pm$ 0.0013 & False \\
 kNN P. & 0.0410 $\pm$ 0.0026 & False \\
 kNN C. & 0.0534 $\pm$ 0.0100 & False \\
-falseCBT P. & 0.0189 $\pm$ 0.0020 & False \\
-falseCBT C. & 0.0140 $\pm$ 0.0002 & False \\
+fakeCBT P. & 0.0189 $\pm$ 0.0020 & False \\
+fakeCBT C. & 0.0140 $\pm$ 0.0002 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -280,8 +281,8 @@ Random & 0.0046 $\pm$ 0.0013 & True \\
 TopPop & 0.0242 $\pm$ 0.0013 & True \\
 kNN P. & 0.0410 $\pm$ 0.0026 & False \\
 kNN C. & 0.0534 $\pm$ 0.0100 & False \\
-falseCBT P. & 0.0189 $\pm$ 0.0020 & True \\
-falseCBT C. & 0.0140 $\pm$ 0.0002 & True \\
+fakeCBT P. & 0.0189 $\pm$ 0.0020 & True \\
+fakeCBT C. & 0.0140 $\pm$ 0.0002 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens 1M (Sparse) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -300,8 +301,8 @@ TopPop & 0.0392 $\pm$ 0.0072 & 0.0609 $\pm$ 0.0087 & 0.0071 $\pm$ 0.0007 \\
 Random & 0.0033 $\pm$ 0.0003 & 0.0066 $\pm$ 0.0004 & 0.0009 $\pm$ 0.0001 \\
 kNN P. & 0.0527 $\pm$ 0.0005 & 0.0810 $\pm$ 0.0022 & 0.0092 $\pm$ 0.0005 \\
 kNN C. & 0.0670 $\pm$ 0.0074 & 0.1035 $\pm$ 0.0092 & 0.0118 $\pm$ 0.0008 \\
-falseCBT P. & 0.0200 $\pm$ 0.0062 & 0.0336 $\pm$ 0.0080 & 0.0042 $\pm$ 0.0008 \\
-falseCBT C. & 0.0195 $\pm$ 0.0045 & 0.0346 $\pm$ 0.0048 & 0.0046 $\pm$ 0.0003 \\
+fakeCBT P. & 0.0200 $\pm$ 0.0062 & 0.0336 $\pm$ 0.0080 & 0.0042 $\pm$ 0.0008 \\
+fakeCBT C. & 0.0195 $\pm$ 0.0045 & 0.0346 $\pm$ 0.0048 & 0.0046 $\pm$ 0.0003 \\
 CBT P. & 0.0482 $\pm$ 0.0086 & 0.0752 $\pm$ 0.0100 & 0.0087 $\pm$ 0.0007 \\
 CBT C. & 0.0342 $\pm$ 0.0134 & 0.0551 $\pm$ 0.0187 & 0.0066 $\pm$ 0.0019 \\
 \hline
@@ -312,8 +313,8 @@ TopPop & 0.1413 $\pm$ 0.0141 & 0.0361 $\pm$ 0.0000 & 0.1283 $\pm$ 0.0009 \\
 Random & 0.0187 $\pm$ 0.0025 & 0.8094 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1840 $\pm$ 0.0099 & 0.0980 $\pm$ 0.0347 & 0.2920 $\pm$ 0.1072 \\
 kNN C. & 0.2360 $\pm$ 0.0156 & 0.1342 $\pm$ 0.0352 & 0.3837 $\pm$ 0.0975 \\
-falseCBT P. & 0.0840 $\pm$ 0.0157 & 0.1370 $\pm$ 0.0784 & 0.5357 $\pm$ 0.1721 \\
-falseCBT C. & 0.0920 $\pm$ 0.0057 & 0.0318 $\pm$ 0.0001 & 0.0847 $\pm$ 0.0021 \\
+fakeCBT P. & 0.0840 $\pm$ 0.0157 & 0.1370 $\pm$ 0.0784 & 0.5357 $\pm$ 0.1721 \\
+fakeCBT C. & 0.0920 $\pm$ 0.0057 & 0.0318 $\pm$ 0.0001 & 0.0847 $\pm$ 0.0021 \\
 CBT P. & 0.1740 $\pm$ 0.0150 & 0.0661 $\pm$ 0.0014 & 0.3130 $\pm$ 0.0214 \\
 CBT C. & 0.1327 $\pm$ 0.0370 & 0.1304 $\pm$ 0.1354 & 0.3530 $\pm$ 0.3281 \\
 \hline
@@ -336,8 +337,8 @@ Random & 0.0033 $\pm$ 0.0003 & False \\
 TopPop & 0.0392 $\pm$ 0.0072 & False \\
 kNN P. & 0.0527 $\pm$ 0.0005 & False \\
 kNN C. & 0.0670 $\pm$ 0.0074 & False \\
-falseCBT P. & 0.0200 $\pm$ 0.0062 & False \\
-falseCBT C. & 0.0195 $\pm$ 0.0045 & False \\
+fakeCBT P. & 0.0200 $\pm$ 0.0062 & False \\
+fakeCBT C. & 0.0195 $\pm$ 0.0045 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -348,8 +349,8 @@ Random & 0.0033 $\pm$ 0.0003 & True \\
 TopPop & 0.0392 $\pm$ 0.0072 & False \\
 kNN P. & 0.0527 $\pm$ 0.0005 & False \\
 kNN C. & 0.0670 $\pm$ 0.0074 & True \\
-falseCBT P. & 0.0200 $\pm$ 0.0062 & True \\
-falseCBT C. & 0.0195 $\pm$ 0.0045 & True \\
+fakeCBT P. & 0.0200 $\pm$ 0.0062 & True \\
+fakeCBT C. & 0.0195 $\pm$ 0.0045 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 1M (Sparse) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -368,8 +369,8 @@ TopPop & 0.0181 $\pm$ 0.0064 & 0.0322 $\pm$ 0.0063 & 0.0043 $\pm$ 0.0002 \\
 Random & 0.0039 $\pm$ 0.0006 & 0.0075 $\pm$ 0.0008 & 0.0010 $\pm$ 0.0001 \\
 kNN P. & 0.0330 $\pm$ 0.0018 & 0.0548 $\pm$ 0.0026 & 0.0067 $\pm$ 0.0003 \\
 kNN C. & 0.0558 $\pm$ 0.0071 & 0.0832 $\pm$ 0.0088 & 0.0091 $\pm$ 0.0007 \\
-falseCBT P. & 0.0144 $\pm$ 0.0028 & 0.0230 $\pm$ 0.0038 & 0.0027 $\pm$ 0.0004 \\
-falseCBT C. & 0.0110 $\pm$ 0.0032 & 0.0170 $\pm$ 0.0053 & 0.0019 $\pm$ 0.0007 \\
+fakeCBT P. & 0.0144 $\pm$ 0.0028 & 0.0230 $\pm$ 0.0038 & 0.0027 $\pm$ 0.0004 \\
+fakeCBT C. & 0.0110 $\pm$ 0.0032 & 0.0170 $\pm$ 0.0053 & 0.0019 $\pm$ 0.0007 \\
 CBT P. & 0.0396 $\pm$ 0.0032 & 0.0644 $\pm$ 0.0026 & 0.0077 $\pm$ 0.0004 \\
 CBT C. & 0.0227 $\pm$ 0.0038 & 0.0373 $\pm$ 0.0070 & 0.0046 $\pm$ 0.0009 \\
 \hline
@@ -380,8 +381,8 @@ TopPop & 0.0853 $\pm$ 0.0050 & 0.0236 $\pm$ 0.0000 & 0.0403 $\pm$ 0.0005 \\
 Random & 0.0207 $\pm$ 0.0025 & 0.8197 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1347 $\pm$ 0.0062 & 0.1104 $\pm$ 0.0086 & 0.4607 $\pm$ 0.0199 \\
 kNN C. & 0.1820 $\pm$ 0.0145 & 0.1167 $\pm$ 0.0114 & 0.4240 $\pm$ 0.0311 \\
-falseCBT P. & 0.0540 $\pm$ 0.0071 & 0.1443 $\pm$ 0.0729 & 0.4623 $\pm$ 0.2254 \\
-falseCBT C. & 0.0387 $\pm$ 0.0131 & 0.0222 $\pm$ 0.0003 & 0.0337 $\pm$ 0.0025 \\
+fakeCBT P. & 0.0540 $\pm$ 0.0071 & 0.1443 $\pm$ 0.0729 & 0.4623 $\pm$ 0.2254 \\
+fakeCBT C. & 0.0387 $\pm$ 0.0131 & 0.0222 $\pm$ 0.0003 & 0.0337 $\pm$ 0.0025 \\
 CBT P. & 0.1547 $\pm$ 0.0077 & 0.0812 $\pm$ 0.0150 & 0.3507 $\pm$ 0.0296 \\
 CBT C. & 0.0913 $\pm$ 0.0189 & 0.1551 $\pm$ 0.0949 & 0.5353 $\pm$ 0.3526 \\
 \hline
@@ -404,8 +405,8 @@ Random & 0.0039 $\pm$ 0.0006 & True \\
 TopPop & 0.0181 $\pm$ 0.0064 & False \\
 kNN P. & 0.0330 $\pm$ 0.0018 & False \\
 kNN C. & 0.0558 $\pm$ 0.0071 & True \\
-falseCBT P. & 0.0144 $\pm$ 0.0028 & True \\
-falseCBT C. & 0.0110 $\pm$ 0.0032 & False \\
+fakeCBT P. & 0.0144 $\pm$ 0.0028 & True \\
+fakeCBT C. & 0.0110 $\pm$ 0.0032 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -416,8 +417,8 @@ Random & 0.0039 $\pm$ 0.0006 & True \\
 TopPop & 0.0181 $\pm$ 0.0064 & True \\
 kNN P. & 0.0330 $\pm$ 0.0018 & False \\
 kNN C. & 0.0558 $\pm$ 0.0071 & False \\
-falseCBT P. & 0.0144 $\pm$ 0.0028 & True \\
-falseCBT C. & 0.0110 $\pm$ 0.0032 & True \\
+fakeCBT P. & 0.0144 $\pm$ 0.0028 & True \\
+fakeCBT C. & 0.0110 $\pm$ 0.0032 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix Prize (Dense) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -436,8 +437,8 @@ TopPop & 0.0542 $\pm$ 0.0015 & 0.0786 $\pm$ 0.0006 & 0.0084 $\pm$ 0.0003 \\
 Random & 0.0097 $\pm$ 0.0014 & 0.0165 $\pm$ 0.0022 & 0.0021 $\pm$ 0.0003 \\
 kNN P. & 0.0684 $\pm$ 0.0043 & 0.1015 $\pm$ 0.0057 & 0.0111 $\pm$ 0.0010 \\
 kNN C. & 0.0939 $\pm$ 0.0082 & 0.1356 $\pm$ 0.0063 & 0.0143 $\pm$ 0.0004 \\
-falseCBT P. & 0.0447 $\pm$ 0.0062 & 0.0624 $\pm$ 0.0070 & 0.0063 $\pm$ 0.0005 \\
-falseCBT C. & 0.0373 $\pm$ 0.0050 & 0.0542 $\pm$ 0.0044 & 0.0058 $\pm$ 0.0002 \\
+fakeCBT P. & 0.0447 $\pm$ 0.0062 & 0.0624 $\pm$ 0.0070 & 0.0063 $\pm$ 0.0005 \\
+fakeCBT C. & 0.0373 $\pm$ 0.0050 & 0.0542 $\pm$ 0.0044 & 0.0058 $\pm$ 0.0002 \\
 CBT P. & 0.0559 $\pm$ 0.0051 & 0.0809 $\pm$ 0.0041 & 0.0086 $\pm$ 0.0001 \\
 CBT C. & 0.0391 $\pm$ 0.0048 & 0.0581 $\pm$ 0.0031 & 0.0063 $\pm$ 0.0002 \\
 \hline
@@ -448,8 +449,8 @@ TopPop & 0.1673 $\pm$ 0.0068 & 0.1307 $\pm$ 0.0001 & 0.3047 $\pm$ 0.0012 \\
 Random & 0.0420 $\pm$ 0.0059 & 0.7504 $\pm$ 0.0004 & 0.9893 $\pm$ 0.0005 \\
 kNN P. & 0.2213 $\pm$ 0.0191 & 0.2607 $\pm$ 0.0189 & 0.6873 $\pm$ 0.0456 \\
 kNN C. & 0.2860 $\pm$ 0.0071 & 0.4157 $\pm$ 0.0998 & 0.8790 $\pm$ 0.0724 \\
-falseCBT P. & 0.1253 $\pm$ 0.0096 & 0.1961 $\pm$ 0.0343 & 0.6310 $\pm$ 0.0762 \\
-falseCBT C. & 0.1160 $\pm$ 0.0049 & 0.0784 $\pm$ 0.0004 & 0.2217 $\pm$ 0.0012 \\
+fakeCBT P. & 0.1253 $\pm$ 0.0096 & 0.1961 $\pm$ 0.0343 & 0.6310 $\pm$ 0.0762 \\
+fakeCBT C. & 0.1160 $\pm$ 0.0049 & 0.0784 $\pm$ 0.0004 & 0.2217 $\pm$ 0.0012 \\
 CBT P. & 0.1713 $\pm$ 0.0019 & 0.2016 $\pm$ 0.0215 & 0.5890 $\pm$ 0.0497 \\
 CBT C. & 0.1267 $\pm$ 0.0050 & 0.2109 $\pm$ 0.1623 & 0.4660 $\pm$ 0.2953 \\
 \hline
@@ -472,8 +473,8 @@ Random & 0.0097 $\pm$ 0.0014 & True \\
 TopPop & 0.0542 $\pm$ 0.0015 & True \\
 kNN P. & 0.0684 $\pm$ 0.0043 & True \\
 kNN C. & 0.0939 $\pm$ 0.0082 & True \\
-falseCBT P. & 0.0447 $\pm$ 0.0062 & False \\
-falseCBT C. & 0.0373 $\pm$ 0.0050 & False \\
+fakeCBT P. & 0.0447 $\pm$ 0.0062 & False \\
+fakeCBT C. & 0.0373 $\pm$ 0.0050 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -484,8 +485,8 @@ Random & 0.0097 $\pm$ 0.0014 & True \\
 TopPop & 0.0542 $\pm$ 0.0015 & False \\
 kNN P. & 0.0684 $\pm$ 0.0043 & True \\
 kNN C. & 0.0939 $\pm$ 0.0082 & True \\
-falseCBT P. & 0.0447 $\pm$ 0.0062 & True \\
-falseCBT C. & 0.0373 $\pm$ 0.0050 & True \\
+fakeCBT P. & 0.0447 $\pm$ 0.0062 & True \\
+fakeCBT C. & 0.0373 $\pm$ 0.0050 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 1M (Dense), with Netflix Prize (Dense) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -504,8 +505,8 @@ TopPop & 0.0223 $\pm$ 0.0023 & 0.0360 $\pm$ 0.0039 & 0.0043 $\pm$ 0.0006 \\
 Random & 0.0021 $\pm$ 0.0013 & 0.0050 $\pm$ 0.0031 & 0.0008 $\pm$ 0.0005 \\
 kNN P. & 0.0392 $\pm$ 0.0052 & 0.0576 $\pm$ 0.0078 & 0.0062 $\pm$ 0.0009 \\
 kNN C. & 0.0567 $\pm$ 0.0053 & 0.0821 $\pm$ 0.0061 & 0.0087 $\pm$ 0.0005 \\
-falseCBT P. & 0.0151 $\pm$ 0.0028 & 0.0249 $\pm$ 0.0028 & 0.0030 $\pm$ 0.0001 \\
-falseCBT C. & 0.0144 $\pm$ 0.0049 & 0.0220 $\pm$ 0.0085 & 0.0025 $\pm$ 0.0011 \\
+fakeCBT P. & 0.0151 $\pm$ 0.0028 & 0.0249 $\pm$ 0.0028 & 0.0030 $\pm$ 0.0001 \\
+fakeCBT C. & 0.0144 $\pm$ 0.0049 & 0.0220 $\pm$ 0.0085 & 0.0025 $\pm$ 0.0011 \\
 CBT P. & 0.0537 $\pm$ 0.0032 & 0.0794 $\pm$ 0.0025 & 0.0086 $\pm$ 0.0001 \\
 CBT C. & 0.0345 $\pm$ 0.0159 & 0.0505 $\pm$ 0.0216 & 0.0054 $\pm$ 0.0021 \\
 \hline
@@ -516,8 +517,8 @@ TopPop & 0.0860 $\pm$ 0.0118 & 0.0236 $\pm$ 0.0000 & 0.0397 $\pm$ 0.0009 \\
 Random & 0.0160 $\pm$ 0.0102 & 0.8198 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1240 $\pm$ 0.0172 & 0.1121 $\pm$ 0.0102 & 0.4557 $\pm$ 0.0224 \\
 kNN C. & 0.1747 $\pm$ 0.0096 & 0.1544 $\pm$ 0.0757 & 0.4937 $\pm$ 0.1559 \\
-falseCBT P. & 0.0600 $\pm$ 0.0028 & 0.0905 $\pm$ 0.0770 & 0.2973 $\pm$ 0.2206 \\
-falseCBT C. & 0.0493 $\pm$ 0.0225 & 0.0222 $\pm$ 0.0005 & 0.0343 $\pm$ 0.0026 \\
+fakeCBT P. & 0.0600 $\pm$ 0.0028 & 0.0905 $\pm$ 0.0770 & 0.2973 $\pm$ 0.2206 \\
+fakeCBT C. & 0.0493 $\pm$ 0.0225 & 0.0222 $\pm$ 0.0005 & 0.0343 $\pm$ 0.0026 \\
 CBT P. & 0.1727 $\pm$ 0.0025 & 0.1362 $\pm$ 0.0310 & 0.5103 $\pm$ 0.0775 \\
 CBT C. & 0.1080 $\pm$ 0.0427 & 0.1942 $\pm$ 0.0593 & 0.7197 $\pm$ 0.1330 \\
 \hline
@@ -540,8 +541,8 @@ Random & 0.0021 $\pm$ 0.0013 & False \\
 TopPop & 0.0223 $\pm$ 0.0023 & False \\
 kNN P. & 0.0392 $\pm$ 0.0052 & False \\
 kNN C. & 0.0567 $\pm$ 0.0053 & False \\
-falseCBT P. & 0.0151 $\pm$ 0.0028 & False \\
-falseCBT C. & 0.0144 $\pm$ 0.0049 & False \\
+fakeCBT P. & 0.0151 $\pm$ 0.0028 & False \\
+fakeCBT C. & 0.0144 $\pm$ 0.0049 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -552,8 +553,8 @@ Random & 0.0021 $\pm$ 0.0013 & True \\
 TopPop & 0.0223 $\pm$ 0.0023 & True \\
 kNN P. & 0.0392 $\pm$ 0.0052 & False \\
 kNN C. & 0.0567 $\pm$ 0.0053 & False \\
-falseCBT P. & 0.0151 $\pm$ 0.0028 & True \\
-falseCBT C. & 0.0144 $\pm$ 0.0049 & True \\
+fakeCBT P. & 0.0151 $\pm$ 0.0028 & True \\
+fakeCBT C. & 0.0144 $\pm$ 0.0049 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix Prize (Sparse) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -572,8 +573,8 @@ TopPop & 0.0456 $\pm$ 0.0075 & 0.0699 $\pm$ 0.0091 & 0.0079 $\pm$ 0.0007 \\
 Random & 0.0050 $\pm$ 0.0009 & 0.0083 $\pm$ 0.0017 & 0.0010 $\pm$ 0.0002 \\
 kNN P. & 0.0810 $\pm$ 0.0072 & 0.1184 $\pm$ 0.0085 & 0.0127 $\pm$ 0.0012 \\
 kNN C. & 0.1057 $\pm$ 0.0091 & 0.1527 $\pm$ 0.0130 & 0.0161 $\pm$ 0.0013 \\
-falseCBT P. & 0.0367 $\pm$ 0.0057 & 0.0555 $\pm$ 0.0081 & 0.0062 $\pm$ 0.0009 \\
-falseCBT C. & 0.0306 $\pm$ 0.0052 & 0.0487 $\pm$ 0.0072 & 0.0057 $\pm$ 0.0008 \\
+fakeCBT P. & 0.0367 $\pm$ 0.0057 & 0.0555 $\pm$ 0.0081 & 0.0062 $\pm$ 0.0009 \\
+fakeCBT C. & 0.0306 $\pm$ 0.0052 & 0.0487 $\pm$ 0.0072 & 0.0057 $\pm$ 0.0008 \\
 CBT P. & 0.0836 $\pm$ 0.0133 & 0.1190 $\pm$ 0.0109 & 0.0123 $\pm$ 0.0003 \\
 CBT C. & 0.0443 $\pm$ 0.0070 & 0.0706 $\pm$ 0.0101 & 0.0083 $\pm$ 0.0010 \\
 \hline
@@ -584,8 +585,8 @@ TopPop & 0.1587 $\pm$ 0.0139 & 0.0505 $\pm$ 0.0000 & 0.1783 $\pm$ 0.0017 \\
 Random & 0.0207 $\pm$ 0.0050 & 0.8043 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.2533 $\pm$ 0.0237 & 0.1746 $\pm$ 0.0512 & 0.6317 $\pm$ 0.0945 \\
 kNN C. & 0.3213 $\pm$ 0.0269 & 0.2142 $\pm$ 0.0168 & 0.6323 $\pm$ 0.0269 \\
-falseCBT P. & 0.1240 $\pm$ 0.0180 & 0.0545 $\pm$ 0.0139 & 0.2520 $\pm$ 0.0518 \\
-falseCBT C. & 0.1147 $\pm$ 0.0164 & 0.0616 $\pm$ 0.0162 & 0.3473 $\pm$ 0.1573 \\
+fakeCBT P. & 0.1240 $\pm$ 0.0180 & 0.0545 $\pm$ 0.0139 & 0.2520 $\pm$ 0.0518 \\
+fakeCBT C. & 0.1147 $\pm$ 0.0164 & 0.0616 $\pm$ 0.0162 & 0.3473 $\pm$ 0.1573 \\
 CBT P. & 0.2467 $\pm$ 0.0066 & 0.1374 $\pm$ 0.0473 & 0.4690 $\pm$ 0.1538 \\
 CBT C. & 0.1667 $\pm$ 0.0205 & 0.0500 $\pm$ 0.0005 & 0.1773 $\pm$ 0.0024 \\
 \hline
@@ -608,8 +609,8 @@ Random & 0.0050 $\pm$ 0.0009 & True \\
 TopPop & 0.0456 $\pm$ 0.0075 & False \\
 kNN P. & 0.0810 $\pm$ 0.0072 & True \\
 kNN C. & 0.1057 $\pm$ 0.0091 & True \\
-falseCBT P. & 0.0367 $\pm$ 0.0057 & False \\
-falseCBT C. & 0.0306 $\pm$ 0.0052 & False \\
+fakeCBT P. & 0.0367 $\pm$ 0.0057 & False \\
+fakeCBT C. & 0.0306 $\pm$ 0.0052 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -620,8 +621,8 @@ Random & 0.0050 $\pm$ 0.0009 & True \\
 TopPop & 0.0456 $\pm$ 0.0075 & True \\
 kNN P. & 0.0810 $\pm$ 0.0072 & False \\
 kNN C. & 0.1057 $\pm$ 0.0091 & False \\
-falseCBT P. & 0.0367 $\pm$ 0.0057 & True \\
-falseCBT C. & 0.0306 $\pm$ 0.0052 & True \\
+fakeCBT P. & 0.0367 $\pm$ 0.0057 & True \\
+fakeCBT C. & 0.0306 $\pm$ 0.0052 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 1M (Sparse), with Netflix Prize (Sparse) as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -632,7 +633,7 @@ falseCBT C. & 0.0306 $\pm$ 0.0052 & True \\
 
 \subsection{Experiments Summary}
 
-While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
+While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a fake source matrix.\\
 These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
 It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
 
@@ -642,7 +643,7 @@ It is also important to notice that CBT performs better in mAP the smaller the c
 
 \section{CBT: Experiments on Public Datasets}
 
-The following section covers CBT ranking experiments performed on well known datasets in the field of recommender systems. The goal of these experiments is to evaluate the ranking capabilities of CBT in additional real domains, on data preprocessed to obtain multiple datasets with properties similar to the ones used by Li \textit{et al.} in the original CBT article \cite{10.5555/1661445.1661773}. Similarly to the previous experiments, a false source matrix is provided as input to determine whether CBT is capable of knowledge transfer or its behavior is similar with irrelevant input data.\\
+The following section covers CBT ranking experiments performed on well known datasets in the field of recommender systems. The goal of these experiments is to evaluate the ranking capabilities of CBT in additional real domains, on data preprocessed starting from original complete datasets to obtain multiple subsets with properties similar to the ones used by Li \textit{et al.} in the original CBT article \cite{10.5555/1661445.1661773}. Similarly to the previous experiments, a fake source matrix is provided as input to determine whether CBT is capable of knowledge transfer or its behaviour is similar with irrelevant input data.\\
 Experiments are run over 3 folds for each combination of source and target domains.\\
 A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
@@ -650,7 +651,7 @@ To compare the results, the following baseline recommender systems are used with
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
 \item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
-\item \textbf{falseCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{fakeCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
 \end{itemize}
 
 
@@ -722,23 +723,8 @@ Each target dataset is split in train, validation and test sets. To do so, a ran
 
 \subsection{Hyperparameters}
 
-The following hyperparameters are set:
-\begin{itemize}
-\item $\texttt{construct\_validation\_every\_n} = 1$: the amount of iterations after which the codebook construction loss is evaluated by the early stopping training for codebook construction.
-\item $\texttt{construct\_lower\_validations\_allowed} = 2000$: the amount of consecutive iterations with loss higher than the best one after which the early stopping training for codebook construction stops.
-\item $\texttt{maximum\_construct\_iterations} = 20000$: the maximum amount of iterations used for codebook constructions. If the early stopping training reaches this amount, it stops.
-\item $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
-\item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
-\end{itemize}
-The following hyperparameters are optimized with bayesian optimization based on the mAP metric, with 50 iterations and 15 random starts:
-\begin{itemize}
-\item $\texttt{user\_clusters} \in [5,100]$: the amount of user clusters used to build the codebook.
-\item $\texttt{item\_clusters} \in [5,100]$: the amount of item clusters used to build the codebook.
-\item $\texttt{knn\_topk} \in [5,1000]$: the amount of similar users to consider when computing similarity for kNN.
-\item $\texttt{knn\_shrink} \in [0,1000]$: the shrinkage to apply when computing the similarity for kNN.
-\item $\texttt{knn\_similarity} \in \{pearson,cosine\}$: the similarity type to use for kNN.
-\item $\texttt{knn\_normalize} \in \{true,false\}$: whether to normalize when computing the similarity for kNN. Normalization is computed by dividing the dot product by the product of the norms.
-\end{itemize}
+The set and optimized hyperparameters are the same described in \autoref{ss:preprocessed-datasets-hyperparameters}, except for the following:\\\\
+$\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 
 
 \begin{figure}[hbt!]
@@ -763,8 +749,8 @@ TopPop & 0.0130 $\pm$ 0.0024 & 0.0219 $\pm$ 0.0043 & 0.0028 $\pm$ 0.0006 \\
 Random & 0.0047 $\pm$ 0.0004 & 0.0098 $\pm$ 0.0009 & 0.0014 $\pm$ 0.0002 \\
 kNN P. & 0.0242 $\pm$ 0.0036 & 0.0388 $\pm$ 0.0045 & 0.0046 $\pm$ 0.0004 \\
 kNN C. & 0.0476 $\pm$ 0.0060 & 0.0713 $\pm$ 0.0063 & 0.0080 $\pm$ 0.0005 \\
-falseCBT P. & 0.0094 $\pm$ 0.0015 & 0.0164 $\pm$ 0.0012 & 0.0021 $\pm$ 0.0002 \\
-falseCBT C. & 0.0078 $\pm$ 0.0011 & 0.0147 $\pm$ 0.0011 & 0.0020 $\pm$ 0.0000 \\
+fakeCBT P. & 0.0094 $\pm$ 0.0015 & 0.0164 $\pm$ 0.0012 & 0.0021 $\pm$ 0.0002 \\
+fakeCBT C. & 0.0078 $\pm$ 0.0011 & 0.0147 $\pm$ 0.0011 & 0.0020 $\pm$ 0.0000 \\
 CBT P. & 0.0073 $\pm$ 0.0027 & 0.0143 $\pm$ 0.0041 & 0.0020 $\pm$ 0.0005 \\
 CBT C. & 0.0077 $\pm$ 0.0017 & 0.0151 $\pm$ 0.0028 & 0.0021 $\pm$ 0.0003 \\
 \hline
@@ -775,8 +761,8 @@ TopPop & 0.0553 $\pm$ 0.0123 & 0.0289 $\pm$ 0.0000 & 0.0700 $\pm$ 0.0000 \\
 Random & 0.0287 $\pm$ 0.0041 & 0.8175 $\pm$ 0.0001 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.0913 $\pm$ 0.0077 & 0.1151 $\pm$ 0.0602 & 0.4547 $\pm$ 0.1610 \\
 kNN C. & 0.1593 $\pm$ 0.0093 & 0.4525 $\pm$ 0.1251 & 0.8973 $\pm$ 0.0942 \\
-falseCBT P. & 0.0420 $\pm$ 0.0043 & 0.1713 $\pm$ 0.1252 & 0.5303 $\pm$ 0.2942 \\
-falseCBT C. & 0.0407 $\pm$ 0.0009 & 0.0645 $\pm$ 0.0276 & 0.2917 $\pm$ 0.1655 \\
+fakeCBT P. & 0.0420 $\pm$ 0.0043 & 0.1713 $\pm$ 0.1252 & 0.5303 $\pm$ 0.2942 \\
+fakeCBT C. & 0.0407 $\pm$ 0.0009 & 0.0645 $\pm$ 0.0276 & 0.2917 $\pm$ 0.1655 \\
 CBT P. & 0.0400 $\pm$ 0.0091 & 0.1035 $\pm$ 0.0648 & 0.4347 $\pm$ 0.2614 \\
 CBT C. & 0.0427 $\pm$ 0.0066 & 0.0875 $\pm$ 0.0877 & 0.3103 $\pm$ 0.3583 \\
 \hline
@@ -799,8 +785,8 @@ Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
 kNN P. & 0.0242 $\pm$ 0.0036 & True \\
 kNN C. & 0.0476 $\pm$ 0.0060 & True \\
-falseCBT P. & 0.0094 $\pm$ 0.0015 & False \\
-falseCBT C. & 0.0078 $\pm$ 0.0011 & False \\
+fakeCBT P. & 0.0094 $\pm$ 0.0015 & False \\
+fakeCBT C. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -811,8 +797,8 @@ Random & 0.0047 $\pm$ 0.0004 & False \\
 TopPop & 0.0130 $\pm$ 0.0024 & False \\
 kNN P. & 0.0242 $\pm$ 0.0036 & False \\
 kNN C. & 0.0476 $\pm$ 0.0060 & True \\
-falseCBT P. & 0.0094 $\pm$ 0.0015 & False \\
-falseCBT C. & 0.0078 $\pm$ 0.0011 & False \\
+fakeCBT P. & 0.0094 $\pm$ 0.0015 & False \\
+fakeCBT C. & 0.0078 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -831,8 +817,8 @@ TopPop & 0.0795 $\pm$ 0.0099 & 0.0988 $\pm$ 0.0095 & 0.0085 $\pm$ 0.0006 \\
 Random & 0.0033 $\pm$ 0.0007 & 0.0066 $\pm$ 0.0008 & 0.0010 $\pm$ 0.0001 \\
 kNN P. & 0.0748 $\pm$ 0.0146 & 0.0913 $\pm$ 0.0140 & 0.0075 $\pm$ 0.0006 \\
 kNN C. & 0.0911 $\pm$ 0.0115 & 0.1120 $\pm$ 0.0119 & 0.0093 $\pm$ 0.0008 \\
-falseCBT P. & 0.0132 $\pm$ 0.0062 & 0.0207 $\pm$ 0.0089 & 0.0024 $\pm$ 0.0010 \\
-falseCBT C. & 0.0116 $\pm$ 0.0026 & 0.0188 $\pm$ 0.0025 & 0.0022 $\pm$ 0.0001 \\
+fakeCBT P. & 0.0132 $\pm$ 0.0062 & 0.0207 $\pm$ 0.0089 & 0.0024 $\pm$ 0.0010 \\
+fakeCBT C. & 0.0116 $\pm$ 0.0026 & 0.0188 $\pm$ 0.0025 & 0.0022 $\pm$ 0.0001 \\
 CBT P. & 0.0624 $\pm$ 0.0060 & 0.0754 $\pm$ 0.0059 & 0.0062 $\pm$ 0.0003 \\
 CBT C. & 0.0641 $\pm$ 0.0088 & 0.0757 $\pm$ 0.0100 & 0.0059 $\pm$ 0.0009 \\
 \hline
@@ -843,8 +829,8 @@ TopPop & 0.1707 $\pm$ 0.0124 & 0.0241 $\pm$ 0.0000 & 0.0577 $\pm$ 0.0005 \\
 Random & 0.0193 $\pm$ 0.0019 & 0.8188 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1500 $\pm$ 0.0118 & 0.1131 $\pm$ 0.0120 & 0.5647 $\pm$ 0.0673 \\
 kNN C. & 0.1867 $\pm$ 0.0165 & 0.0412 $\pm$ 0.0053 & 0.2293 $\pm$ 0.0394 \\
-falseCBT P. & 0.0487 $\pm$ 0.0195 & 0.0858 $\pm$ 0.0295 & 0.3587 $\pm$ 0.0375 \\
-falseCBT C. & 0.0447 $\pm$ 0.0025 & 0.0389 $\pm$ 0.0228 & 0.1390 $\pm$ 0.1280 \\
+fakeCBT P. & 0.0487 $\pm$ 0.0195 & 0.0858 $\pm$ 0.0295 & 0.3587 $\pm$ 0.0375 \\
+fakeCBT C. & 0.0447 $\pm$ 0.0025 & 0.0389 $\pm$ 0.0228 & 0.1390 $\pm$ 0.1280 \\
 CBT P. & 0.1233 $\pm$ 0.0066 & 0.0261 $\pm$ 0.0012 & 0.0800 $\pm$ 0.0071 \\
 CBT C. & 0.1180 $\pm$ 0.0170 & 0.0235 $\pm$ 0.0000 & 0.0590 $\pm$ 0.0008 \\
 \hline
@@ -867,8 +853,8 @@ Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
 kNN P. & 0.0748 $\pm$ 0.0146 & False \\
 kNN C. & 0.0911 $\pm$ 0.0115 & True \\
-falseCBT P. & 0.0132 $\pm$ 0.0062 & True \\
-falseCBT C. & 0.0116 $\pm$ 0.0026 & True \\
+fakeCBT P. & 0.0132 $\pm$ 0.0062 & True \\
+fakeCBT C. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -879,8 +865,8 @@ Random & 0.0033 $\pm$ 0.0007 & True \\
 TopPop & 0.0795 $\pm$ 0.0099 & True \\
 kNN P. & 0.0748 $\pm$ 0.0146 & False \\
 kNN C. & 0.0911 $\pm$ 0.0115 & True \\
-falseCBT P. & 0.0132 $\pm$ 0.0062 & True \\
-falseCBT C. & 0.0116 $\pm$ 0.0026 & True \\
+fakeCBT P. & 0.0132 $\pm$ 0.0062 & True \\
+fakeCBT C. & 0.0116 $\pm$ 0.0026 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -899,8 +885,8 @@ TopPop & 0.1079 $\pm$ 0.0032 & 0.1565 $\pm$ 0.0028 & 0.0169 $\pm$ 0.0002 \\
 Random & 0.0063 $\pm$ 0.0014 & 0.0115 $\pm$ 0.0029 & 0.0019 $\pm$ 0.0005 \\
 kNN P. & 0.1181 $\pm$ 0.0070 & 0.1720 $\pm$ 0.0052 & 0.0186 $\pm$ 0.0002 \\
 kNN C. & 0.1573 $\pm$ 0.0101 & 0.2160 $\pm$ 0.0107 & 0.0215 $\pm$ 0.000 \\
-falseCBT P. & 0.0599 $\pm$ 0.0045 & 0.0930 $\pm$ 0.0056 & 0.0109 $\pm$ 0.0005 \\
-falseCBT C. & 0.0588 $\pm$ 0.0048 & 0.0940 $\pm$ 0.0058 & 0.0113 $\pm$ 0.0005 \\
+fakeCBT P. & 0.0599 $\pm$ 0.0045 & 0.0930 $\pm$ 0.0056 & 0.0109 $\pm$ 0.0005 \\
+fakeCBT C. & 0.0588 $\pm$ 0.0048 & 0.0940 $\pm$ 0.0058 & 0.0113 $\pm$ 0.0005 \\
 CBT P. & 0.0607 $\pm$ 0.0016 & 0.0941 $\pm$ 0.0045 & 0.0110 $\pm$ 0.0009 \\
 CBT C. & 0.0546 $\pm$ 0.0040 & 0.0868 $\pm$ 0.0048 & 0.0104 $\pm$ 0.0005 \\
 \hline
@@ -911,8 +897,8 @@ TopPop & 0.3307 $\pm$ 0.0034 & 0.0596 $\pm$ 0.0000 & 0.2263 $\pm$ 0.0012 \\
 Random & 0.0307 $\pm$ 0.0096 & 0.8044 $\pm$ 0.0001 & 0.9990 $\pm$ 0.0000 \\
 kNN P. & 0.3647 $\pm$ 0.0050 & 0.0731 $\pm$ 0.0041 & 0.3120 $\pm$ 0.0312 \\
 kNN C. & 0.4227 $\pm$ 0.0105 & 0.1123 $\pm$ 0.0096 & 0.3883 $\pm$ 0.0357 \\
-falseCBT P. & 0.2093 $\pm$ 0.0094 & 0.0845 $\pm$ 0.0425 & 0.3350 $\pm$ 0.1239 \\
-falseCBT C. & 0.2180 $\pm$ 0.0102 & 0.0400 $\pm$ 0.0018 & 0.1733 $\pm$ 0.0493 \\
+fakeCBT P. & 0.2093 $\pm$ 0.0094 & 0.0845 $\pm$ 0.0425 & 0.3350 $\pm$ 0.1239 \\
+fakeCBT C. & 0.2180 $\pm$ 0.0102 & 0.0400 $\pm$ 0.0018 & 0.1733 $\pm$ 0.0493 \\
 CBT P. & 0.2120 $\pm$ 0.0172 & 0.0749 $\pm$ 0.0342 & 0.3020 $\pm$ 0.1192 \\
 CBT C. & 0.2000 $\pm$ 0.0091 & 0.0551 $\pm$ 0.0251 & 0.2797 $\pm$ 0.1982 \\
 \hline
@@ -935,8 +921,8 @@ Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
 kNN P. & 0.1181 $\pm$ 0.0070 & True \\
 kNN C. & 0.1573 $\pm$ 0.0101 & True \\
-falseCBT P. & 0.0599 $\pm$ 0.0045 & False \\
-falseCBT C. & 0.0588 $\pm$ 0.0048 & True \\
+fakeCBT P. & 0.0599 $\pm$ 0.0045 & False \\
+fakeCBT C. & 0.0588 $\pm$ 0.0048 & True \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -947,8 +933,8 @@ Random & 0.0063 $\pm$ 0.0014 & True \\
 TopPop & 0.1079 $\pm$ 0.0032 & True \\
 kNN P. & 0.1181 $\pm$ 0.0070 & True \\
 kNN C. & 0.1573 $\pm$ 0.0101 & True \\
-falseCBT P. & 0.0599 $\pm$ 0.0045 & False \\
-falseCBT C. & 0.0588 $\pm$ 0.0048 & False \\
+fakeCBT P. & 0.0599 $\pm$ 0.0045 & False \\
+fakeCBT C. & 0.0588 $\pm$ 0.0048 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 20M as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -967,8 +953,8 @@ TopPop & 0.1522 $\pm$ 0.0103 & 0.2197 $\pm$ 0.0115 & 0.0231 $\pm$ 0.0007 \\
 Random & 0.0026 $\pm$ 0.0015 & 0.0045 $\pm$ 0.0012 & 0.0006 $\pm$ 0.0000 \\
 kNN P. & 0.1604 $\pm$ 0.0112 & 0.2281 $\pm$ 0.0144 & 0.0235 $\pm$ 0.0012 \\
 kNN C. & 0.1847 $\pm$ 0.0132 & 0.2552 $\pm$ 0.0172 & 0.0253 $\pm$ 0.0016 \\
-falseCBT P. & 0.1260 $\pm$ 0.0132 & 0.1787 $\pm$ 0.0156 & 0.0182 $\pm$ 0.0013 \\
-falseCBT C. & 0.1264 $\pm$ 0.0153 & 0.1792 $\pm$ 0.0185 & 0.0182 $\pm$ 0.0015 \\
+fakeCBT P. & 0.1260 $\pm$ 0.0132 & 0.1787 $\pm$ 0.0156 & 0.0182 $\pm$ 0.0013 \\
+fakeCBT C. & 0.1264 $\pm$ 0.0153 & 0.1792 $\pm$ 0.0185 & 0.0182 $\pm$ 0.0015 \\
 CBT P. & 0.0870 $\pm$ 0.0053 & 0.1113 $\pm$ 0.0074 & 0.0097 $\pm$ 0.0011 \\
 CBT C. & 0.1006 $\pm$ 0.0120 & 0.1325 $\pm$ 0.0140 & 0.0121 $\pm$ 0.0010 \\
 \hline
@@ -979,8 +965,8 @@ TopPop & 0.4620 $\pm$ 0.0150 & 0.0389 $\pm$ 0.0000 & 0.1070 $\pm$ 0.0022 \\
 Random & 0.0120 $\pm$ 0.0000 & 0.8141 $\pm$ 0.0001 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.4693 $\pm$ 0.0249 & 0.0457 $\pm$ 0.0023 & 0.1457 $\pm$ 0.0068 \\
 kNN C. & 0.5060 $\pm$ 0.0326 & 0.0493 $\pm$ 0.0055 & 0.1453 $\pm$ 0.0330 \\
-falseCBT P. & 0.3633 $\pm$ 0.0253 & 0.0369 $\pm$ 0.0004 & 0.1440 $\pm$ 0.0075 \\
-falseCBT C. & 0.3640 $\pm$ 0.0300 & 0.0364 $\pm$ 0.0042 & 0.1350 $\pm$ 0.0806 \\
+fakeCBT P. & 0.3633 $\pm$ 0.0253 & 0.0369 $\pm$ 0.0004 & 0.1440 $\pm$ 0.0075 \\
+fakeCBT C. & 0.3640 $\pm$ 0.0300 & 0.0364 $\pm$ 0.0042 & 0.1350 $\pm$ 0.0806 \\
 CBT P. & 0.1933 $\pm$ 0.0225 & 0.0258 $\pm$ 0.0020 & 0.0463 $\pm$ 0.0104 \\
 CBT C. & 0.2413 $\pm$ 0.0207 & 0.0265 $\pm$ 0.0001 & 0.0440 $\pm$ 0.0024 \\
 \hline
@@ -1003,8 +989,8 @@ Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
 kNN P. & 0.1604 $\pm$ 0.0112 & True \\
 kNN C. & 0.1847 $\pm$ 0.0132 & True \\
-falseCBT P. & 0.1260 $\pm$ 0.0132 & True \\
-falseCBT C. & 0.1264 $\pm$ 0.0153 & True \\
+fakeCBT P. & 0.1260 $\pm$ 0.0132 & True \\
+fakeCBT C. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -1015,8 +1001,8 @@ Random & 0.0026 $\pm$ 0.0015 & True \\
 TopPop & 0.1522 $\pm$ 0.0103 & True \\
 kNN P. & 0.1604 $\pm$ 0.0112 & True \\
 kNN C. & 0.1847 $\pm$ 0.0132 & True \\
-falseCBT P. & 0.1260 $\pm$ 0.0132 & True \\
-falseCBT C. & 0.1264 $\pm$ 0.0153 & True \\
+fakeCBT P. & 0.1260 $\pm$ 0.0132 & True \\
+fakeCBT C. & 0.1264 $\pm$ 0.0153 & True \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 20M as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -1035,8 +1021,8 @@ TopPop & 0.0142 $\pm$ 0.0044 & 0.0242 $\pm$ 0.0044 & 0.0031 $\pm$ 0.0003 \\
 Random & 0.0046 $\pm$ 0.0018 & 0.0100 $\pm$ 0.0034 & 0.0015 $\pm$ 0.0004 \\
 kNN P. & 0.0244 $\pm$ 0.0018 & 0.0403 $\pm$ 0.0025 & 0.0049 $\pm$ 0.0004 \\
 kNN C. & 0.0422 $\pm$ 0.0096 & 0.0665 $\pm$ 0.0094 & 0.0077 $\pm$ 0.0004 \\
-falseCBT P. & 0.0089 $\pm$ 0.0030 & 0.0155 $\pm$ 0.0041 & 0.0020 $\pm$ 0.0004 \\
-falseCBT C. & 0.0096 $\pm$ 0.0004 & 0.0163 $\pm$ 0.0011 & 0.0021 $\pm$ 0.0002 \\
+fakeCBT P. & 0.0089 $\pm$ 0.0030 & 0.0155 $\pm$ 0.0041 & 0.0020 $\pm$ 0.0004 \\
+fakeCBT C. & 0.0096 $\pm$ 0.0004 & 0.0163 $\pm$ 0.0011 & 0.0021 $\pm$ 0.0002 \\
 CBT P. & 0.0148 $\pm$ 0.0032 & 0.0261 $\pm$ 0.0044 & 0.0034 $\pm$ 0.0004 \\
 CBT C. & 0.0099 $\pm$ 0.0008 & 0.0163 $\pm$ 0.0012 & 0.0020 $\pm$ 0.0002 \\
 \hline
@@ -1047,8 +1033,8 @@ TopPop & 0.0613 $\pm$ 0.0066 & 0.0289 $\pm$ 0.0000 & 0.0707 $\pm$ 0.0005 \\
 Random & 0.0300 $\pm$ 0.0086 & 0.8177 $\pm$ 0.0000 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.0987 $\pm$ 0.0074 & 0.0919 $\pm$ 0.0254 & 0.4273 $\pm$ 0.1022 \\
 kNN C. & 0.1547 $\pm$ 0.0081 & 0.2891 $\pm$ 0.1283 & 0.7123 $\pm$ 0.1619 \\
-falseCBT P. & 0.0400 $\pm$ 0.0086 & 0.2232 $\pm$ 0.1476 & 0.6063 $\pm$ 0.3553 \\
-falseCBT C. & 0.0413 $\pm$ 0.0041 & 0.0470 $\pm$ 0.0300 & 0.2290 $\pm$ 0.2411 \\
+fakeCBT P. & 0.0400 $\pm$ 0.0086 & 0.2232 $\pm$ 0.1476 & 0.6063 $\pm$ 0.3553 \\
+fakeCBT C. & 0.0413 $\pm$ 0.0041 & 0.0470 $\pm$ 0.0300 & 0.2290 $\pm$ 0.2411 \\
 CBT P. & 0.0680 $\pm$ 0.0086 & 0.1722 $\pm$ 0.1132 & 0.5517 $\pm$ 0.3176 \\
 CBT C. & 0.0400 $\pm$ 0.0043 & 0.0525 $\pm$ 0.0372 & 0.2233 $\pm$ 0.2331 \\
 \hline
@@ -1071,8 +1057,8 @@ Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
 kNN P. & 0.0244 $\pm$ 0.0018 & True \\
 kNN C. & 0.0422 $\pm$ 0.0096 & True \\
-falseCBT P. & 0.0089 $\pm$ 0.0030 & False \\
-falseCBT C. & 0.0096 $\pm$ 0.0004 & False \\
+fakeCBT P. & 0.0089 $\pm$ 0.0030 & False \\
+fakeCBT C. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -1083,8 +1069,8 @@ Random & 0.0046 $\pm$ 0.0018 & True \\
 TopPop & 0.0142 $\pm$ 0.0044 & False \\
 kNN P. & 0.0244 $\pm$ 0.0018 & False \\
 kNN C. & 0.0422 $\pm$ 0.0096 & True \\
-falseCBT P. & 0.0089 $\pm$ 0.0030 & False \\
-falseCBT C. & 0.0096 $\pm$ 0.0004 & False \\
+fakeCBT P. & 0.0089 $\pm$ 0.0030 & False \\
+fakeCBT C. & 0.0096 $\pm$ 0.0004 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -1103,8 +1089,8 @@ TopPop & 0.0922 $\pm$ 0.0131 & 0.1110 $\pm$ 0.0127 & 0.0090 $\pm$ 0.0006 \\
 Random & 0.0047 $\pm$ 0.0015 & 0.0092 $\pm$ 0.0021 & 0.0013 $\pm$ 0.0002 \\
 kNN P. & 0.0843 $\pm$ 0.0012 & 0.1039 $\pm$ 0.0043 & 0.0087 $\pm$ 0.0007 \\
 kNN C. & 0.1014 $\pm$ 0.0090 & 0.1219 $\pm$ 0.0095 & 0.0097 $\pm$ 0.0008 \\
-falseCBT P. & 0.0145 $\pm$ 0.0044 & 0.0244 $\pm$ 0.0047 & 0.0030 $\pm$ 0.0003 \\
-falseCBT C. & 0.0143 $\pm$ 0.0038 & 0.0219 $\pm$ 0.0030 & 0.0025 $\pm$ 0.0000 \\
+fakeCBT P. & 0.0145 $\pm$ 0.0044 & 0.0244 $\pm$ 0.0047 & 0.0030 $\pm$ 0.0003 \\
+fakeCBT C. & 0.0143 $\pm$ 0.0038 & 0.0219 $\pm$ 0.0030 & 0.0025 $\pm$ 0.0000 \\
 CBT P. & 0.0454 $\pm$ 0.0232 & 0.0625 $\pm$ 0.0206 & 0.0062 $\pm$ 0.0013 \\
 CBT C. & 0.0574 $\pm$ 0.0232 & 0.0754 $\pm$ 0.0158 & 0.0071 $\pm$ 0.0006 \\
 \hline
@@ -1115,8 +1101,8 @@ TopPop & 0.1807 $\pm$ 0.0123 & 0.0241 $\pm$ 0.0000 & 0.0577 $\pm$ 0.0005 \\
 Random & 0.0253 $\pm$ 0.0050 & 0.8189 $\pm$ 0.0003 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1740 $\pm$ 0.0142 & 0.1163 $\pm$ 0.0155 & 0.5670 $\pm$ 0.0634 \\
 kNN C. & 0.1947 $\pm$ 0.0152 & 0.0443 $\pm$ 0.0120 & 0.2343 $\pm$ 0.0903 \\
-falseCBT P. & 0.0607 $\pm$ 0.0062 & 0.0899 $\pm$ 0.0183 & 0.3613 $\pm$ 0.1444 \\
-falseCBT C. & 0.0493 $\pm$ 0.0009 & 0.0449 $\pm$ 0.0317 & 0.1487 $\pm$ 0.1410 \\
+fakeCBT P. & 0.0607 $\pm$ 0.0062 & 0.0899 $\pm$ 0.0183 & 0.3613 $\pm$ 0.1444 \\
+fakeCBT C. & 0.0493 $\pm$ 0.0009 & 0.0449 $\pm$ 0.0317 & 0.1487 $\pm$ 0.1410 \\
 CBT P. & 0.1233 $\pm$ 0.0253 & 0.0534 $\pm$ 0.0406 & 0.2203 $\pm$ 0.2056 \\
 CBT C. & 0.1413 $\pm$ 0.0120 & 0.0235 $\pm$ 0.0000 & 0.0603 $\pm$ 0.0017 \\
 \hline
@@ -1139,8 +1125,8 @@ Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
 kNN P. & 0.0843 $\pm$ 0.0012 & False \\
 kNN C. & 0.1014 $\pm$ 0.0090 & False \\
-falseCBT P. & 0.0145 $\pm$ 0.0044 & False \\
-falseCBT C. & 0.0143 $\pm$ 0.0038 & False \\
+fakeCBT P. & 0.0145 $\pm$ 0.0044 & False \\
+fakeCBT C. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -1151,8 +1137,8 @@ Random & 0.0047 $\pm$ 0.0015 & False \\
 TopPop & 0.0922 $\pm$ 0.0131 & False \\
 kNN P. & 0.0843 $\pm$ 0.0012 & False \\
 kNN C. & 0.1014 $\pm$ 0.0090 & False \\
-falseCBT P. & 0.0145 $\pm$ 0.0044 & False \\
-falseCBT C. & 0.0143 $\pm$ 0.0038 & False \\
+fakeCBT P. & 0.0145 $\pm$ 0.0044 & False \\
+fakeCBT C. & 0.0143 $\pm$ 0.0038 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -1171,8 +1157,8 @@ TopPop & 0.0321 $\pm$ 0.0029 & 0.0528 $\pm$ 0.0042 & 0.0065 $\pm$ 0.0005 \\
 Random & 0.0048 $\pm$ 0.0011 & 0.0093 $\pm$ 0.0023 & 0.0013 $\pm$ 0.0004 \\
 kNN P. & 0.0377 $\pm$ 0.0032 & 0.0610 $\pm$ 0.0056 & 0.0074 $\pm$ 0.0007 \\
 kNN C. & 0.0576 $\pm$ 0.0062 & 0.0914 $\pm$ 0.0043 & 0.0107 $\pm$ 0.0002 \\
-falseCBT P. & 0.0230 $\pm$ 0.0058 & 0.0373 $\pm$ 0.0076 & 0.0045 $\pm$ 0.0008 \\
-falseCBT C. & 0.0247 $\pm$ 0.0011 & 0.0387 $\pm$ 0.0031 & 0.0045 $\pm$ 0.0005 \\
+fakeCBT P. & 0.0230 $\pm$ 0.0058 & 0.0373 $\pm$ 0.0076 & 0.0045 $\pm$ 0.0008 \\
+fakeCBT C. & 0.0247 $\pm$ 0.0011 & 0.0387 $\pm$ 0.0031 & 0.0045 $\pm$ 0.0005 \\
 CBT P. & 0.0247 $\pm$ 0.0014 & 0.0393 $\pm$ 0.0024 & 0.0047 $\pm$ 0.0006 \\
 CBT C. & 0.0242 $\pm$ 0.0015 & 0.0382 $\pm$ 0.0042 & 0.0045 $\pm$ 0.0007 \\
 \hline
@@ -1183,8 +1169,8 @@ TopPop & 0.1293 $\pm$ 0.0096 & 0.0398 $\pm$ 0.0000 & 0.1383 $\pm$ 0.0012 \\
 Random & 0.0260 $\pm$ 0.0071 & 0.8118 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.1480 $\pm$ 0.0150 & 0.0609 $\pm$ 0.0121 & 0.2443 $\pm$ 0.0569 \\
 kNN C. & 0.2147 $\pm$ 0.0041 & 0.1400 $\pm$ 0.0260 & 0.4757 $\pm$ 0.0748 \\
-falseCBT P. & 0.0907 $\pm$ 0.0152 & 0.0671 $\pm$ 0.0487 & 0.2443 $\pm$ 0.1920 \\
-falseCBT C. & 0.0907 $\pm$ 0.0106 & 0.0296 $\pm$ 0.0001 & 0.0813 $\pm$ 0.0005 \\
+fakeCBT P. & 0.0907 $\pm$ 0.0152 & 0.0671 $\pm$ 0.0487 & 0.2443 $\pm$ 0.1920 \\
+fakeCBT C. & 0.0907 $\pm$ 0.0106 & 0.0296 $\pm$ 0.0001 & 0.0813 $\pm$ 0.0005 \\
 CBT P. & 0.0933 $\pm$ 0.0124 & 0.0413 $\pm$ 0.0163 & 0.1810 $\pm$ 0.1421 \\
 CBT C. & 0.0900 $\pm$ 0.0140 & 0.0295 $\pm$ 0.0001 & 0.0797 $\pm$ 0.0009 \\
 \hline
@@ -1207,8 +1193,8 @@ Random & 0.0048 $\pm$ 0.0011 & False \\
 TopPop & 0.0321 $\pm$ 0.0029 & False \\
 kNN P. & 0.0377 $\pm$ 0.0032 & False \\
 kNN C. & 0.0576 $\pm$ 0.0062 & False \\
-falseCBT P. & 0.0230 $\pm$ 0.0058 & False \\
-falseCBT C. & 0.0247 $\pm$ 0.0011 & False \\
+fakeCBT P. & 0.0230 $\pm$ 0.0058 & False \\
+fakeCBT C. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -1219,8 +1205,8 @@ Random & 0.0048 $\pm$ 0.0011 & True \\
 TopPop & 0.0321 $\pm$ 0.0029 & True \\
 kNN P. & 0.0377 $\pm$ 0.0032 & True \\
 kNN C. & 0.0576 $\pm$ 0.0062 & True \\
-falseCBT P. & 0.0230 $\pm$ 0.0058 & False \\
-falseCBT C. & 0.0247 $\pm$ 0.0011 & False \\
+fakeCBT P. & 0.0230 $\pm$ 0.0058 & False \\
+fakeCBT C. & 0.0247 $\pm$ 0.0011 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -1239,8 +1225,8 @@ TopPop & 0.0192 $\pm$ 0.0018 & 0.0313 $\pm$ 0.0025 & 0.0038 $\pm$ 0.0002 \\
 Random & 0.0039 $\pm$ 0.0010 & 0.0083 $\pm$ 0.0013 & 0.0012 $\pm$ 0.0002 \\
 kNN P. & 0.0232 $\pm$ 0.0032 & 0.0389 $\pm$ 0.0046 & 0.0048 $\pm$ 0.0005 \\
 kNN C. & 0.0470 $\pm$ 0.0016 & 0.0735 $\pm$ 0.0030 & 0.0085 $\pm$ 0.0004 \\
-falseCBT P. & 0.0161 $\pm$ 0.0006 & 0.0259 $\pm$ 0.0004 & 0.0031 $\pm$ 0.0002 \\
-falseCBT C. & 0.0136 $\pm$ 0.0007 & 0.0233 $\pm$ 0.0021 & 0.0030 $\pm$ 0.0006 \\
+fakeCBT P. & 0.0161 $\pm$ 0.0006 & 0.0259 $\pm$ 0.0004 & 0.0031 $\pm$ 0.0002 \\
+fakeCBT C. & 0.0136 $\pm$ 0.0007 & 0.0233 $\pm$ 0.0021 & 0.0030 $\pm$ 0.0006 \\
 CBT P. & 0.0069 $\pm$ 0.0031 & 0.0129 $\pm$ 0.0051 & 0.0017 $\pm$ 0.0007 \\
 CBT C. & 0.0124 $\pm$ 0.0023 & 0.0206 $\pm$ 0.0020 & 0.0025 $\pm$ 0.0004 \\
 \hline
@@ -1251,8 +1237,8 @@ TopPop & 0.0753 $\pm$ 0.0050 & 0.0234 $\pm$ 0.0000 & 0.0443 $\pm$ 0.0005 \\
 Random & 0.0247 $\pm$ 0.0047 & 0.8236 $\pm$ 0.0002 &1.0000 $\pm$ 0.0000 \\
 kNN P. & 0.0960 $\pm$ 0.0102 & 0.2712 $\pm$ 0.0113 & 0.8263 $\pm$ 0.0123 \\
 kNN C. & 0.1700 $\pm$ 0.0082 & 0.2066 $\pm$ 0.0171 & 0.6763 $\pm$ 0.0189 \\
-falseCBT P. & 0.0627 $\pm$ 0.0041 & 0.0773 $\pm$ 0.0164 & 0.4820 $\pm$ 0.0800 \\
-falseCBT C. & 0.0593 $\pm$ 0.0123 & 0.0223 $\pm$ 0.0002 & 0.0343 $\pm$ 0.0005 \\
+fakeCBT P. & 0.0627 $\pm$ 0.0041 & 0.0773 $\pm$ 0.0164 & 0.4820 $\pm$ 0.0800 \\
+fakeCBT C. & 0.0593 $\pm$ 0.0123 & 0.0223 $\pm$ 0.0002 & 0.0343 $\pm$ 0.0005 \\
 CBT P. & 0.0347 $\pm$ 0.0133 & 0.0459 $\pm$ 0.0164 & 0.1887 $\pm$ 0.0528 \\
 CBT C. & 0.0507 $\pm$ 0.0081 & 0.0221 $\pm$ 0.0002 & 0.0350 $\pm$ 0.0014 \\
 \hline
@@ -1275,8 +1261,8 @@ Random & 0.0039 $\pm$ 0.0010 & True \\
 TopPop & 0.0192 $\pm$ 0.0018 & False \\
 kNN P. & 0.0232 $\pm$ 0.0032 & False \\
 kNN C. & 0.0470 $\pm$ 0.0016 & True \\
-falseCBT P. & 0.0161 $\pm$ 0.0006 & False \\
-falseCBT C. & 0.0136 $\pm$ 0.0007 & False \\
+fakeCBT P. & 0.0161 $\pm$ 0.0006 & False \\
+fakeCBT C. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \hline
 Cut-off @20 & mAP & Difference is Significant \\
@@ -1287,8 +1273,8 @@ Random & 0.0039 $\pm$ 0.0010 & False \\
 TopPop & 0.0192 $\pm$ 0.0018 & True \\
 kNN P. & 0.0232 $\pm$ 0.0032 & True \\
 kNN C. & 0.0470 $\pm$ 0.0016 & True \\
-falseCBT P. & 0.0161 $\pm$ 0.0006 & False \\
-falseCBT C. & 0.0136 $\pm$ 0.0007 & False \\
+fakeCBT P. & 0.0161 $\pm$ 0.0006 & False \\
+fakeCBT C. & 0.0136 $\pm$ 0.0007 & False \\
 \hline
 \end{tabulary}
 \caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. Significance is computed using paired t-test if the results over different folds follow the normal distribution, otherwise using Wilcoxon signed rank. "P." and "C." stand for Pearson and cosine similarity.}
@@ -1298,10 +1284,8 @@ falseCBT C. & 0.0136 $\pm$ 0.0007 & False \\
 
 
 \subsection{Experiments Summary}
-
-While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
-These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
-It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
+The experiments performed on public dataset mostly confirm the previous observations. CBT ranking and accuracy performance is always inferior to the one of simple kNN and to the one of TopPop.\\
+Furthermore, CBT provided with a meaningful source matrix is not consistently better than CBT provided with a fake source matrix. On the contrary, it is often outperformed by it. This, paired with the fact that CBT performance is better when the codebook is smaller, suggests that its performance heavily improves when filled ratings have low impact on the kNN phase and, as a consequence, its behaviour is similar to the one of simple kNN without codebook transfer. In this scenario, it is evident that CBT is indeed not capable of transferring knowledge.
 
 \clearpage
 
@@ -1309,7 +1293,7 @@ It is also important to notice that CBT performs better in mAP the smaller the c
 
 \section{CBT and LKT-FM: Experiments on Full Target Dataset (Netflix Prize to MovieLens Hetrec 2011)}
 
-The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain. The goal of this experiment is to evaluate the ranking capabilities of CBT on a dataset without preprocessing. Moreover, additional transformations of the source matrix are applied on baselines, to further analyse whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
+The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain. The goal of this experiment is to evaluate the ranking capabilities of CBT on a real dataset without preprocessing. Moreover, additional transformations of the source matrix are applied on baselines, to further analyse whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The kNN phase is performed with cosine similarity. The metrics of its results are reported with a cutoff of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
@@ -1545,6 +1529,6 @@ LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
 
 \subsection{Experiments Summary}
 
-While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while in a single experiment CBT is outperformed by TopPop, it generally appears to result in better metrics. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, always outperforms its baseline, which instead is provided a false source matrix.\\
-These results suggest that CBT is indeed capable of transferring knowledge. Otherwise, given the amount of filled ratings, we would expect it to behave similarly to the random recommender system. Nevertheless, it is clear that the codebook transfer also generates a high amount of noise, that leads to worse results compared to kNN without the transfer process.\\
-It is also important to notice that CBT performs better in mAP the smaller the codebook. This result can lead us to two conclusions. First, the fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook. Second, the inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
+Experiments performed on a real and not preprocessed target dataset confirm the previous conclusions. CBT is heavily outperformed by both simple kNN and TopPop.\\
+In addition, CBT provided with a meaningful source matrix is on par with all the three baselines of CBT provided with the transformed and randomly generated source matrices.\\
+Nevertheless, it is important to mention that the performance of LKT-FM is very similar to the one of the random recommender system and it is worse than any other baseline. Given the fact that LKT-FM is provided with the same hyperparameters of CBT, including codebook size, and only differs from CBT in implementing alternative models for codebook creation and transfer phases, it is possible to assert that changing the clusters mapping and codebook expansion methods may lead to improved or decreased ranking metrics, compared to the ones obtained with currently known codebook transfer recommender systems.
