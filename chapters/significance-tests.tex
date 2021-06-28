@@ -1,0 +1,694 @@
+\chapter{Significance Tests of Experiments}
+
+In this appendix we report the table of significance tests of the experiments in \autoref{ch:experiments-preprocessed} and \autoref{ch:experiments-full}.\\
+For each test, significance is computed using paired t-test if the results over differents folds follow the normal distribution; otherwise using Wilcoxon signed rank. Bonferroni correction is applied with $\alpha = 0.05$.
+
+
+
+\section{First Set of Preprocessed Datasets}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 1M (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0158 $\pm$ 0.0012 & \\
+\hline
+Random & 0.0049 $\pm$ 0.0004 & True \\
+TopPop & 0.0174 $\pm$ 0.0023 & False \\
+kNN P. & 0.0359 $\pm$ 0.0026 & True \\
+kNN C. & 0.0504 $\pm$ 0.0036 & True \\
+targetCBT P. & 0.0124 $\pm$ 0.0023 & False \\
+targetCBT C. & 0.0109 $\pm$ 0.0006 & True \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0234 $\pm$ 0.0116 & \\
+\hline
+Random & 0.0049 $\pm$ 0.0004 & False \\
+TopPop & 0.0174 $\pm$ 0.0023 & False \\
+kNN P. & 0.0359 $\pm$ 0.0026 & False \\
+kNN C. & 0.0504 $\pm$ 0.0036 & False \\
+targetCBT P. & 0.0124 $\pm$ 0.0023 & False \\
+targetCBT C. & 0.0109 $\pm$ 0.0006 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens 1M (Dense) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 1M (Dense) $\rightarrow$ Netflix Prize (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0335 $\pm$ 0.0062 & \\
+\hline
+Random & 0.0078 $\pm$ 0.0018 & True \\
+TopPop & 0.0433 $\pm$ 0.0052 & True \\
+kNN P. & 0.0556 $\pm$ 0.0070 & True \\
+kNN C. & 0.0740 $\pm$ 0.0101 & True \\
+targetCBT P. & 0.0273 $\pm$ 0.0103 & False \\
+targetCBT C. & 0.0296 $\pm$ 0.0057 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0430 $\pm$ 0.0100 & \\
+\hline
+Random & 0.0078 $\pm$ 0.0018 & True \\
+TopPop & 0.0433 $\pm$ 0.0052 & False \\
+kNN P. & 0.0556 $\pm$ 0.0070 & False \\
+kNN C. & 0.0740 $\pm$ 0.0101 & False \\
+targetCBT P. & 0.0273 $\pm$ 0.0103 & False \\
+targetCBT C. & 0.0296 $\pm$ 0.0057 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 1M (Dense) as source domain. Significance is computed using Wilcoxon signed-rank or paired t-test. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 1M (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0276 $\pm$ 0.0079 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0013 & False \\
+TopPop & 0.0242 $\pm$ 0.0013 & False \\
+kNN P. & 0.0410 $\pm$ 0.0026 & False \\
+kNN C. & 0.0534 $\pm$ 0.0100 & False \\
+targetCBT P. & 0.0189 $\pm$ 0.0020 & False \\
+targetCBT C. & 0.0140 $\pm$ 0.0002 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0499 $\pm$ 0.0076 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0013 & True \\
+TopPop & 0.0242 $\pm$ 0.0013 & True \\
+kNN P. & 0.0410 $\pm$ 0.0026 & False \\
+kNN C. & 0.0534 $\pm$ 0.0100 & False \\
+targetCBT P. & 0.0189 $\pm$ 0.0020 & True \\
+targetCBT C. & 0.0140 $\pm$ 0.0002 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with MovieLens 1M (Sparse) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 1M (Sparse) $\rightarrow$ Netflix Prize (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0342 $\pm$ 0.0134 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0003 & False \\
+TopPop & 0.0392 $\pm$ 0.0072 & False \\
+kNN P. & 0.0527 $\pm$ 0.0005 & False \\
+kNN C. & 0.0670 $\pm$ 0.0074 & False \\
+targetCBT P. & 0.0200 $\pm$ 0.0062 & False \\
+targetCBT C. & 0.0195 $\pm$ 0.0045 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0482 $\pm$ 0.0086 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0003 & True \\
+TopPop & 0.0392 $\pm$ 0.0072 & False \\
+kNN P. & 0.0527 $\pm$ 0.0005 & False \\
+kNN C. & 0.0670 $\pm$ 0.0074 & True \\
+targetCBT P. & 0.0200 $\pm$ 0.0062 & True \\
+targetCBT C. & 0.0195 $\pm$ 0.0045 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 1M (Sparse) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Dense) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0227 $\pm$ 0.0038 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0006 & True \\
+TopPop & 0.0181 $\pm$ 0.0064 & False \\
+kNN P. & 0.0330 $\pm$ 0.0018 & False \\
+kNN C. & 0.0558 $\pm$ 0.0071 & True \\
+targetCBT P. & 0.0144 $\pm$ 0.0028 & True \\
+targetCBT C. & 0.0110 $\pm$ 0.0032 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0396 $\pm$ 0.0032 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0006 & True \\
+TopPop & 0.0181 $\pm$ 0.0064 & True \\
+kNN P. & 0.0330 $\pm$ 0.0018 & False \\
+kNN C. & 0.0558 $\pm$ 0.0071 & False \\
+targetCBT P. & 0.0144 $\pm$ 0.0028 & True \\
+targetCBT C. & 0.0110 $\pm$ 0.0032 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix Prize (Dense) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Dense) $\rightarrow$ MovieLens 1M (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0391 $\pm$ 0.0048 & \\
+\hline
+Random & 0.0097 $\pm$ 0.0014 & True \\
+TopPop & 0.0542 $\pm$ 0.0015 & True \\
+kNN P. & 0.0684 $\pm$ 0.0043 & True \\
+kNN C. & 0.0939 $\pm$ 0.0082 & True \\
+targetCBT P. & 0.0447 $\pm$ 0.0062 & False \\
+targetCBT C. & 0.0373 $\pm$ 0.0050 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0559 $\pm$ 0.0051 & \\
+\hline
+Random & 0.0097 $\pm$ 0.0014 & True \\
+TopPop & 0.0542 $\pm$ 0.0015 & False \\
+kNN P. & 0.0684 $\pm$ 0.0043 & True \\
+kNN C. & 0.0939 $\pm$ 0.0082 & True \\
+targetCBT P. & 0.0447 $\pm$ 0.0062 & True \\
+targetCBT C. & 0.0373 $\pm$ 0.0050 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 1M (Dense), with Netflix Prize (Dense) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Sparse) $\rightarrow$ BookCrossing} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0345 $\pm$ 0.0159 & \\
+\hline
+Random & 0.0021 $\pm$ 0.0013 & False \\
+TopPop & 0.0223 $\pm$ 0.0023 & False \\
+kNN P. & 0.0392 $\pm$ 0.0052 & False \\
+kNN C. & 0.0567 $\pm$ 0.0053 & False \\
+targetCBT P. & 0.0151 $\pm$ 0.0028 & False \\
+targetCBT C. & 0.0144 $\pm$ 0.0049 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0537 $\pm$ 0.0032 & \\
+\hline
+Random & 0.0021 $\pm$ 0.0013 & True \\
+TopPop & 0.0223 $\pm$ 0.0023 & True \\
+kNN P. & 0.0392 $\pm$ 0.0052 & False \\
+kNN C. & 0.0567 $\pm$ 0.0053 & False \\
+targetCBT P. & 0.0151 $\pm$ 0.0028 & True \\
+targetCBT C. & 0.0144 $\pm$ 0.0049 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on BookCrossing, with Netflix Prize (Sparse) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Sparse) $\rightarrow$ MovieLens 1M (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0443 $\pm$ 0.0070 & \\
+\hline
+Random & 0.0050 $\pm$ 0.0009 & True \\
+TopPop & 0.0456 $\pm$ 0.0075 & False \\
+kNN P. & 0.0810 $\pm$ 0.0072 & True \\
+kNN C. & 0.1057 $\pm$ 0.0091 & True \\
+targetCBT P. & 0.0367 $\pm$ 0.0057 & False \\
+targetCBT C. & 0.0306 $\pm$ 0.0052 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0836 $\pm$ 0.0133 & \\
+\hline
+Random & 0.0050 $\pm$ 0.0009 & True \\
+TopPop & 0.0456 $\pm$ 0.0075 & True \\
+kNN P. & 0.0810 $\pm$ 0.0072 & False \\
+kNN C. & 0.1057 $\pm$ 0.0091 & False \\
+targetCBT P. & 0.0367 $\pm$ 0.0057 & True \\
+targetCBT C. & 0.0306 $\pm$ 0.0052 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens 1M (Sparse), with Netflix Prize (Sparse) as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+\clearpage
+
+
+
+\section{Second Set of Preprocessed Datasets}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 20M $\rightarrow$ Amazon Movies TV Series (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0077 $\pm$ 0.0017 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0004 & False \\
+TopPop & 0.0130 $\pm$ 0.0024 & False \\
+kNN P. & 0.0242 $\pm$ 0.0036 & True \\
+kNN C. & 0.0476 $\pm$ 0.0060 & True \\
+targetCBT P. & 0.0094 $\pm$ 0.0015 & False \\
+targetCBT C. & 0.0078 $\pm$ 0.0011 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0073 $\pm$ 0.0027 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0004 & False \\
+TopPop & 0.0130 $\pm$ 0.0024 & False \\
+kNN P. & 0.0242 $\pm$ 0.0036 & False \\
+kNN C. & 0.0476 $\pm$ 0.0060 & True \\
+targetCBT P. & 0.0094 $\pm$ 0.0015 & False \\
+targetCBT C. & 0.0078 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with MovieLens 20M as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 20M $\rightarrow$ Amazon Movies TV Series (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0641 $\pm$ 0.0088 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0007 & True \\
+TopPop & 0.0795 $\pm$ 0.0099 & True \\
+kNN P. & 0.0748 $\pm$ 0.0146 & False \\
+kNN C. & 0.0911 $\pm$ 0.0115 & True \\
+targetCBT P. & 0.0132 $\pm$ 0.0062 & True \\
+targetCBT C. & 0.0116 $\pm$ 0.0026 & True \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0624 $\pm$ 0.0060 & \\
+\hline
+Random & 0.0033 $\pm$ 0.0007 & True \\
+TopPop & 0.0795 $\pm$ 0.0099 & True \\
+kNN P. & 0.0748 $\pm$ 0.0146 & False \\
+kNN C. & 0.0911 $\pm$ 0.0115 & True \\
+targetCBT P. & 0.0132 $\pm$ 0.0062 & True \\
+targetCBT C. & 0.0116 $\pm$ 0.0026 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with MovieLens 20M as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 20M $\rightarrow$ Netflix Prize (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0546 $\pm$ 0.0040 & \\
+\hline
+Random & 0.0063 $\pm$ 0.0014 & True \\
+TopPop & 0.1079 $\pm$ 0.0032 & True \\
+kNN P. & 0.1181 $\pm$ 0.0070 & True \\
+kNN C. & 0.1573 $\pm$ 0.0101 & True \\
+targetCBT P. & 0.0599 $\pm$ 0.0045 & False \\
+targetCBT C. & 0.0588 $\pm$ 0.0048 & True \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0607 $\pm$ 0.0016 & \\
+\hline
+Random & 0.0063 $\pm$ 0.0014 & True \\
+TopPop & 0.1079 $\pm$ 0.0032 & True \\
+kNN P. & 0.1181 $\pm$ 0.0070 & True \\
+kNN C. & 0.1573 $\pm$ 0.0101 & True \\
+targetCBT P. & 0.0599 $\pm$ 0.0045 & False \\
+targetCBT C. & 0.0588 $\pm$ 0.0048 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Dense), with MovieLens 20M as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{MovieLens 20M $\rightarrow$ Netflix Prize (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.1006 $\pm$ 0.0120 & \\
+\hline
+Random & 0.0026 $\pm$ 0.0015 & True \\
+TopPop & 0.1522 $\pm$ 0.0103 & True \\
+kNN P. & 0.1604 $\pm$ 0.0112 & True \\
+kNN C. & 0.1847 $\pm$ 0.0132 & True \\
+targetCBT P. & 0.1260 $\pm$ 0.0132 & True \\
+targetCBT C. & 0.1264 $\pm$ 0.0153 & True \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0870 $\pm$ 0.0053 & \\
+\hline
+Random & 0.0026 $\pm$ 0.0015 & True \\
+TopPop & 0.1522 $\pm$ 0.0103 & True \\
+kNN P. & 0.1604 $\pm$ 0.0112 & True \\
+kNN C. & 0.1847 $\pm$ 0.0132 & True \\
+targetCBT P. & 0.1260 $\pm$ 0.0132 & True \\
+targetCBT C. & 0.1264 $\pm$ 0.0153 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Netflix Prize (Sparse), with MovieLens 20M as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ Amazon Movies TV Series (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0099 $\pm$ 0.0008 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0018 & True \\
+TopPop & 0.0142 $\pm$ 0.0044 & False \\
+kNN P. & 0.0244 $\pm$ 0.0018 & True \\
+kNN C. & 0.0422 $\pm$ 0.0096 & True \\
+targetCBT P. & 0.0089 $\pm$ 0.0030 & False \\
+targetCBT C. & 0.0096 $\pm$ 0.0004 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0148 $\pm$ 0.0032 & \\
+\hline
+Random & 0.0046 $\pm$ 0.0018 & True \\
+TopPop & 0.0142 $\pm$ 0.0044 & False \\
+kNN P. & 0.0244 $\pm$ 0.0018 & False \\
+kNN C. & 0.0422 $\pm$ 0.0096 & True \\
+targetCBT P. & 0.0089 $\pm$ 0.0030 & False \\
+targetCBT C. & 0.0096 $\pm$ 0.0004 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Dense), with Netflix Prize as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ Amazon Movies TV Series (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0574 $\pm$ 0.0232 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0015 & False \\
+TopPop & 0.0922 $\pm$ 0.0131 & False \\
+kNN P. & 0.0843 $\pm$ 0.0012 & False \\
+kNN C. & 0.1014 $\pm$ 0.0090 & False \\
+targetCBT P. & 0.0145 $\pm$ 0.0044 & False \\
+targetCBT C. & 0.0143 $\pm$ 0.0038 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0454 $\pm$ 0.0232 & \\
+\hline
+Random & 0.0047 $\pm$ 0.0015 & False \\
+TopPop & 0.0922 $\pm$ 0.0131 & False \\
+kNN P. & 0.0843 $\pm$ 0.0012 & False \\
+kNN C. & 0.1014 $\pm$ 0.0090 & False \\
+targetCBT P. & 0.0145 $\pm$ 0.0044 & False \\
+targetCBT C. & 0.0143 $\pm$ 0.0038 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on Amazon Movies TV Series (Sparse), with Netflix Prize as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Dense)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0242 $\pm$ 0.0015 & \\
+\hline
+Random & 0.0048 $\pm$ 0.0011 & False \\
+TopPop & 0.0321 $\pm$ 0.0029 & False \\
+kNN P. & 0.0377 $\pm$ 0.0032 & False \\
+kNN C. & 0.0576 $\pm$ 0.0062 & False \\
+targetCBT P. & 0.0230 $\pm$ 0.0058 & False \\
+targetCBT C. & 0.0247 $\pm$ 0.0011 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0247 $\pm$ 0.0014 & \\
+\hline
+Random & 0.0048 $\pm$ 0.0011 & True \\
+TopPop & 0.0321 $\pm$ 0.0029 & True \\
+kNN P. & 0.0377 $\pm$ 0.0032 & True \\
+kNN C. & 0.0576 $\pm$ 0.0062 & True \\
+targetCBT P. & 0.0230 $\pm$ 0.0058 & False \\
+targetCBT C. & 0.0247 $\pm$ 0.0011 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Dense), with Netflix Prize as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Sparse)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT C. & 0.0124 $\pm$ 0.0023 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0010 & True \\
+TopPop & 0.0192 $\pm$ 0.0018 & False \\
+kNN P. & 0.0232 $\pm$ 0.0032 & False \\
+kNN C. & 0.0470 $\pm$ 0.0016 & True \\
+targetCBT P. & 0.0161 $\pm$ 0.0006 & False \\
+targetCBT C. & 0.0136 $\pm$ 0.0007 & False \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT P. & 0.0069 $\pm$ 0.0031 & \\
+\hline
+Random & 0.0039 $\pm$ 0.0010 & False \\
+TopPop & 0.0192 $\pm$ 0.0018 & True \\
+kNN P. & 0.0232 $\pm$ 0.0032 & True \\
+kNN C. & 0.0470 $\pm$ 0.0016 & True \\
+targetCBT P. & 0.0161 $\pm$ 0.0006 & False \\
+targetCBT C. & 0.0136 $\pm$ 0.0007 & False \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on preprocessed target dataset for mAP@20 differences between CBT and baselines on MovieLens Hetrec 2011 (Sparse), with Netflix Prize as source domain. `P.' and `C.' stand for Pearson and cosine similarity.}
+\end{table}
+
+\clearpage
+
+
+
+\section{Full Target Dataset}
+
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+CBT & 0.0090 $\pm$ 0.0019 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+mixedCBT & 0.0103 $\pm$ 0.0012 & False \\
+randomCBT & 0.0109 $\pm$ 0.0014 & False \\
+removalCBT & 0.0092 $\pm$ 0.0017 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+LKT-FM & 0.0015 $\pm$ 0.0009 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+mixedCBT & 0.0103 $\pm$ 0.0012 & True \\
+randomCBT & 0.0109 $\pm$ 0.0014 & True \\
+removalCBT & 0.0092 $\pm$ 0.0017 & True \\
+CBT & 0.0090 $\pm$ 0.0019 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of LKT-FM experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Mixed) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+mixedCBT & 0.0103 $\pm$ 0.0012 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+randomCBT & 0.0109 $\pm$ 0.0014 & False \\
+removalCBT & 0.0092 $\pm$ 0.0017 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is mixed in order to lower the sparsity. Then, the source domain is mixed to perform the ablation study.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Random $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+randomCBT & 0.0109 $\pm$ 0.0014 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+mixedCBT & 0.0103 $\pm$ 0.0012 & False \\
+removalCBT & 0.0092 $\pm$ 0.0017 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full). The source domain is randomly generated to perform the ablation study.}
+\end{table}
+
+\begin{table}[hbt]
+\centering
+\begin{tabulary}{\textwidth}{|L|CC|}
+\hline
+\multicolumn{3}{|c|}{Netflix Prize (Removal) $\rightarrow$ MovieLens Hetrec 2011 (Full)} \\
+\hline
+\hline
+Cut-off @20 & mAP & Difference is Significant \\
+\hline
+removalCBT & 0.0092 $\pm$ 0.0017 & \\
+\hline
+Random & 0.0004 $\pm$ 0.0003 & True \\
+TopPop & 0.0489 $\pm$ 0.0041 & True \\
+kNN & 0.0672 $\pm$ 0.0027 & True \\
+mixedCBT & 0.0103 $\pm$ 0.0012 & False \\
+randomCBT & 0.0109 $\pm$ 0.0014 & False \\
+CBT & 0.0090 $\pm$ 0.0019 & False \\
+LKT-FM & 0.0015 $\pm$ 0.0009 & True \\
+\hline
+\end{tabulary}
+\caption{Significance tests of CBT experiment on full target dataset for mAP@20 differences between CBT, LKT-FM and baselines on MovieLens Hetrec 2011 (Full), with Netflix Prize as source domain. The source domain is reduced in order to lower the sparsity. Then, random ratings removal is applied to the source domain to perform the ablation study.}
+\end{table}

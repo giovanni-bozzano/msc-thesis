@@ -5,6 +5,7 @@
 \usepackage[nottoc]{tocbibind}
 
 \usepackage{graphicx}
+\usepackage{subcaption}
 \usepackage{tabulary}
 \usepackage{amssymb}
 \usepackage{amsmath}
@@ -40,8 +41,8 @@
 
 \include{chapters/abstract}
 \clearpage
-\include{chapters/acknowledgements}
-\clearpage
+%\include{chapters/acknowledgements}
+%\clearpage
 
 \tableofcontents
 
@@ -51,7 +52,9 @@
 \clearpage
 \include{chapters/analysed-models}
 \clearpage
-\include{chapters/experiments}
+\include{chapters/experiments-preprocessed}
+\clearpage
+\include{chapters/experiments-full}
 \clearpage
 \include{chapters/conclusion}
 \clearpage
@@ -60,6 +63,10 @@
 \bibliography{bibliography}
 \clearpage
 
-\include{chapters/appendix}
+\appendix
+\include{chapters/applied-model}
+\clearpage
+\include{chapters/significance-tests}
+\clearpage
 
 \end{document}
