@@ -766,7 +766,7 @@ While in a few dataset combinations CBT and kNN performances are not significant
 \item The performance of CBT reported in the original article is only assessed by evaluating its rating prediction capability, without taking into consideration any accuracy or ranking metric.
 \item The experiments reported in the original article do not include any CBT baseline provided with a transformed or randomly generated source matrix.
 \item The kNN used in the experiments reported in the original article may not have been properly optimized.
-\begin{itemize}
+\end{itemize}
 It is also important to notice that CBT performs better in mAP the smaller the codebook, since most of the dataset combinations reach the optimal mAP when the user and item clusters are the minimum possible values. This result can lead us to three conclusions:
 \begin{itemize}
 \item The fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook.
