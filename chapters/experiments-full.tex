@@ -1,7 +1,8 @@
 \chapter{Experiments on Full Target Dataset}
 \label{ch:experiments-full}
 
-The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain. The goal of this experiment is to evaluate the ranking capabilities of CBT on a real dataset without preprocessing. Moreover, additional transformations of the source matrix are applied on baselines, to further analyse whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
+The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain. The goal of this experiment is to evaluate the ranking capabilities of CBT on a real dataset without preprocessing.\\
+We report an ablation study where additional transformations of the source matrix are applied on baselines, to further analyse whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The kNN phase is performed with cosine similarity to reduce the computational cost of the experiment. The metrics of its results are reported with a cut-off of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
@@ -83,6 +84,7 @@ The following hyperparameters are set:
 
 \section{Results}
 
+\vspace*{\fill}
 \begin{figure}[hbt!]
 \centering
 \begin{subfigure}{\textwidth}
@@ -93,6 +95,7 @@ The following hyperparameters are set:
 \end{subfigure}
 \caption{Heatmap of the preprocessed MovieLens Hetrec 2011 Dense train set before and after the codebook transfer process performed with Netflix Prize as source domain. Low to high values are mapped to red to yellow color scale. Black dots represent missing ratings. The missing ratings in the filled target matrix represent users or items that could not be mapped to clusters during codebook construction.}
 \end{figure}
+\vspace*{\fill}
 
 \begin{table}[hbt]
 \centering

@@ -84,6 +84,7 @@ The following hyperparameters are optimized with bayesian optimization based on 
 
 \subsection{Results}
 
+\vspace*{\fill}
 \begin{table}[hbt]
 \centering
 \begin{tabulary}{\textwidth}{|L|CCC|}
@@ -119,6 +120,7 @@ CBT C. & 0.0567 $\pm$ 0.0038 & 0.1580 $\pm$ 0.0954 & 0.5693 $\pm$ 0.3767 \\
 \end{tabulary}
 \caption{Results of CBT experiment on preprocessed target dataset for cut-off @20 on BookCrossing, with MovieLens 1M (Dense) as source domain. `P.' and `C.' stand for Pearson and cosine similarity. Higher values are better.}
 \end{table}
+\vspace*{\fill}
 
 \begin{table}[hbt]
 \centering
@@ -453,6 +455,7 @@ $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minim
 
 \subsection{Results}
 
+\vspace*{\fill}
 \begin{figure}[hbt!]
 \centering
 \begin{subfigure}{\textwidth}
@@ -463,6 +466,7 @@ $\texttt{transfer\_attempts} = 30$: the amount of attempts to find a local minim
 \end{subfigure}
 \caption{Heatmap of the preprocessed MovieLens Hetrec 2011 Dense train set before and after the codebook transfer process performed with Netflix Prize as source domain. Low to high values are mapped to red to yellow color scale. Black dots represent missing ratings. The missing ratings in the filled target matrix represent users or items that could not be mapped to clusters during codebook construction.}
 \end{figure}
+\vspace*{\fill}
 
 \begin{table}[hbt]
 \centering
@@ -757,7 +761,12 @@ CBT C. & 0.0507 $\pm$ 0.0081 & 0.0221 $\pm$ 0.0002 & 0.0350 $\pm$ 0.0014 \\
 
 \section{Experiments Summary}
 
-While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while on the first set of datasets CBT has better metrics than TopPop, in the second set of datasets it is generally outperformed by it. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, is not consistently better than its baseline, which instead is provided with a fake source matrix, and it results in a better performance only in the first set of datasets. These results suggest that, at least between less dense source and target datasets, CBT is not capable of transferring knowledge.\par
+While in a few dataset combinations CBT and kNN performances are not significantly different, in most of them CBT is outperformed in both ranking and accuracy metrics by simple kNN. Moreover, while on the first set of datasets CBT has better metrics than TopPop, in the second set of datasets it is generally outperformed by it. In addition to that, we consider the fact that CBT, when provided with a significant source matrix, is not consistently better than its baseline, which instead is provided with a fake source matrix, and it results in a better performance only in the first set of datasets. These results suggest that, at least between less dense source and target datasets, CBT is not capable of transferring knowledge. The performance difference between these experiments and the ones reported in the original article can be traced back to multiple reasons:
+\begin{itemize}
+\item The performance of CBT reported in the original article is only assessed by evaluating its rating prediction capability, without taking into consideration any accuracy or ranking metric.
+\item The experiments reported in the original article do not include any CBT baseline provided with a transformed or randomly generated source matrix.
+\item The kNN used in the experiments reported in the original article may not have been properly optimized.
+\begin{itemize}
 It is also important to notice that CBT performs better in mAP the smaller the codebook, since most of the dataset combinations reach the optimal mAP when the user and item clusters are the minimum possible values. This result can lead us to three conclusions:
 \begin{itemize}
 \item The fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook.
