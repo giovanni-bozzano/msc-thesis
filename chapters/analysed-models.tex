@@ -77,7 +77,8 @@ $B = \frac{U_S^T X_S V_S}{U_S^T 1 1^T V_S}$;
 \caption{The algorithm for codebook construction}
 \end{algorithm}
 \vskip 0.7cm
-According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few clusters could be insufficient to encode the information about users and item, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.
+According to Li \textit{et al.}, too many clusters can comprise redundant information, while too few clusters could be insufficient to encode the information about users and item, missing important knowledge. An optimal codebook size should be expressive enough and suitable for computation.\\
+It is also important to notice that, since the cluster membership matrices are binarized, if the source matrix is mapped to an excessive amount of clusters, some clusters may not have any user or item mapped to them. Since the user cluster membership matrix $U_S$ is transposed to compute the codebook, this issue can lead to invalid values in the codebook and, in the following phase, to missing filled ratings in the target user-rating matrix.
 
 
 \subsection{Codebook Transfer}
