@@ -14,7 +14,7 @@ To perform experiments, hyperparameters for each model are optimized using a wra
 Bayesian optimization \cite{bayesian-optimization} is a method to optimize black-box functions that take long time to evaluate by building a surrogate for the objective and quantifying the uncertainty in that surrogate using a bayesian machine learning technique called \textit{Gaussian process regression}. It then uses an acquisition function defined from the surrogate to decide where to sample in the provided hyperparameter ranges.\\
 The wrapper accepts as input a set of hyperparameter ranges, an amount of cases, which is the number of iterations of training and evaluation to perform, an amount of random starts, which is the numbers of times the optimization process initializes the hyperparameters randomly within the provided range, and a target evaluation metric, used to perform comparison between iterations.\\
 Each training and evaluation iteration during hyperparameter tuning is performed using a train set and a validation set, which has the same properties as the final test set, while they are disjoint.\\
-Further details about the hyperparameters and other tuning variables are covered in the single experiments in \autoref{ch:experiments}.
+Further details about the hyperparameters and other tuning variables are covered in the specific experiments in \autoref{ch:experiments-preprocessed} and \autoref{ch:experiments-full}.
 
 
 

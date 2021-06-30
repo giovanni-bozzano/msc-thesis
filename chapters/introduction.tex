@@ -11,8 +11,8 @@ Both of these techniques suffer from poor data quality or quantity, which lead t
 Another common and major problem in the field of recommender systems is cold start.
 The cold start problem arises when a user has no recorded interaction with any item or vice versa.\par
 The objective of this thesis is to analyse a recent technique, called codebook transfer, which aims at alleviating these problems by transferring data from a different and unrelated dataset, with no overlap of users or items.\\
-A set of articles expanding on the original technique have appeared over the last ten years.
-We show that the original technique, and thus the derived articles, only work on the specific reported scenarios.
+Since a set of articles expanding on the original technique have appeared over the last ten years, we evaluate the original codebook transfer model and a recent variation of it, called LKT-FM, by performing experiments targeting multiple domains and including different types of baselines.\par
+By reporting multiple results, along with significance tests, and analysing the models, we show that the original technique, and thus the derived articles, only work on the specific scenarios reported in the original articles and that the base approach on which recent rating pattern transfer models are built is not capable of consistently transferring knowledge between non-overlapping domains.
 
 
 \section{Thesis Structure}
@@ -22,5 +22,5 @@ The structure of the thesis is as follows.\\
 \autoref{ch:analysed-models} contains a detailed description of the models of the analysed recommender systems that adopt the codebook transfer technique.\\
 \autoref{ch:experiments-preprocessed} and \autoref{ch:experiments-full} include the description of datasets, parameters, goals and results of the experiments.\\
 \autoref{ch:conclusion} contains the conclusion that can be drawn from the performed experiments and final notes.\\
-\autoref{ch:applied-model} contains details about the implementations of the analysed recommender systems.
+\autoref{ch:applied-model} contains details about the implementations of the analysed recommender systems.\\
 \autoref{ch:significance-tests} reports the tables of significance tests performed during the experiments.
