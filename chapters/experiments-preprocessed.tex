@@ -1,16 +1,16 @@
 \chapter{Experiments on Preprocessed Datasets}
 \label{ch:experiments-preprocessed}
 
-The following chapter covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}, in \autoref{sc:first-set-datasets}, and on an additional set of public well known datasets in the field of recommender systems, in \autoref{sc:second-set-datasets}. The goal of these experiments is to expand on the ones that Cremonesi and Quadrana performed on rating prediction by evaluating CBT ranking capabilities on the same datasets and on multiple additional real domains, with data preprocessed starting from public complete datasets to obtain subsets with properties similar to the ones used by Li \textit{et al.} in the original CBT article \cite{10.5555/1661445.1661773}.\\
-Additionally, a fake source matrix is provided as input to determine whether CBT is capable of knowledge transfer from a source domain or its behavior remains consistent when provided with irrelevant input data and its performances depends uniquely on its matrix factorization model.\\
+The following chapter covers CBT raking experiments performed on the preprocessed datasets used by Cremonesi and Quadrana in their experiments \cite{10.1145/2645710.2645769}, in \autoref{sc:first-set-datasets}, and on an additional set of public well-known datasets in the field of recommender systems, in \autoref{sc:second-set-datasets}. The goal of these experiments is to expand on the ones that Cremonesi and Quadrana performed on rating prediction by evaluating CBT ranking capabilities on the same datasets and on multiple additional real domains, with data preprocessed starting from public complete datasets to obtain subsets with properties similar to the ones used by Li \textit{et al.} in the original CBT article \cite{10.5555/1661445.1661773}.\\
+Additionally, a fake source matrix is provided as input to determine whether CBT is capable of knowledge transfer from a source domain or its behavior remains consistent when provided with irrelevant input data and its performance depends uniquely on its matrix factorization model.\\
 Due to the high computational cost, the experiments are run over 3 folds for each combination of source and target domains.\\
-A bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cut-off of 20.\\
+A Bayesian optimization process is performed on each fold by using the validation set, with 50 iterations and 15 random starts. The final iteration is performed using the test set with the hyperparameters of the best iteration. The kNN phase is performed with both Pearson and cosine similarities. The metrics of its results are reported with a cut-off of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and bayesian optimization is applied.
-\item \textbf{targetCBT}: codebook construction, codebook transfer and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and bayesian optimization is applied.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Both Pearson and cosine similarities are used and Bayesian optimization is applied.
+\item \textbf{targetCBT}: codebook construction, codebook transfer, and kNN are applied like in CBT, but the codebook is extracted from the target domain. Both Pearson and cosine similarities are used and Bayesian optimization is applied.
 \end{itemize}
 
 
@@ -52,10 +52,10 @@ BookCrossing & 3.03 & 500 & 1000 & 15148 \\
 \end{table}
 \label{tb:first-set-datasets-properties}
 All datasets are preprocessed to extract sparse and dense versions.\\
-MovieLens 1M and Netflix Prize are used as source domain, while each dataset is used as target domain.\\
+MovieLens 1M and Netflix Prize are used as source domains, while each dataset is used as target domain.\\
 Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed datasets used in the experiments have the properties listed in \autoref{tb:first-set-datasets-properties}.\\
-Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
+Each target dataset is split into train, validation, and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
 
 
 \subsection{Hyperparameters}
@@ -69,7 +69,7 @@ The following hyperparameters are set:
 \item $\texttt{transfer\_attempts} = 3$: the amount of attempts to find a local minimum for codebook transfer, as described in \autoref{ss:applied-codebook-transfer}.
 \item $\texttt{maximum\_fill\_iterations} = 100$: the maximum amount of iterations used to find a mapping between the target domain and the codebook. The maximum amount is the same for each of the transfer attempts.
 \end{itemize}
-The following hyperparameters are optimized with bayesian optimization based on the mAP metric, with 50 iterations and 15 random starts:
+The following hyperparameters are optimized with Bayesian optimization based on the mAP metric, with 50 iterations and 15 random starts:
 \begin{itemize}
 \item $\texttt{user\_clusters} \in [5,100]$: the amount of user clusters used to build the codebook.
 \item $\texttt{item\_clusters} \in [5,100]$: the amount of item clusters used to build the codebook.
@@ -439,10 +439,10 @@ Amazon Movies TV Series S. & 2.88 & 500 & 1000 & 14416 \\
 \end{table}
 \label{tb:second-set-datasets-properties}
 MovieLens 20M and Netflix Prize are preprocessed to extract very dense datasets to be used as source domain.\\
-MovieLens Hetrec 2011, Netflix Prize and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domain.\\
+MovieLens Hetrec 2011, Netflix Prize, and Amazon Movies TV Series are preprocessed to extract sparse and dense versions, both to be used as target domains.\\
 Preprocessing for both source and target domains is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed datasets used in the experiments have the properties listed in \autoref{tb:second-set-datasets-properties}.\\
-Each target dataset is split in train, validation and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
+Each target dataset is split into train, validation, and test sets. To do so, a random rating for each user is removed from the dataset and added to the validation set. The same is done for the test set, while the remaining ratings form the train set.
 
 
 \subsection{Hyperparameters}
@@ -767,9 +767,9 @@ While in a few dataset combinations CBT and kNN performances are not significant
 \item The experiments reported in the original article do not include any CBT baseline provided with a transformed or randomly generated source matrix.
 \item The kNN used in the experiments reported in the original article may not have been properly optimized.
 \end{itemize}
-It is also important to notice that CBT performs better in mAP the smaller the codebook, since most of the dataset combinations reach the optimal mAP when the user and item clusters are the minimum possible values. This result can lead us to three conclusions:
+It is also important to notice that CBT performs better in mAP the smaller the codebook since most of the dataset combinations reach the optimal mAP when the user and item clusters are the minimum possible values. This result can lead us to three conclusions:
 \begin{itemize}
-\item The fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of ratings diversity in the filled target matrix, due to the small codebook.
+\item The fact that Gini diversity is often inferior in CBT, compared to simple kNN, can be traced back to the low amount of rating diversity in the filled target matrix, due to the small codebook.
 \item The inverse proportion between mAP and codebook size is a sign that either the codebook creation or the codebook transfer phase fails in mapping clusters.
-\item The performance of CBT heavily improves when filled ratings have low impact on the kNN phase and, as a consequence, its behavior is similar to the one of simple kNN without codebook transfer.
+\item The performance of CBT heavily improves when filled ratings have a low impact on the kNN phase and, as a consequence, its behavior is similar to the one of simple kNN without codebook transfer.
 \end{itemize}

@@ -2,14 +2,14 @@
 \label{ch:experiments-full}
 
 The following section covers CBT and LKT-FM ranking experiments performed on the full MovieLens Hetrec 2011 dataset, using Netflix Prize as the source domain. The goal of this experiment is to evaluate the ranking capabilities of CBT on a real dataset without preprocessing.\\
-We report an ablation study where additional transformations of the source matrix are applied on baselines, to further analyse whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
+We report an ablation study where additional transformations of the source matrix are applied on baselines, to further analyze whether CBT is capable of knowledge transfer or its performance is strictly bound to the model.\\
 Experiments are run over 10 folds for each combination of source and target domains.\\
 The kNN phase is performed with cosine similarity to reduce the computational cost of the experiment. The metrics of its results are reported with a cut-off of 20.\\
 To compare the results, the following baseline recommender systems are used with the same datasets:
 \begin{itemize}
 \item \textbf{Random}: random items are chosen for recommendation.
 \item \textbf{TopPop}: the most popular items are chosen for recommendation.
-\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Only cosine similarity is used and bayesian optimization is applied.
+\item \textbf{kNN}: the same kNN approach used in CBT is applied, without codebook transfer, on the original target dataset. Only cosine similarity is used and Bayesian optimization is applied.
 \end{itemize}
 
 
@@ -44,7 +44,7 @@ MovieLens Hetrec 2011 & 4.00 & 2113 & 10109 & 855598 \\
 Netflix Prize is preprocessed to extract a very dense dataset to be used as source domain.\\
 Preprocessing of the source domain is performed in multiple iterations. First by removing users with a low amount of interactions, then by removing items with a low amount of interactions. Each missing rating of the source domain is filled with the average of ratings of its user.\\
 Finally, the preprocessed and full datasets used in the experiments have the properties listed in \autoref{tb:full-datasets-properties}.\\
-The target dataset is split in train and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the train set.
+The target dataset is split into train and test sets. To do so, a random rating for each user is removed from the dataset and added to the test set, while the remaining ratings form the train set.
 
 
 
@@ -53,7 +53,7 @@ The target dataset is split in train and test sets. To do so, a random rating fo
 The ablation study for this experiment is performed in three different ways:
 \begin{itemize}
 \item \textbf{Source domain mix (mixedCBT)}: all the ratings of the source domain are shuffled without keeping rows and column relation, to test whether breaking user and item profile relations has any impact on the performance.
-\item \textbf{Random source domain (randomCBT)}: a $500 \times 500$ source domain matrix is randomly generated using uniform distribution with ratings from 1 to 5, to test whether a completely irrelevant source domain leads to worse ranking metrics or the performance of CBT uniquely depends on its model.
+\item \textbf{Random source domain (randomCBT)}: a $500 \times 500$ source domain matrix is randomly generated using the uniform distribution with ratings from 1 to 5, to test whether a completely irrelevant source domain leads to worse ranking metrics or the performance of CBT uniquely depends on its model.
 \item \textbf{Source domain reduction (removalCBT)}: 10\% of the ratings of the source domain are removed before each missing rating is filled with the average of ratings of its user, to test whether an increase or decrease of source data substantially changes the metrics of the results.
 \end{itemize}
 Similar source matrix transformations are not applied to LKT-FM due to computational cost.
@@ -141,4 +141,4 @@ LKT-FM & 0.0059 $\pm$ 0.0028 & 0.0059 $\pm$ 0.0002 & 0.0612 $\pm$ 0.0044 \\
 
 Experiments performed on a real and not preprocessed target dataset confirm the previous conclusions. CBT is heavily outperformed by both simple kNN and TopPop.\\
 In addition, CBT provided with a meaningful source matrix is on par with all the three baselines of CBT provided with the transformed and randomly generated source matrices.\\
-Nevertheless, it is important to mention that the performance of LKT-FM is very similar to the one of the random recommender system and it is worse than any other baseline. Given the fact that LKT-FM is provided with the same hyperparameters of CBT, including codebook size, and only differs from CBT in implementing alternative models for codebook creation and transfer phases, it is possible to assert that changing the clusters mapping and codebook expansion methods may lead to improved or decreased ranking metrics, compared to the ones obtained with currently known codebook transfer recommender systems. It is also important to mention that, while the results reported by Zang \textit{et al.} in the original LKT-FM article \cite{10.1007/978-3-319-71246-8_39} were not reproducible, the additional hyperparameters for the matrix factorization phase and for the factorization machine were not optimized with bayesian optimization due to the high computational cost.
+Nevertheless, it is important to mention that the performance of LKT-FM is very similar to the one of the random recommender system and it is worse than any other baseline. Given the fact that LKT-FM is provided with the same hyperparameters of CBT, including codebook size, and only differs from CBT in implementing alternative models for codebook creation and transfer phases, it is possible to assert that changing the clusters mapping and codebook expansion methods may lead to improved or decreased ranking metrics, compared to the ones obtained with currently known codebook transfer recommender systems. It is also important to mention that, while the results reported by Zang \textit{et al.} in the original LKT-FM article \cite{10.1007/978-3-319-71246-8_39} were not reproducible, the additional hyperparameters for the matrix factorization phase and the factorization machine were not optimized with Bayesian optimization due to the high computational cost.

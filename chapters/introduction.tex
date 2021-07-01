@@ -1,8 +1,8 @@
 \chapter{Introduction}
 
 In recent years, due to the fast advancement of information technology, entertainment and commerce services have shifted towards the web medium.
-Not only did consumers easily adapt to the new medium, but the expansion of options of what to do for fun has led to a major increase in entertainment activities related to digital media, which are now generally seen as an habit.\\
-This, paired with continuously enriched and updated catalogs, makes sure that users are faced with a mass of media content. It is thus difficult for users to find the products they are interested in, while personal recommendations from friends or family is not enough to choose what to buy or how to employ free time. Recommender systems aim to address this issue and to increase traffic and revenue. There are two common types of recommender systems:
+Not only did consumers easily adapt to the new medium, but the expansion of options of what to do for fun has led to a major increase in entertainment activities related to digital media, which are now generally seen as a habit.\\
+This, paired with continuously enriched and updated catalogs, makes sure that users are faced with a mass of media content. It is thus difficult for users to find the products they are interested in, while personal recommendations from friends or family are not enough to choose what to buy or how to employ free time. Recommender systems aim to address this issue and to increase traffic and revenue. There are two common types of recommender systems:
 \begin{itemize}
 \item Content-based: when catalog items are comparable, it is possible to leverage their features to retrieve items similar to the user's preferred ones. Generally, a similarity matrix is built by transforming the item features in numerical values and computing the distance between each interacted or liked item and the others.
 \item Collaborative filtering: this technique aims at providing recommendations based on correlated preferences. Each user's historical interactions or preferences are used to determine the similarity with other users. Then, items preferred by similar users are recommended.
@@ -10,17 +10,18 @@ This, paired with continuously enriched and updated catalogs, makes sure that us
 Both of these techniques suffer from poor data quality or quantity, which lead to wrong or biased user and item similarities.\\
 Another common and major problem in the field of recommender systems is cold start.
 The cold start problem arises when a user has no recorded interaction with any item or vice versa.\par
-The objective of this thesis is to analyse a recent technique, called codebook transfer, which aims at alleviating these problems by transferring data from a different and unrelated dataset, with no overlap of users or items.\\
+The objective of this thesis is to analyze a recent technique, called codebook transfer, which aims at alleviating these problems by transferring data from a different and unrelated dataset, with no overlap of users or items.\\
 Since a set of articles expanding on the original technique have appeared over the last ten years, we evaluate the original codebook transfer model and a recent variation of it, called LKT-FM, by performing experiments targeting multiple domains and including different types of baselines.\par
-By reporting multiple results, along with significance tests, and analysing the models, we show that the original technique, and thus the derived articles, only work on the specific scenarios reported in the original articles and that the base approach on which recent rating pattern transfer models are built is not capable of consistently transferring knowledge between non-overlapping domains.
+By reporting multiple results, along with significance tests, and analyzing the models, we show that the original technique, and thus the derived articles, only work on the specific scenarios reported in the original articles and that the base approach on which recent rating pattern transfer models are built is not capable of consistently transferring knowledge between non-overlapping domains.
+
 
 
 \section{Thesis Structure}
 
 The structure of the thesis is as follows.\\
-\autoref{ch:state-of-the-art} describes the current state of the art in recommender systems. We present basic principles, classic and machine learning algorithms, evaluation criteria and knowledge transfer techniques.\\
-\autoref{ch:analysed-models} contains a detailed description of the models of the analysed recommender systems that adopt the codebook transfer technique.\\
+\autoref{ch:state-of-the-art} describes the current state of the art in recommender systems. We present basic principles, classic and machine learning algorithms, evaluation criteria, and knowledge transfer techniques.\\
+\autoref{ch:analyzed-models} contains a detailed description of the models of the analyzed recommender systems that adopt the codebook transfer technique.\\
 \autoref{ch:experiments-preprocessed} and \autoref{ch:experiments-full} include the description of datasets, parameters, goals and results of the experiments.\\
 \autoref{ch:conclusion} contains the conclusion that can be drawn from the performed experiments and final notes.\\
-\autoref{ch:applied-model} contains details about the implementations of the analysed recommender systems.\\
+\autoref{ch:applied-model} contains details about the implementations of the analyzed recommender systems.\\
 \autoref{ch:significance-tests} reports the tables of significance tests performed during the experiments.
